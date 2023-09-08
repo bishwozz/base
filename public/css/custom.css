@@ -1,0 +1,223 @@
+/* css for login page */logo
+.login-container {
+  height: 100%;
+  background-image: url('../img/main-bg.png');
+  background-repeat: no-repeat;
+  /* background-position: center; */
+}
+.gov-logo {
+  max-width: 500px;
+}
+.login-panel {
+  background-image: url('../img/login-bg.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-align: center;
+  width: 750px;
+  height: 650px;
+  padding: 30px 120px;
+  margin-top:20px;
+}
+.login-panel .cabinet-logo {
+  max-width: 225px;
+}
+.login-panel .map-img {
+  max-width: 260px;
+}
+.login-panel label {
+  text-align: unset;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.login-panel input {
+  background: unset;
+  padding-left: 5px;
+  border: 0;
+  border-radius: 0.25rem;
+  border-bottom: 1px solid #636c74;
+}
+
+
+.text-white {
+  color: #fff !important;
+}
+
+.input-group-text {
+  align-items: center;
+  background-color: #E8F0FE;
+  border: 1px solid #f1f4f8;
+  border-radius: 0.25rem;
+  color: #506690;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 0;
+  padding: 0.375rem 0.75rem;
+  text-align: center;
+  white-space: nowrap;
+  height: 37px;
+}
+
+
+.login-panel input:focus {
+  color: #fff;
+  background-color: unset;
+}
+.login-panel .form-check-input:checked {
+  background-color: unset;
+}
+
+@media only screen and (min-width: 600px) and (max-width:1499px) {
+  .login-container {
+    position: relative;
+    top:-25px;
+    align-items: center;
+  }
+
+  .login-panel {
+    width: 600px !important;
+    height: 600px !important;
+    padding: 0 110px;
+    align-items: center;
+
+  }
+  .gov-logo {
+    max-width: 400px;
+  }
+  .login-panel .cabinet-logo {
+    max-width: 200px;
+  }
+  .login-panel .map-img {
+    max-width: 200px;
+  }
+  .login-panel label {
+    text-align: unset;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+}
+
+/* css for sidebar */
+/* .sidebar .nav-dropdown:hover>.nav-dropdown-items {
+  max-height: 1500px;
+} */
+
+/* .sidebar .nav-dropdown:hover>.nav-dropdown-toggle:before {
+  transform: rotate(-90deg);
+} */
+
+/* css for setting-tab */
+.setting-tab {
+  position: fixed;
+  padding: 5px 0;
+  top: 73px;
+  right: 0;
+  width: 44px;
+  background: rgba(0,0,0,.3);
+  z-index: 3;
+  border-radius: 8px 0 0 8px;
+  text-align: center;
+}
+
+.setting-tab i:hover {
+  cursor: pointer;
+}
+
+.setting-tab-container {
+  position: fixed;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 12px 15px;
+  box-shadow: 3px 3px 8px #888888;
+  top: 70px;
+  /* opacity: 0; */
+  right: 60px;
+  z-index: 5;
+  display: none;
+}
+
+.setting-tab-container.open {
+  /* visibility: visible; */
+  display: block;
+}
+
+.setting-tab-container::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  width: 16px;
+  border-bottom: 16px solid transparent;
+  border-left: 16px solid rgba(0,0,0,.2);
+  border-top: 16px solid transparent;
+  right: -16px;
+}
+
+.setting-tab-container::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  width: 16px;
+  border-bottom: 16px solid transparent;
+  border-left: 16px solid #fff;
+  border-top: 16px solid transparent;
+  right: -15px;
+}
+
+.setting-tab-container .badge {
+  border: 3px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-block;
+  height: 23px;
+  margin-right: 5px;
+  position: relative;
+  width: 23px;
+  padding: 8px;
+  transition: all .34s;
+}
+
+.badge.primary {
+  background-color: #32579F;
+}
+.badge.red {
+  background-color: #f44336;
+}
+.badge.green {
+  background-color: #18ce0f;
+}
+.badge.purple {
+  background-color: #9368e9;
+}
+.badge.blue {
+  background-color: #2ca8ff;
+}
+
+.setting-tab-container .badge.active {
+  border-color: #0bf;
+}
+
+.setting-overlay {
+  position: absolute;
+  display: none;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 3;
+}
+
+.setting-overlay.open {
+  display: block;
+}
+
+.show-btn-return {
+  margin-left: 2px;
+  padding: 0px 2px 0px 3px;
+  border-radius: 4px;
+  font-size: 16px;
+  border: 1px solid #055d78;
+  background-color: red;
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+>
+    <testsuites>
+        <testsuite name="Package Test Suite">
+            <directory suffix=".php">./tests/</directory>
+            <file phpVersion="8.1.0" phpVersionOperator=">=">./tests81/Unit/CrudPanel/CrudPanelUpdateTest.php</file>
+            <file phpVersion="8.1.0" phpVersionOperator=">=">./tests81/Unit/CrudPanel/CrudPanelFieldsTest.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/app/Library/CrudPanel/Traits/</directory>
+            <directory suffix=".php">./src/app/Library/CrudPanel/</directory>
+            <directory suffix=".php">./src/app/Models/Traits/</directory>
+            <file>./src/app/Library/Widget.php</file>
+            <file>./src/app/Http/Controllers/CrudController.php</file>
+            <file>./src/ViewNamespaces.php</file>
+            <exclude>
+                <directory suffix=".php">./src/app/Models/Traits/SpatieTranslatable/</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
