@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin\CoreMaster;
 
 
 use App\Base\BaseCrudController;
-use App\Models\CoreMaster\MstFiscalYear;
+use Prologue\Alerts\Facades\Alert;
 use App\Models\CoreMaster\AppSetting;
+use App\Models\CoreMaster\MstMinistry;
+use App\Models\CoreMaster\MstFiscalYear;
 use App\Http\Requests\CoreMaster\AppSettingRequest;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -27,7 +29,37 @@ class AppSettingCrudController extends BaseCrudController
         CRUD::setModel(\App\Models\CoreMaster\AppSetting::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/app-setting');
         CRUD::setEntityNameStrings(trans('menu.appSetting'), trans('menu.appSetting'));
-        $this->checkPermission();
+        if(!backpack_user()->hasRole('superadmin|admin')){   
+            $this->crud->addClause('where','ministry_id',backpack_user()->ministry_id);
+        }
+        if(backpack_user()->hasRole('admin')){
+            $this->crud->addClause('where','id','<>',1);
+        }
+        $this->data['script_js'] = $this->getScriptJs();
+    }
+
+
+    private function getScriptJs(){
+        return "
+        function appSetting_letter_head(){
+            var title_1 = $('form input[name=letter_head_title_1]').val(),
+            title_2 = $('form input[name=letter_head_title_2]').val(),
+            title_3 = $('form input[name=letter_head_title_3]').val(),
+            title_4 = $('form input[name=letter_head_title_4]').val();
+            
+            $('#letter_head_title_1_label').html(title_1);
+            $('#letter_head_title_2_label').html(title_2);
+            $('#letter_head_title_3_label').html(title_3);
+            $('#letter_head_title_4_label').html(title_4);
+        }
+        $(document).ready(function(){
+            appSetting_letter_head();
+            $('form input[name=letter_head_title_1]').keyup(appSetting_letter_head);
+            $('form input[name=letter_head_title_2]').keyup(appSetting_letter_head);
+            $('form input[name=letter_head_title_3]').keyup(appSetting_letter_head);
+            $('form input[name=letter_head_title_4]').keyup(appSetting_letter_head);
+        });
+        ";
     }
 
     /**
@@ -40,25 +72,29 @@ protected function setupListOperation()
     {
         $cols=[
             $this->addRowNumberColumn(),
-            $this->addSettingNameLcColumn(),
             [
-                'name' => 'address_name_'.lang(),
-                'label' => trans('common.address_name_'.lang()),
+                'name' => 'office_name_lc',
+                'label' => trans('कार्यालयको नाम'),
+                'type' => 'text',
+            ],
+            [
+                'name' => 'address_name_lc',
+                'label' => trans('ठेगाना'),
                 'type' => 'text',
             ],
             [
                 'name' => 'phone',
-                'label' => trans('common.phone_no'),
+                'label' => trans('सम्पर्क न.'),
                 'type' => 'text',
             ],
             [
                 'name' => 'fax',
-                'label' => trans('common.fax'),
+                'label' => trans('फ्याक्स'),
                 'type' => 'text',
             ],
             [
                 'name' => 'email',
-                'label' => trans('common.email'),
+                'label' => trans('इमेल'),
                 'type' => 'email',
             ],
 
@@ -79,19 +115,6 @@ protected function setupListOperation()
         CRUD::setValidation(AppSettingRequest::class);
 
         $arr = [
-            // $this->addClientIdField(),
-            [ // CustomHTML
-                'name' => 'fieldset_open',
-                'type' => 'custom_html',
-                'value' => '<fieldset>',
-            ],
-            [
-                'name' => 'legend1',
-                'type' => 'custom_html',
-                'value' => '<b><legend>कार्यलय विवरण :</legend></b>',
-            ],
-            $this->addCodeField(),
-            $this->addPlainHtml(),
             $this->addSettingNameLcField(),
             $this->addSettingNameEnField(),
             $this->addAddressLcField(),
@@ -100,23 +123,11 @@ protected function setupListOperation()
             $this->addPhoneField(),
             $this->addFaxField(),
             $this->addEmailField(),
-            [
-                'name' => 'formation_of_council_ministers_date_bs',
-                'type' => 'nepali_date',
-                'label' => trans('common.formation_of_council_ministers_date_bs'),
-                'attributes' => [
-                    'id' => 'formation_of_council_ministers_date_bs',
-                    'maxlength' => '10',
-                ],
-                'wrapperAttributes' => [
-                    'class' => 'form-group col-md-4',
-                ],
-            ],
             $this->addRemarksField(),
             [
                 'name' => 'legend12',
                 'type' => 'custom_html',
-                'value' => '<b><legend>पत्रको शिर्षक:</legend></b>',
+                'value' => '<b><legend>&nbsp;&nbsp;पत्रको शिर्षक:</legend></b>',
             ],
             [
                 'name' => 'div_1-0',
@@ -130,24 +141,24 @@ protected function setupListOperation()
             ],
             [
                 'name' => 'letter_head_title_1',
-                'label' =>  trans('common.title1'),
+                'label' =>  trans('शीर्षक एक'),
                 'type' => 'text',
             ],
             [
                 'name' => 'letter_head_title_2',
-                'label' =>  trans('common.title2'),
+                'label' =>  trans('शीर्षक दुई'),
                 'type' => 'text',
             ],
             [
                 'name' => 'letter_head_title_3',
-                'label' =>  trans('common.title3'),
+                'label' =>  trans('शीर्षक तीन'),
                 'type' => 'text',
             ],
-            // [
-            //     'name' => 'letter_head_title_4',
-            //     'label' => trans('common.title4'),
-            //     'type' => 'text',
-            // ],
+            [
+                'name' => 'letter_head_title_4',
+                'label' => trans('शीर्षक चार'),
+                'type' => 'text',
+            ],
             [ 
                 'name' => 'div_1-2_close',
                 'type' => 'plain_html',
@@ -175,6 +186,7 @@ protected function setupListOperation()
                     <span id="letter_head_title_1_label">-</span><br/> 
                     <span style="font-size: 18px;" id="letter_head_title_2_label">-</span><br/> 
                     <span style="font-size: 18px;" id="letter_head_title_3_label">-</span><br/> 
+                    <span style="font-size: 16px;" id="letter_head_title_4_label">-</span>
                 </h2>
                 </div>',
             ],
@@ -221,10 +233,9 @@ protected function setupListOperation()
           'letter_head_title_1' => $request->letter_head_title_1,
           'letter_head_title_2' => $request->letter_head_title_2,
           'letter_head_title_3' => $request->letter_head_title_3,
-        //   'letter_head_title_4' => $request->letter_head_title_4,
+          'letter_head_title_4' => $request->letter_head_title_4,
           'fiscal_year_id' => $request->fiscal_year_id,
           'phone' => $request->phone,
-          'formation_of_council_ministers_date_bs' => $request->formation_of_council_ministers_date_bs,
           'fax' => $request->fax,
           'email' => $request->email,
           'remarks' => $request->remarks,
@@ -250,10 +261,9 @@ protected function setupListOperation()
         $appSetting->letter_head_title_1 = $request->letter_head_title_1;
         $appSetting->letter_head_title_2 = $request->letter_head_title_2;
         $appSetting->letter_head_title_3 = $request->letter_head_title_3;
-        // $appSetting->letter_head_title_4 = $request->letter_head_title_4;
+        $appSetting->letter_head_title_4 = $request->letter_head_title_4;
         $appSetting->fiscal_year_id = $request->fiscal_year_id;
         $appSetting->phone = $request->phone;
-        $appSetting->formation_of_council_ministers_date_bs = $request->formation_of_council_ministers_date_bs;
         $appSetting->fax = $request->fax;
         $appSetting->email = $request->email;
         $appSetting->remarks =$request->remarks;

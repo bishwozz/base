@@ -10,7 +10,7 @@
     <label>{!! $field['label'] !!}</label>
     @include('crud::fields.inc.translatable_icon')
     <textarea
-        name="{{ $field['name'] }}" 
+        name="{{ $field['name'] }}"
         data-init-function="bpFieldInitSummernoteElement"
         data-options="{{ json_encode($field['options']) }}"
         @include('crud::fields.inc.attributes', ['default_class' =>  'form-control summernote'])
@@ -35,9 +35,6 @@
     <style type="text/css">
         .note-editor.note-frame .note-status-output, .note-editor.note-airframe .note-status-output {
                 height: auto;
-        }
-        .note-editable{
-            height: 400px !important;
         }
     </style>
     @endLoadOnce

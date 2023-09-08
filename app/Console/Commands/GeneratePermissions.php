@@ -43,26 +43,21 @@ class GeneratePermissions extends Command
     {
         $this->info('Generating Permissions .....');
 
-        $models = array_keys(modelCollection()['final_output']);
-        $exclude_models = \excludeModels();
+        $models = modelCollection();
 
-        $merged_array = array_merge($models,$exclude_models);
-        foreach($merged_array as $name){
-
-            $this->info('Generating Permissions For ::: '.$name);
-
+        foreach($models as $key=>$name){
             $array_value = ['list','create','update','delete'];
 
             foreach($array_value as $value){
                 Permission::firstOrCreate(
-                    ['name'=>$value . ' ' . $name,
+                    ['name'=>$value . ' ' . $key,
                     'guard_name'=>'backpack'],
                 );
             }
-            // $inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
+            $inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
 
-            // $link = $inflector->tableize($name);
-            // $link = \str_replace('_','-',$link);
+            $link = $inflector->tableize($name);
+            $link = \str_replace('_','-',$link);
 
             // MenuItem::firstOrCreate(
             //     [

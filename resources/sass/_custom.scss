@@ -34,6 +34,7 @@ header ul li a.nav-link {
 
 .main {
   padding-top: 30px;
+  background-color: white;
 }
 
 
@@ -45,8 +46,8 @@ header ul li a.nav-link {
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #32579F;
-  border-color: #32579F;
+  background-color: #22314b;
+  border-color: #22314b;
 }
 
 .nav-tabs .nav-item.show .nav-link,
@@ -94,7 +95,7 @@ header ul li a.nav-link {
   border-radius: 4px;
   font-size: 16px;
   border: 1px solid #0b7697;
-  background-color: #1a8eb1;
+  background-color: #1aa0c8;
 }
 
 // .back-btn>a {
@@ -180,9 +181,9 @@ div.DTFC_RightBodyWrapper {
 }
 
 /* css for sidebar*/
-.sidebar {
-  background-color: #32579F;
-}
+// .sidebar {
+//   background-color: #2855A6;
+// }
 
 .sidebar .nav-dropdown-toggle:before{
   right: 11px !important;
@@ -255,20 +256,18 @@ td p {
     border-top: none;
     background-color: #c8ced3;
     font-size: 14px;
-    text-align:left;
 }
 
 .table td {
-    padding:0.15rem 0.5rem;
+    padding-top: 0.15rem !important;
+    padding-bottom: 0.15rem !important;
     border-top: none;
     font-size: 14px !important;
-    text-align: left;
+    border-right: 2px solid rgb(215, 214, 214);
 }
-.f-check-circle{
-  text-align: center;
-}
-
-
+// .sidebar{
+//   background: linear-gradient(0deg, rgb(247, 132, 132) 1%, rgba(162,88,72,1) 16%, rgb(0, 0, 0) 84%);
+// }
 /*** Patient Observation Page ***/
 .today-date {
   margin: 10px 30px 0px 0px;
@@ -325,7 +324,7 @@ li.nav-item {
 }
 
 .app-header {
-  background-color: #32579F;
+  background-color: #1b2a4e;
   height: unset !important;
   justify-self: center;
       padding: 6px 0;
@@ -342,7 +341,10 @@ li.nav-item {
 }
 
 .print_export_button.buttons-colvis{
-  background-color: red !important;
+  background-color: rgb(45 66 137) !important;
+}
+.input-group-text{
+  padding: 0.375rem 0.4rem !important;
 }
 
 @media (min-width: 992px) {
@@ -359,21 +361,6 @@ li.nav-item {
       margin-left: 222px;
   }
 }
-textarea{
-  color:black !important;
-}
-
-@media(min-width:1150px){
-  .col-lg-2-4{
-    max-width:20% !important;
-  }
-}
-@media(min-width:768px) and (max-width:1149px){
-  .col-lg-2-4{
-    max-width:33% !important;
-  }
-}
-
 
 
 

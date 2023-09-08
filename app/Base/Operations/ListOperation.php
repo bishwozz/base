@@ -3,6 +3,7 @@
 namespace App\Base\Operations;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 trait ListOperation
 {
@@ -43,6 +44,11 @@ trait ListOperation
 
         $this->crud->operation('list', function () {
             $this->crud->loadDefaultOperationSettingsFromConfig();
+            // dd($this->crud->model->getAttributes());
+            $schema =  Schema::getColumnListing($this->crud->model->getTable());
+            if(in_array('deleted_uq_code',$schema)){
+               $this->crud->query->where('deleted_uq_code',1);
+            }
             $this->crud->orderBy('id');
         });
     }
@@ -79,7 +85,7 @@ trait ListOperation
         // if a search term was present
         if (request()->input('search') && request()->input('search')['value']) {
             // filter the results accordingly
-            $this->applySearchTerm(request()->input('search')['value']);
+            $this->crud->applySearchTerm(request()->input('search')['value']);
             // recalculate the number of filtered rows
             $filteredRows = $this->crud->count();
         }
@@ -152,82 +158,5 @@ trait ListOperation
 
         // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
         return view($this->crud->getDetailsRowView(), $this->data);
-    }
-
-    public function applySearchTerm($searchTerm)
-    {
-        return $this->crud->query->where(function ($query) use ($searchTerm) {
-            foreach ($this->crud->columns() as $column) {
-                if (! isset($column['type'])) {
-                    abort(400, 'Missing column type when trying to apply search term.');
-                }
-
-                $this->applySearchLogicForColumn($query, $column, $searchTerm);
-            }
-        });
-    }
-
-    /**
-     * Apply the search logic for each CRUD column.
-     */
-    public function applySearchLogicForColumn($query, $column, $searchTerm)
-    {
-        $columnType = $column['type'];
-
-        // if there's a particular search logic defined, apply that one
-        if (isset($column['searchLogic'])) {
-            $searchLogic = $column['searchLogic'];
-
-            // if a closure was passed, execute it
-            if (is_callable($searchLogic)) {
-                return $searchLogic($query, $column, $searchTerm);
-            }
-
-            // if a string was passed, search like it was that column type
-            if (is_string($searchLogic)) {
-                $columnType = $searchLogic;
-            }
-
-            // if false was passed, don't search this column
-            if ($searchLogic == false) {
-                return;
-            }
-        }
-
-        // sensible fallback search logic, if none was explicitly given
-        if ($column['tableColumn']) {
-            $searchOperator = config('backpack.operations.list.searchOperator', 'like');
-
-            switch ($columnType) {
-                case 'email':
-                case 'text':
-                case 'textarea':
-                case 'model_function':
-                    $query->orWhere($this->crud->getColumnWithTableNamePrefixed($query, $column['name']), $searchOperator, '%'.$searchTerm.'%');
-                    break;
-
-                case 'date':
-                case 'datetime':
-                    $validator = Validator::make(['value' => $searchTerm], ['value' => 'date']);
-
-                    if ($validator->fails()) {
-                        break;
-                    }
-
-                    $query->orWhereDate($this->crud->getColumnWithTableNamePrefixed($query, $column['name']), Carbon::parse($searchTerm));
-                    break;
-
-                case 'select':
-                case 'select_multiple':
-                    $query->orWhereHas($column['entity'], function ($q) use ($column, $searchTerm, $searchOperator) {
-                        $q->where($this->crud->getColumnWithTableNamePrefixed($q, $column['attribute']), $searchOperator, '%'.$searchTerm.'%');
-                    });
-                    break;
-
-                default:
-                    return;
-                    break;
-            }
-        }
     }
 }

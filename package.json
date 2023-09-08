@@ -14,15 +14,11 @@
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
-        "pusher-js": "^8.3.0",
         "resolve-url-loader": "^5.0.0",
-        "sass": "^1.52.0",
+        "sass": "^1.52.3",
         "sass-loader": "^12.1.0"
     },
     "dependencies": {
-        "@fancyapps/ui": "^4.0.27",
-        "gasparesganga-jquery-loading-overlay": "^2.1.7",
-        "laravel-echo": "^1.15.2",
-        "sweetalert2": "^11.6.13"
+        "gasparesganga-jquery-loading-overlay": "^2.1.7"
     }
 }

@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'reset' => 'तपाइको पासवर्ड रिसेट भैसकेको छ!',
-    'sent' => 'हामीले तपाइको इमेल मा पासवर्ड रिसेट लिंक पठाइसकेका छौ!',
-    'throttled' => 'केहि समय प्रतिक्षा गरेर पुन: प्रयास गर्नु होस्.',
-    'token' => 'यो पासवर्ड टोकन अवैध छ.',
-    'user' => "हामीले यो इमेल भएको प्रयोगकर्ता फेला पार्न सकेनौ.",
+    'reset' => 'Your password has been reset!',
+    'sent' => 'We have emailed your password reset link!',
+    'throttled' => 'Please wait before retrying.',
+    'token' => 'This password reset token is invalid.',
+    'user' => "We can't find a user with that email address.",
 
 ];

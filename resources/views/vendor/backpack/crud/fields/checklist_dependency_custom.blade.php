@@ -68,8 +68,8 @@
 
       <div class="row">
 
-          <div class="col-sm-12 my-2">
-              <label class="font-weight-bold bg-secondary px-2 rounded">{!! $primary_dependency['label'] !!}</label>
+          <div class="col-sm-12">
+              <label>{!! $primary_dependency['label'] !!}</label>
           </div>
       </div>
 
@@ -91,7 +91,6 @@
 
           @php
           $primary_option = $primary_dependency['option'] ?? $primary_dependency['model']::all();
-
         @endphp
 
         @foreach ($primary_option as $connected_entity_entry)
@@ -123,8 +122,8 @@
       </div>
 
       <div class="row">
-          <div class="col-sm-12 my-2">
-              <label class="font-weight-bold bg-secondary px-2 rounded">{!! $secondary_dependency['label'] !!}</label>
+          <div class="col-sm-12">
+              <label>{!! $secondary_dependency['label'] !!}</label>
           </div>
       </div>
 
@@ -152,24 +151,11 @@
                 $entity_arr = explode(' ',$item->name);
                 $permission_collection[end($entity_arr)][$item->id] = $entity_arr[0];
             }
-            $entity_dirs = modelCollection()['entity_dir']; 
-            foreach($entity_dirs as $a_key=>$arr){
-              foreach($permission_collection as $c_key=>$collection){
-                if(in_array($c_key,$arr)){
-                  $dir_permission_collection[$a_key][$c_key]=$collection;
-                }
-              }
-            }
-
           @endphp
 
-        @foreach($dir_permission_collection as $dir_key=>$per_collection)
-        <br/>
-        <h6 class="font-weight-bold bg-success p-1 px-2 ml-3 rounded">{{ $dir_key }}</h6>
-
-          @foreach ($per_collection as $key=>$collection)
-            <div class="row ml-3" style="width: 100%">
-                <div class="col-md-4"><span class="font-weight-bold text-violet">{{trans('permission_role.'.$key) }}</span></div>
+          @foreach ($permission_collection as $key=>$collection)
+            <div class="row" style="width: 100%">
+                <div class="col-md-4"><span>{{$key}}</span></div>
                 @foreach($collection as $key=>$option)
                     <div class="col-sm-2">
                         <div class="checkbox">
@@ -201,7 +187,6 @@
                 @endforeach
             </div>
           @endforeach
-        @endforeach
       </div>
     </div><!-- /.container -->
 
@@ -241,23 +226,6 @@
           thisField.find('.primary_list').change(function(){
 
             var idCurrent = $(this).data('id');
-            var primaryCheckboxes = thisField.find('.primary_list');
-            var secondaryCheckboxes = thisField.find('.secondary_list');
-
-            // Uncheck all primary checkboxes except the current one
-            primaryCheckboxes.not(this).prop('checked', false);
-
-            // Uncheck all secondary checkboxes
-            secondaryCheckboxes.prop('checked', false);
-
-            // Disable all primary checkboxes except the current one
-            // primaryCheckboxes.not(this).prop('disabled', true);
-            // Enable the current primary checkbox
-            $(this).prop('disabled', false);
-
-            // Enable all primary checkboxes
-            primaryCheckboxes.prop('disabled', false);
-
             if($(this).is(':checked')){
 
               //add hidden field with this value
@@ -275,8 +243,6 @@
                 if(hidden)
                   hidden.remove();
               });
-
-
 
             }else{
               //remove hidden field with this value
@@ -313,10 +279,6 @@
           thisField.find('.secondary_list').click(function(){
 
             var idCurrent = $(this).data('id');
-            // for only one checkbox checked
-            var secondaryCheckboxes = thisField.find('.secondary_list');
-
-            secondaryCheckboxes.not(this).prop('checked', false);
             if($(this).is(':checked')){
               //add hidden field with this value
               var nameInput = thisField.find('.hidden_fields_secondary').data('name');

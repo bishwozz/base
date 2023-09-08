@@ -1,53 +1,37 @@
 {{-- Text Backpack CRUD filter --}}
 
-{{-- <li filter-name="{{ $filter->name }}"
+<li filter-name="{{ Str::slug($filter->name) }}"
 	filter-type="{{ $filter->type }}"
-	class="dropdown {{ Request::get($filter->name) ? 'active' : '' }}">
-	<a href="#" class="dropdown-toggle-1" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ $filter->label }} <span class="carte-1"></span></a>
-	<div class="dropdown-menu">
-		<div class="form-group backpack-filter m-b-0">
+	class="nav-item dropdown1 {{ Request::get($filter->name) ? 'active' : '' }}">
+	<a href="#" class="nav-link dropdown-toggle1" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ $filter->label }} <span class="caret1"></span></a>
+	<div class="dropdown-menu-1 p-0">
+		<div class="form-group backpack-filter mb-0">
 			<div class="input-group">
 		        <input class="form-control pull-right"
-		        		id="text-filter-{{ str_slug($filter->name) }}"
+		        		id="text-filter-{{ Str::slug($filter->name) }}"
 		        		type="text"
 						@if ($filter->currentValue)
 							value="{{ $filter->currentValue }}"
 						@endif
 		        		>
-		        <div class="input-group-addon text-filter-{{ str_slug($filter->name) }}-clear-button">
-		          <a class="" href=""><i class="fa fa-times"></i></a>
+		        <div class="input-group-append text-filter-{{ Str::slug($filter->name) }}-clear-button">
+		          <a class="input-group-text" href=""><i class="la la-times"></i></a>
 		        </div>
 		    </div>
 		</div>
 	</div>
-</li> --}}
-
-<li filter-name="{{ str_slug($filter->name) }}"
-    filter-type="{{ $filter->type }}"
-    class="nav-item dropdown1 {{ Request::get($filter->name) ? 'active' : '' }}">
-    <a href="#" class="dropdown-toggle1" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ $filter->label }} <span class="caret1"></span></a>
-    <div class="dropdown-menu1 p-0">
-        <div class="form-group backpack-filter mb-0">
-            <div class="input-group">
-                <input class="form-control pull-right"
-                        id="text-filter-{{ str_slug($filter->name) }}"
-                        type="text"
-                        @if ($filter->currentValue)
-                            value="{{ $filter->currentValue }}"
-                        @endif
-                        >
-                <div class="input-group-append text-filter-{{ str_slug($filter->name) }}-clear-button">
-                  <a class="input-group-text" href=""><i class="fa fa-times"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
 </li>
 
 {{-- ########################################### --}}
 {{-- Extra CSS and JS for this particular filter --}}
 
-
+@push('crud_list_styles')
+<style>
+    [id^=text-filter-]{
+        width:120px !important;
+        }
+</style>
+@endpush
 {{-- FILTERS EXTRA JS --}}
 {{-- push things in the after_scripts section --}}
 
@@ -55,7 +39,7 @@
 	<!-- include select2 js-->
   <script>
 		jQuery(document).ready(function($) {
-			$('#text-filter-{{ str_slug($filter->name) }}').on('change', function(e) {
+			$('#text-filter-{{ Str::slug($filter->name) }}').on('change', function(e) {
 
 				var parameter = '{{ $filter->name }}';
 				var value = $(this).val();
@@ -70,7 +54,7 @@
 				ajax_table.ajax.url(new_url).load();
 
 				// add filter to URL
-				crud.updateUrl(new_url);
+				// crud.updateUrl(new_url);
 
 				// mark this filter as active in the navbar-filters
 				if (URI(new_url).hasQuery('{{ $filter->name }}', true)) {
@@ -80,18 +64,18 @@
 				}
 			});
 
-			$('li[filter-name={{ str_slug($filter->name) }}]').on('filter:clear', function(e) {
+			$('li[filter-name={{ Str::slug($filter->name) }}]').on('filter:clear', function(e) {
 				$('li[filter-name={{ $filter->name }}]').removeClass('active');
-				$('#text-filter-{{ str_slug($filter->name) }}').val('');
+				$('#text-filter-{{ Str::slug($filter->name) }}').val('');
 			});
 
 			// datepicker clear button
-			$(".text-filter-{{ str_slug($filter->name) }}-clear-button").click(function(e) {
+			$(".text-filter-{{ Str::slug($filter->name) }}-clear-button").click(function(e) {
 				e.preventDefault();
 
-				$('li[filter-name={{ str_slug($filter->name) }}]').trigger('filter:clear');
-				$('#text-filter-{{ str_slug($filter->name) }}').val('');
-				$('#text-filter-{{ str_slug($filter->name) }}').trigger('change');
+				$('li[filter-name={{ Str::slug($filter->name) }}]').trigger('filter:clear');
+				$('#text-filter-{{ Str::slug($filter->name) }}').val('');
+				$('#text-filter-{{ Str::slug($filter->name) }}').trigger('change');
 			})
 		});
   </script>

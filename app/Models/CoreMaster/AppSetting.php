@@ -34,7 +34,14 @@ class AppSetting extends BaseModel
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+    public function ministry()
+    {
+        return $this->belongsTo('App\Models\CoreMaster\MstMinistry', 'ministry_id', 'id');
+    }
+    public function fiscalYearEntity()
+    {
+        return $this->belongsTo('App\Models\CoreMaster\MstFiscalYear', 'fiscal_year_id', 'id');
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

@@ -19,8 +19,6 @@ class PrintableNewAnonClassNode extends Expr
 {
     /** @var Node\AttributeGroup[] PHP attribute groups */
     public $attrGroups;
-    /** @var int Modifiers */
-    public $flags;
     /** @var Node\Arg[] Arguments */
     public $args;
     /** @var null|Node\Name Name of extended class */
@@ -31,12 +29,11 @@ class PrintableNewAnonClassNode extends Expr
     public $stmts;
 
     public function __construct(
-        array $attrGroups, int $flags, array $args, Node\Name $extends = null, array $implements,
+        array $attrGroups, array $args, Node\Name $extends = null, array $implements,
         array $stmts, array $attributes
     ) {
         parent::__construct($attributes);
         $this->attrGroups = $attrGroups;
-        $this->flags = $flags;
         $this->args = $args;
         $this->extends = $extends;
         $this->implements = $implements;
@@ -49,7 +46,7 @@ class PrintableNewAnonClassNode extends Expr
         // We don't assert that $class->name is null here, to allow consumers to assign unique names
         // to anonymous classes for their own purposes. We simplify ignore the name here.
         return new self(
-            $class->attrGroups, $class->flags, $newNode->args, $class->extends, $class->implements,
+            $class->attrGroups, $newNode->args, $class->extends, $class->implements,
             $class->stmts, $newNode->getAttributes()
         );
     }
@@ -59,6 +56,6 @@ class PrintableNewAnonClassNode extends Expr
     }
 
     public function getSubNodeNames() : array {
-        return ['attrGroups', 'flags', 'args', 'extends', 'implements', 'stmts'];
+        return ['attrGroups', 'args', 'extends', 'implements', 'stmts'];
     }
 }

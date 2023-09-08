@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\EcMp;
+use App\Models\Role;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, CrudTrait;
+    use HasApiTokens, HasFactory, Notifiable, CrudTrait, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -25,14 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'last_login',
-        'mp_id',
         'ministry_id',
-        'display_order',
-        'phone_no',
-        'is_ministry_member',
-        'mp_id',
-        'employee_id',
     ];
 
     /**
@@ -53,23 +46,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function mp(){
-        return $this->belongsTo(Ministry::class,'ministry_id','id');
-    }
-    public function MinistryEmployee(){
-        return $this->belongsTo(MinistryEmployee::class,'employee_id','id');
-    }
-
-    public function uis()
-    {
-        return $this->hasMany('App\Models\Ui','user_id','id');
-    }
-
-    public function ministry(){
-        return $this->belongsTo('App\Models\Ministry','ministry_id','id');
-    }
-
-    //assign role to user
+        //assign role to user
 
     public function assignRoleCustom($role_name, $model_id){
         $roleModel = Role::where('name', $role_name)->first();
@@ -85,8 +62,16 @@ class User extends Authenticatable
 
     }
 
-    public function commiteeEntity()
+    public function isSystemUser(){
+        if(isset($this->ministry_id))
+            return false;
+        else {
+            return true;
+        }
+    }
+
+    public function ministry()
     {
-       return $this->belongsTo('App\Models\MinistryMember', 'mp_id', 'mp_id');
+        return $this->belongsTo('App\Models\CoreMaster\MstMinistry', 'ministry_id', 'id');
     }
 }

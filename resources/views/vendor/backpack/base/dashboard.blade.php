@@ -1,309 +1,224 @@
 @extends(backpack_view('blank'))
-@section('content')
+@push('after_styles')
+<link rel="stylesheet" href="{{ asset('homepage/css/chart.min.css') }}" />
 <style>
-    .page-title{
-        font-family: 'Poppins';
+    .dashboard-card-body {
+        color: black;
+        padding: 10px 0px;
+    }
+
+    .hr-line1 {
+        opacity: .20 !important;
+        color: azure;
+    }
+
+    hr.hr-line1 {
+        border: 1px solid azure;
+        box-shadow: 2px 2px 2px black;
+    }
+    .dashboard-card-body select {
+        color: black;
+        border: 1px solid darkgray;
+    }
+    .btn-toggle{
+        background-color: #2774e8;
+        color:white;
+    }
+    .btn-toggle:hover{
+        background-color: #0d47a1;
+        color:white;
+    }
+
+    .printbtn {
+        background: none;
+        border: none;
+    }
+    .printbtn:focus {
+        outline: none;
+        /* or use border: none; if you want to remove the border */
     }
 </style>
-    <div class="row" style="padding-right: 1em;padding-left: 1em; padding-bottom: 1em;">
-        <div class="col-12">
-            <div class="page-title-box">
-                <div class="page-title-right" style="float: right;">
-                    <div class="d-flex">
-                        <table style="border:none;">
-                            <tr style="border:none;">
-                                <td style="border:none;">
-                                    <div>
-                                        @if(!backpack_user()->ministry_id)
-                                            <label for="ministry_id" class="font-weight-bold">मन्त्रालय&nbsp;</label>
-                                            <select class="form-control-sm" name="ministry_id" id="ministry_id" onchange="loadDashboardData()">
-                                                <option value="all" selected>सबै</option>
-                                                @foreach ($ministries as $option)
-                                                <option value="{{ $option->getKey() }}">{{ $option->name_lc }}</option>
-                                                @endforeach
-                                            </select>
-                                        @else
-                                            <input type="hidden" name="ministry_id" id="ministry_id" value={{backpack_user()->ministry_id}}>
-                                        @endif
+@endpush
+@section('content')
+<div class="card p-0">
+    <div class="card-body dashboard-card-body">
+        <div class="row">
+            <div class="col-12 px-4">
+                <div class="page-title-box">
+                    <h5 class="page-title float-left"><img src="{{asset('/assets/dashboard-icon.png')}}" width="40px;"
+                            height="40px;"> ड्यासबोर्ड</h5>
+                    <div class="page-title-right" style="float: right;">
+                        <div class="d-flex">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label for="section_type" class="font-weight-bold">विवरण प्रकार</label>
+                                        <select class="form-control-sm" name="section_type" id="section_type" onchange="loadDashboardData()">
+                                            <option value="milestone" selected>योजना क्रियाकलाप अनुसार प्रगति विवरण</option>
+                                            <option value="progress">वित्तीय तथा भौतिक प्रगति विवरण</option>
+                                            <option value="law">ऐन कानुन निर्माणको अवस्था</option>
+                                            <option value="bidding">सार्वजनिक खरीद तथा ठेक्का व्यवस्थापन</option>
+                                            <option value="office">कार्यालय व्यवस्थापन विवरण</option>
+                                            <option value="darbandi">जनसक्ति दरबन्दी विवरण</option>
+                                        </select>
+                                    </td>
                                     
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                                    @unless($ministry_dashboard)
+                                    <td>
+                                        <label for="ministry_id" class="font-weight-bold">मन्त्रालय</label>
+                                        <select class="form-control-sm" name="ministry_id" id="ministry_id" onchange="loadDashboardData()">
+                                            <option value="all" selected>सबै</option>
+                                            @foreach ($ministries as $option)
+                                            <option value="{{ $option->getKey() }}">{{ $option->name_lc }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    @endunless
+                                    
+                                    <td>
+                                        <label for="fiscal_year_id" class="font-weight-bold">आ.व.</label>
+                                        <select class="form-control-sm" name="fiscal_year_id" id="fiscal_year_id" onchange="loadDashboardData()">
+                                            @foreach ($fiscal_years as $option)
+                                            @if (intval($fiscal_year_id) === $option->getKey())
+                                            <option value="{{ $fiscal_year_id }}" selected>{{ $option->code }}</option>
+                                            @else
+                                            <option value="{{ $option->getKey() }}">{{ $option->code }}</option>
+                                            @endif
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label for="month_id" class="font-weight-bold">महिना</label>
+                                        <select class="form-control-sm" name="month_id" id="month_id" onchange="loadDashboardData()">
+                                            <option value="">{{'-- महिना छान्नुहोस् --' }}</option>
+                                            @foreach ($months as $option)
+                                            <option value="{{ $option->getKey() }}">{{ $option->name_lc }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            
+                        </div>
                     </div>
                 </div>
-                <h4 class="page-title">{{$lang == 'lc'? 'ड्यासबोर्ड' : 'Dashboard' }}</h4>
             </div>
         </div>
-    </div>
-    <span id="dashboard_table"></span>
+        <hr class="hr-line1 mt-0">
 
+        <section id="tabular_section" class="parallax-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="container_content"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+@endsection
+
+
+@section('after_scripts')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+    
     <script src="{{asset('homepage/js/chart.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/html2pdf.js"></script> --}}
+    <script src="{{asset('js/plotchart.js')}}"></script>
     <script>
         $(document).ready(function() {
-        // getDash(fiscal_year_id = 'all');
-        loadDashboardData();
 
-        // $('#fiscal_year_id').change(function() {
-        //     getDash($('#fiscal_year_id').val());
-        // });
-        $('#ministry_id').change(function() {
-            loadDashboardData();
-        });
+        //get ministry and fiscal year value
+        let ministryId = $('#ministry_id').val();
+        let fiscalYearId = $('#fiscal_year_id').val();
+
+        loadDashboardData();
+        
     });
 
-        // function getDash(fiscal_year_id = "all"){
+        function printDiv(divId) {
 
-        //     var $base_url ='/admin/dashboard'
-        //     $.ajax({
-        //         url: $base_url + '/dashboard-data',
-        //         type: "get",
-        //         data: {
-        //             fiscal_year_id:fiscal_year_id
-        //         },
-        //         headers: {
-        //             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        //         },
-        //         success: function (response) {
-        //             if (response) {
+            addPrintStyles();
+            var printContents = document.getElementById(divId).innerHTML;
+            var originalContents = document.body.innerHTML;
 
-        //                 $("#dashboardDataT1").html("");
-        //                 // $("#dashboardDataT2").html("");
-        //                 $("#dashboardDataT1").append(response);
-        //                 // $("#dashboardDataT2").append(response);
-                        
-        //             }
-        //         },
-        //     });
-        // };
-        function loadDashboardData(){
-            var $base_url ='/admin/dashboard';
-            var selected_type = $('#selected_type').val();
-            var selected_fiscal_year  = $('#select_fiscal_year').val();
-
-            $.ajax({
-                url: $base_url + '/load-dashboard-table',
-                type: "get",
-                data: {
-                    ministry_id:$('#ministry_id').val(),
-                    selected_type:selected_type,
-                    selected_fiscal_year:selected_fiscal_year,
-                },
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                },
-                success: function (response) {
-                    if (response) {
-                        $("#dashboard_table").empty().append(response.view);
-                        createChart(response.data.selected_type,response.data,'bar');
-                        createChart('fiscalYearDecisionTypeChart',response.data,'bar');
-                    }
-                },
-            });
+            document.body.innerHTML = printContents;
+            window.print();
+            
+            document.body.innerHTML = originalContents;
+            
         }
 
-function generateArray(color, length) {
-    return Array.from({ length }, () => color);
-}
+        function addPrintStyles() {
+            var style = document.createElement('style');
+            style.innerHTML = '@media print {\
+                .printbtn {\
+                    display: none !important; /* Hide the print button while printing */\
+                }\
+            }';
 
-  
-function createChart(element_id, res_data, type) 
-{
-    let data_new = '';
-    let legend_display = false;
-    let label_string = '';
-    let scale_label=false;
-    let axis_scale= false;
-    let title;
-    let labels=[];
-    var ctx = document.getElementById(element_id).getContext('2d');
-
-        if(element_id === 'yearWiseChart'){
-            let customBackgroundColor1 = generateArray('brown', 12);
-            let customBackgroundColor2 = generateArray('green', 12);
-            let chart_data= [];
-            //prepare data for chart
-            let meeting_count =[];
-            let decision_count =[];
-
-            $.each(res_data.year_wise_data,function(key,stats){
-
-                labels.push(key);
-                meeting_count.push(stats.meeting_count)
-                decision_count.push(stats.decision_count)
-            });
-
-            legend_display = true;
-            axis_scale=true;
-            scale_label=true;
-            label_string = 'वर्ष';
-            title='साल अनुसार बैठक / निर्णय संख्या'
-
-            data_new= {
-                labels: labels,
-                datasets: [{    
-                    label: 'बैठक संख्या',
-                    data: meeting_count,
-                    maxBarThickness: 15,
-                    categoryPercentage: 0.035,
-                    barPercentage:1,
-                    backgroundColor: customBackgroundColor1,
-                },
-                {
-                    label: 'निर्णय संख्या',
-                    data: decision_count,
-                    maxBarThickness: 15,
-                    categoryPercentage: 0.035,
-                    barPercentage:1,
-                    backgroundColor: customBackgroundColor2,
-                }]
-            }
-        } 
-        if(element_id === 'fiscalYearWiseChart'){
-            let customBackgroundColor1 = generateArray('brown', 12);
-            let customBackgroundColor2 = generateArray('green', 12);
-            let chart_data= [];
-            //prepare data for chart
-            let meeting_count =[];
-            let decision_count =[];
-
-            $.each(res_data.fiscal_year_wise_data,function(key,stats){
-
-                labels.push(key);
-                meeting_count.push(stats.meeting_count)
-                decision_count.push(stats.decision_count)
-            });
-
-            legend_display = true;
-            axis_scale=true;
-            scale_label=true;
-            label_string = 'आर्थिक वर्ष';
-            title='आर्थिक वर्ष अनुसार बैठक / निर्णय संख्या'
-
-            data_new= {
-                labels: labels,
-                datasets: [{    
-                    label: 'बैठक संख्या',
-                    data: meeting_count,
-                    maxBarThickness: 15,
-                    categoryPercentage: 0.035,
-                    barPercentage:1,
-                    backgroundColor: customBackgroundColor1,
-                },
-                {
-                    label: 'निर्णय संख्या',
-                    data: decision_count,
-                    maxBarThickness: 15,
-                    categoryPercentage: 0.035,
-                    barPercentage:1,
-                    backgroundColor: customBackgroundColor2,
-                }]
-            }
+            document.head.appendChild(style);
         }
 
-        if(element_id === 'fiscalYearDecisionTypeChart'){
-            let customBackgroundColor1 = ['brown', 'green', 'blue', 'violet', 'orange', 'purple', 'cyan', 'magenta', 'pink', 'teal', 'lime', 'darkgreen'];
-            let chart_data= [];
-            //prepare data for chart
-            let count =[];
+        function exportChart(elementId,filename) {
+            // Get the canvas element
+            var canvas = document.getElementById(elementId);
 
+            // Create a new HTML2PDF instance
+                var pdf = new html2pdf();
+            // Add the canvas element to the PDF document
+            var options = {
+                filename: filename+'.pdf',
+                image: { type: 'pdf' },
+                html2canvas: { scale: 2 },
+                jsPDF: { format: 'a3', orientation: 'landscape' }
+            };
 
-            $.each(res_data.decision_type_wise_data[res_data.fy_code],function(key,stats){
-                labels.push(key);
-                count.push(stats)
-            });
-            legend_display = true;
-            axis_scale=true;
-            scale_label=true;
-            label_string = 'निर्णय प्रकार';
-            title='आर्थिक बर्ष अनुसार विभिन्न प्रकारका निर्णय संख्या'
+            // Add the canvas element to the PDF document
+            pdf.set(options).from(canvas).save();
 
-            data_new= {
-                labels: labels,
-                datasets: [{    
-                    label: 'संख्या',
-                    data: count,
-                    maxBarThickness: 20,
-                    categoryPercentage: 1,
-                    barPercentage:2,
-                    backgroundColor: customBackgroundColor1,
-                }]
             }
-        }
 
-        var myChart = new Chart(ctx, {
-            type: type,
-            data:data_new,
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: title,
-                    fontSize: 15,
-                    fontColor:'black',
-                    fontFamily:'Poppins'
-                },
-                animation: {
-                    animateScale: true,
-                    animateRotate: true
-                },
-                tooltips: {
-                    enabled :true,
-                    mode: 'index',
-                    displayColors:true,
-                    titleFont:'Poppins',
-                    titleFontSize:13,
-                    bodyFontSize:12,
-                    bodyFont:'Poppins',
-                    callbacks: {
-                        label: function(tooltipItem, data) {
-                            if(data.type == 'pie' || data.type == 'doughnut'){
-                                var label = data.labels[tooltipItem.index];
-                                label += ' : ' + data.datasets[0].data[tooltipItem.index];
-                            }else{
-                                var label = data.datasets[tooltipItem.datasetIndex].label;
-                                label += ' : '+data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                            }
-                    
-                            return label;
-                        },
-                    }
-                },
-                legend: {
-                    display: legend_display,
-                    position:'top',
-                    labels: {
-                        fontColor: 'black',
-                        fontSize:12,
-                        fontFamily:'Poppins',
-                    }
-                },
-                scales: {
-                    yAxes: [{
-                        display:axis_scale,
-                        ticks: {
-                            beginAtZero: true,
-                            fontColor:'black',
-                            fontFamily:'Poppins'
-                        },
-                        scaleLabel: {
-                            display: scale_label,
-                            labelString: 'संख्या '
-                        }
-                    }],
-                    xAxes: [{
-                        display:axis_scale,
-                        scaleLabel: {
-                            display: scale_label,
-                            labelString: label_string
-                        }
-                    }],
-                }
-            },
-        });
-}
+        function exportCombinedCharts(elementIds, filename) {
+            // Create a new HTML2PDF instance
+            var pdf = new html2pdf();
+
+            // Create a new canvas to combine the pie charts
+            var combinedCanvas = document.createElement('canvas');
+            var ctx = combinedCanvas.getContext('2d');
+
+            // Define the dimensions for the combined canvas
+            var width = 1600; // Adjust as needed
+            var height = 400; // Adjust as needed
+            combinedCanvas.width = width;
+            combinedCanvas.height = height;
+
+            // Calculate the width for each pie chart
+            var chartWidth = width / elementIds.length;
+
+            // Iterate through each canvas element
+            elementIds.forEach(function(elementId, index) {
+                // Get the canvas element
+                var canvas = document.getElementById(elementId);
+
+                // Draw each pie chart on the combined canvas
+                ctx.drawImage(canvas, index * chartWidth, 0, chartWidth, height);
+            });
+
+            // Export the combined canvas as PDF
+            var options = {
+                filename: filename + '.pdf',
+                image: { type: 'pdf' },
+                html2canvas: { scale: 1 },
+                jsPDF: { format: 'a3', orientation: 'landscape' }
+            };
+
+            // Add the combined canvas to the PDF document
+            pdf.set(options).from(combinedCanvas).save();
+            }
 
 
-        
+
     </script>
-@endsection
+ @endsection

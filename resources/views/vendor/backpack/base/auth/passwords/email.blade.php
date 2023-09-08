@@ -2,16 +2,13 @@
 
 <!-- Main Content -->
 @section('content')
-<div class="login-container py-5">
-    <div class="d-flex justify-content-center mb-2 mr-5">
-      <img src="{{url('img/login-logo.png')}}" alt="government logo" class="gov-logo">
-    </div>
-    <div class="login-panel mx-auto">
-        <h3 class="text-center my-4 text-white">पासवर्ड रिसेट गर्नु होस्</h3>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-6">
+            <h3 class="text-center mb-4">{{ trans('backpack::base.reset_password') }}</h3>
             <div class="nav-steps-wrapper">
                 <ul class="nav nav-tabs">
-                  <li class="nav-item active"><a class="nav-link active" href="#tab_1" data-toggle="tab"><strong>स्टेप १.</strong> इमेल पुष्टी गर्नुहोस</a></li>
-                  <li class="nav-item"><a class="nav-link disabled text-muted"><strong>स्टेप २</strong> नया पासवर्ड राख्नुहोस</a></li>
+                  <li class="nav-item active"><a class="nav-link active" href="#tab_1" data-toggle="tab"><strong>{{ trans('backpack::base.step') }} 1.</strong> {{ trans('backpack::base.confirm_email') }}</a></li>
+                  <li class="nav-item"><a class="nav-link disabled text-muted"><strong>{{ trans('backpack::base.step') }} 2.</strong> {{ trans('backpack::base.choose_new_password') }}</a></li>
                 </ul>
             </div>
             <div class="nav-tabs-custom">
@@ -42,7 +39,7 @@
                         <div class="form-group mb-3">
                             <div>
                                 <button type="submit" class="btn btn-block btn-primary">
-                                    पासवर्ड रिसेट लिंक पठाउनु होस्
+                                    {{ trans('backpack::base.send_reset_link') }}
                                 </button>
                             </div>
                         </div>
@@ -56,7 +53,12 @@
               </div>
 
               <div class="text-center mt-4">
-                <a class="text-white" style="text-decoration: none;" href="{{ route('backpack.auth.login') }}">लग इन</a>
-            </div>
+                <a href="{{ route('backpack.auth.login') }}">{{ trans('backpack::base.login') }}</a>
+
+                @if (config('backpack.base.registration_open'))
+                / <a href="{{ route('backpack.auth.register') }}">{{ trans('backpack::base.register') }}</a>
+                @endif
+              </div>
+        </div>
     </div>
 @endsection

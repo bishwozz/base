@@ -16,18 +16,19 @@
             @php ($optionPointer++)
 
             @if( isset($field['inline']) && $field['inline'] )
-
-            <label class="radio-inline" for="{{$field['name']}}_{{$optionPointer}}">
-                <input data-field-toggle="{{ json_encode($field['hide_when']) }}" type="radio" id="{{$field['name']}}_{{$optionPointer}}" name="{{$field['name']}}" value="{{$value}}" {{$optionValue!=='' && $optionValue == $value ? ' checked': ''}}> {!! $label !!}
-            </label>
-
+            <div class="form-check form-check-inline">
+                <label class="radio-inline" for="{{$field['name']}}_{{$optionPointer}}">
+                    <input data-field-toggle="{{ json_encode($field['hide_when']) }}" type="radio" class="form-check-input" id="{{$field['name']}}_{{$optionPointer}}" name="{{$field['name']}}" value="{{$value}}" @include('crud::inc.field_attributes') {{$optionValue!=='' && $optionValue == $value ? ' checked': ''}} > {!! $label !!}
+                </label>
+            </div>
             @else
 
             <div class="radio">
                 <label for="{{$field['name']}}_{{$optionPointer}}">
-                    <input data-field-toggle="{{ json_encode($field['hide_when']) }}" type="radio" id="{{$field['name']}}_{{$optionPointer}}" name="{{$field['name']}}" value="{{$value}}" {{$optionValue!=='' && $optionValue == $value ? ' checked': ''}}> {!! $label !!}
+                    <input data-field-toggle="{{ json_encode($field['hide_when']) }}" type="radio" class="form-check-input" id="{{$field['name']}}_{{$optionPointer}}" name="{{$field['name']}}" value="{{$value}}" @include('crud::inc.field_attributes') {{$optionValue!=='' && $optionValue == $value ? ' checked': ''}} > {!! $label !!}
                 </label>
             </div>
+
 
             @endif
 
@@ -53,7 +54,9 @@
     @endpush
 
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
+    @if(!$crud->enableDialog)
     @push('crud_fields_scripts')
+    @endif
     <script>
         jQuery(document).ready(function($){
             window.$hiddenFields = window.$hiddenFields || {};
@@ -86,7 +89,10 @@
             });
         });
     </script>
-    @endpush
+    @if(!$crud->enableDialog)
+        @endpush
+    @endif
+    
 
 @endif
 {{-- End of Extra CSS and JS --}}

@@ -24,8 +24,6 @@ class MstNepaliMonthCrudController extends BaseCrudController
         CRUD::setModel(\App\Models\CoreMaster\MstNepaliMonth::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/mst-nepali-month');
         CRUD::setEntityNameStrings(trans('menu.nepalimonth'), trans('menu.nepalimonth'));
-        // $this->crud->denyAccess(['create','update','delete']);
-        $this->checkPermission();
     }
 
     /**
@@ -41,6 +39,7 @@ class MstNepaliMonthCrudController extends BaseCrudController
             $this->addCodeColumn(),
             $this->addNameLcColumn(),
             $this->addNameEnColumn(),
+            $this->addDisplayOrderColumn(),
             ];
             $this->crud->addColumns($cols);
 
@@ -66,6 +65,7 @@ class MstNepaliMonthCrudController extends BaseCrudController
             $this->addPlainHtml(),
             $this->addNameEnField(),
             $this->addNameLcField(),
+            $this->addDisplayOrderField(),
         ];
         $this->crud->addFields($arr);
         /**

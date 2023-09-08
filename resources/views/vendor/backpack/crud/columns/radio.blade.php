@@ -5,8 +5,7 @@
     $column['escaped'] = $column['escaped'] ?? true;
     $column['prefix'] = $column['prefix'] ?? '';
     $column['suffix'] = $column['suffix'] ?? '';
-    $column['text'] = $column['options'][data_get($entry, $column['key'])] ?? '';
-
+    $column['text'] = $column['default'] ?? '-';
 
     if($column['value'] instanceof \Closure) {
         $column['value'] = $column['value']($entry);

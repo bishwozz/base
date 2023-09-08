@@ -73,7 +73,7 @@ class MySQLSchemaManager extends AbstractSchemaManager
      */
     public function listTableDetails($name)
     {
-        Deprecation::triggerIfCalledFromOutside(
+        Deprecation::trigger(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pull/5595',
             '%s is deprecated. Use introspectTable() instead.',

@@ -5,7 +5,7 @@
     $column['escaped'] = $column['escaped'] ?? true;
     $column['prefix'] = $column['prefix'] ?? '';
     $column['suffix'] = $column['suffix'] ?? '';
-    $column['limit'] = $column['limit'] ?? 80;
+    $column['limit'] = $column['limit'] ?? 200;
 
     if($column['value'] instanceof \Closure) {
         $column['value'] = $column['value']($entry);

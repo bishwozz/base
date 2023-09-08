@@ -20,11 +20,8 @@
     $permission_collection= [];
   foreach($results_array as $key=>$name){
     $entity_arr = explode(' ',$name);
-    if(!in_array(end($entity_arr),excludeModels())){
-        $permission_collection[end($entity_arr)][] = $entity_arr[0];
-    }
+    $permission_collection[end($entity_arr)][] = $entity_arr[0];
   }
-
 @endphp
 
 <span>
@@ -33,7 +30,7 @@
             <span>
                 @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_start')
                     @if($column['escaped'])
-                    <span class="text-primary mr-3 font-weight-bold" style="line-height: 1.5rem;">{{trans('permission_role.'.$key) }}</span> => &nbsp;&nbsp; {{implode("  ,  ",$text) }}
+                    <span class="text-primary mr-3" style="line-height: 1.5rem;">{{$key}}</span> => &nbsp;&nbsp; {{implode("  ,  ",$text) }}
                     @else
                         {!! $text !!}
                     @endif

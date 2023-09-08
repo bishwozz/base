@@ -6,9 +6,9 @@
 
   // calculate the checklist options
   if (!isset($field['options'])) {
-    $field['options'] = $field['model']::all()->pluck($identifiable_attribute, $key_attribute)->toArray();
+      $field['options'] = $field['model']::all()->pluck($identifiable_attribute, $key_attribute)->toArray();
   } else {
-    $field['options'] =$field['options']->pluck($identifiable_attribute, $key_attribute)->toArray();
+      $field['options'] = call_user_func($field['options'], $field['model']::query());
   }
 
   // calculate the value of the hidden input
@@ -22,54 +22,39 @@
 
 
   $permission_collection= [];
-  $dir_permission_collection= [];
   foreach($field['options'] as $key=>$name){
     $entity_arr = explode(' ',$name);
     $permission_collection[end($entity_arr)][$key] = $entity_arr[0];
   }
-  $entity_dirs = modelCollection()['entity_dir']; 
-  foreach($entity_dirs as $a_key=>$arr){
-    foreach($permission_collection as $c_key=>$collection){
-      if(in_array($c_key,$arr)){
-        $dir_permission_collection[$a_key][$c_key]=$collection;
-      }
-    }
-  }
-
-
 @endphp
 @include('crud::fields.inc.wrapper_start')
 <hr/>
-    <label class="font-weight-bold bg-secondary px-2 rounded">अनुपति</label>
+    <label>{!! $field['label'] !!}</label>
     @include('crud::fields.inc.translatable_icon')
     <input type="hidden" value="{{$field['value']}}" name="{{ $field['name'] }}">
 
-    @foreach($dir_permission_collection as $dir_key=>$per_collection)
-      </br>
-      <h6><span class="font-weight-bold bg-success p-1 px-2 ml-2 rounded">{{ $dir_key }}</span></h6>
-      @foreach($per_collection as $key=>$collection)
-        <div class="row ml-3">
-          <div class="col-md-3 font-weight-bold text-violet"><span>{{trans('permission_role.'.$key) }}</span></div>
-            <div class="col-sm-1" style="cursor: pointer !important;">
-              <div class="checkbox">
-              <label class="font-weight-normal" style="cursor: pointer">
-                  <input type="checkbox" id="{{$key}}" value onclick="checkall('{{$key}}','{{json_encode($collection)}}')"> All
-              </label>
-              </div>
+    @foreach($permission_collection as $key=>$collection)
+      <div class="row">
+        <div class="col-md-3"><span>{{$key}}</span></div>
+          <div class="col-sm-1" style="cursor: pointer !important;">
+            <div class="checkbox">
+            <label class="font-weight-normal" style="cursor: pointer">
+                <input type="checkbox" id="{{$key}}" value onclick="checkall('{{$key}}','{{json_encode($collection)}}')"> All
+            </label>
             </div>
+          </div>
 
-            @foreach($collection as $key=>$option)
-              <div class="col-sm-2" style="cursor: pointer !important;">
-                  <div class="checkbox">
-                  <label class="font-weight-normal" style="cursor: pointer">
-                      <input type="checkbox" value="{{ $key }}"> {{ $option }}
-                  </label>
-                  </div>
-              </div>
-            @endforeach
-        </div>
+          @foreach($collection as $key=>$option)
+            <div class="col-sm-2" style="cursor: pointer !important;">
+                <div class="checkbox">
+                <label class="font-weight-normal" style="cursor: pointer">
+                    <input type="checkbox" value="{{ $key }}"> {{ $option }}
+                </label>
+                </div>
+            </div>
+        @endforeach
+    </div>
 
-      @endforeach
     @endforeach
 
     {{-- <div class="row">

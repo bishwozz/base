@@ -1,4 +1,5 @@
 @extends(backpack_view('layouts.top_left'))
+
 @php
 	// Merge widgets that were fluently declared with widgets declared without the fluent syntax: 
 	// - $data['widgets']['before_content']
@@ -13,7 +14,7 @@
 @endphp
 
 @section('before_breadcrumbs_widgets')
-	@include(backpack_view('inc.widgets'), [ 'w idgets' => app('widgets')->where('section', 'before_breadcrumbs')->toArray() ])
+	@include(backpack_view('inc.widgets'), [ 'widgets' => app('widgets')->where('section', 'before_breadcrumbs')->toArray() ])
 @endsection
 
 @section('after_breadcrumbs_widgets')
@@ -23,6 +24,10 @@
 @section('before_content_widgets')
 	@include(backpack_view('inc.widgets'), [ 'widgets' => app('widgets')->where('section', 'before_content')->toArray() ])
 @endsection
+
+@section('content')
+@endsection
+
 @section('after_content_widgets')
 	@include(backpack_view('inc.widgets'), [ 'widgets' => app('widgets')->where('section', 'after_content')->toArray() ])
 @endsection

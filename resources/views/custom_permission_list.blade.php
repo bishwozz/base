@@ -56,7 +56,7 @@ $permissions = App\Models\Permission::pluck('name')->map(function($item){
              return end($exploded);
 });
 
-$models = modelCollection()['final_output'];
+$models = modelCollection();
 $permissions = array_values(array_unique($permissions->toArray()));
 @endphp
 

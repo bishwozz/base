@@ -3,10 +3,9 @@ namespace App\Utils;
 
 use Carbon\Carbon;
 use App\DateSetting;
-use App\Base\Helpers\NepaliCalendar;
 
 class DateHelper
-{
+{       
     // public $nepalilDate;
 
     public function __construct()
@@ -32,7 +31,7 @@ class DateHelper
         $new_day_ad = $day_ad + $days_to_be_added;
 
         $noOfDaysAdMonth = $res->days_ad;
-
+        
         if($new_day_ad > $noOfDaysAdMonth)
         {
             $new_day_ad = $new_day_ad - $noOfDaysAdMonth;
@@ -43,8 +42,8 @@ class DateHelper
                 $month_ad = 1;
             }
         }
-
-        return $year_ad .'-'. $month_ad .'-'. $new_day_ad;
+        
+        return $year_ad .'/'. $month_ad .'/'. $new_day_ad;
     }
 
     //convert ad to bs
@@ -60,21 +59,18 @@ class DateHelper
 
         //ad date
         $dayMonthYearAd = $this->getDayMonthYear($res->date_ad);
-
+        
         $day_ad = $dayMonthYearAd['day'];
-        // $day_ad = 17;
-
+        
         $days_to_be_added = $input_day_ad - $day_ad;//subtract input day and the initial date
-
+        
         //bs date
         $dayMonthYearBs = $this->getDayMonthYear($res->date_bs);
         $year_bs = $dayMonthYearBs['year'];
         $month_bs = $dayMonthYearBs['month'];
         $day_bs = $dayMonthYearBs['day'];
 
-
         $new_day_bs = $day_bs + $days_to_be_added;
-        // dd($dayMonthYearBs,$new_day_bs,$day_ad);
 
         if($new_day_bs < 1){//new_day_bs will be in negative
             if($month_bs == '01'){
@@ -88,7 +84,7 @@ class DateHelper
             //get no of days of new month
             $newNoOfDaysBs = $res->days_bs;
             $new_day_bs = $newNoOfDaysBs + $new_day_bs;
-        }
+        } 
 
           // For month condition
           if(strlen($month_bs) === 1)
@@ -97,15 +93,15 @@ class DateHelper
           }else{
               $month_bs = $month_bs;
           }
-
+  
           // For day condition
           if(strlen($new_day_bs) === 1){
               $new_day_bs = str_pad($new_day_bs,2,0,STR_PAD_LEFT);
           }else{
               $new_day_bs = $new_day_bs;
           }
-
-          return ($year_bs .'-'. $month_bs .'-'. $new_day_bs);
+  
+          return ($year_bs .'-'. $month_bs .'-'. $new_day_bs);    
     }
 
     //calculate fiscal year
@@ -118,11 +114,13 @@ class DateHelper
         $nxtYear = $year + 1;
         if($date['month'] < 4)
         {
+            $year = substr($year,strlen($year)-2,strlen($year));
             return $preYear.'/'.$year;
         } else {
+            $nxtYear = substr($nxtYear,strlen($nxtYear)-2,strlen($nxtYear));
             return $year.'/'.$nxtYear;
         }
-    }
+    }    
 
     //explode date
     public function getDayMonthYear($date)
@@ -132,11 +130,11 @@ class DateHelper
         }else{
             $result_date = explode('/', $date);
         }
-
+        
         $year = $result_date[0];
         $month = $result_date[1];
         $day = $result_date[2];
-
+        
         $data['year'] = $year;
         $data['month'] = $month;
         $data['day'] = $day;
@@ -156,10 +154,10 @@ class DateHelper
         $startAd = $this->convertAdFromBs($start);
         $endAd = $this->convertAdFromBs($end);
 
-        $total['total_days'] = Carbon::parse($startAd)->diffInDays($endAd);
+        $total['total_days'] = Carbon::parse($startAd)->diffInDays($endAd);        
         $total['total_months'] = Carbon::parse($startAd)->diffInMonths($endAd);
         $total['total_years'] = Carbon::parse($startAd)->diffInYears($endAd);
-
+        
         return $total;
     }
 
@@ -177,7 +175,7 @@ class DateHelper
             $finalDiff =  $this->dateDiffHelper($startDate, $endDate);
 
         } else if($e > $s){ //if end date is greater than start date
-
+            
             $startDate = $this->getDayMonthYear($end);
             $endDate = $this->getDayMonthYear($start);
 
@@ -211,7 +209,7 @@ class DateHelper
         $endDay = $endDate['day'];
 
         $dayDiff = $startDay - $endDay;
-
+            
         $res = DateSetting::where('year_bs', $startYear)
         ->where('month_bs', $startMonth)->first();
 
@@ -229,10 +227,10 @@ class DateHelper
             }
 
             $diffDate = $this->checkMonth($newStartMonth, $endMonth, $startYear, $endYear);
-
+            
         } else { //if day is greater than 1 store day diff as newDay
             $newStartDay = $dayDiff;
-            $diffDate = $this->checkMonth($startMonth, $endMonth, $startYear, $endYear);
+            $diffDate = $this->checkMonth($startMonth, $endMonth, $startYear, $endYear); 
         }
 
         $date['year'] = $diffDate['newStartYear'];
@@ -264,16 +262,16 @@ class DateHelper
         return $newDate;
     }
     /* public function getAdDate($dayAd, $day, $month, $year, $ad_total_day)
-    {
+    {  
 
         $newDay = $dayToAdd + $day;
         if ($newDay > $ad_total_day) {
             $newDay = (int)($newDay % $ad_total_day);
             $month++;
-
+                    
         }
 
-        return $year.'/'.$month.'/'.$newDay;
+        return $year.'/'.$month.'/'.$newDay;                
     } */
 
 
@@ -286,13 +284,6 @@ class DateHelper
     public function currentDate()
     {
         return Carbon::now()->format('Y/m/d');
-    }
-
-    public function get_day_in_word($day){
-        return NepaliCalendar::get_day_of_week_eng_to_nep($day);
-    }
-    public function get_month_in_word($month){
-        return NepaliCalendar::get_nepali_month($month);
     }
 
 }

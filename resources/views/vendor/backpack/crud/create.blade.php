@@ -1,14 +1,7 @@
-
 @extends(backpack_view('blank'))
 
 @php
-	use App\Models\Ministry;
-	use DigitallyHappy\Assets\Facades\Assets;
-
-	$ministry_id = null;
-	$ministry_name = null;
-	$output_string = null;
-	$defaultBreadcrumbs = [
+  $defaultBreadcrumbs = [
     trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
     $crud->entity_name_plural => url($crud->route),
     trans('backpack::crud.add') => false,
@@ -16,34 +9,12 @@
 
   // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
   $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
-//   dd($crud->getRoute());
-
-if(($crud->getRoute() == "admin/ministry")){
-		// $ministry_name = \App\Models\Ministry::where('id',$entry->getKey())->pluck('name_lc')->first();
-  }
-  $segments = explode("/", $crud->getRoute());
-
-
-	// Remove the segment at index 2 (0-based index)
-	if (isset($segments[2])) {
-		$ministry_id = $segments[2];
-		unset($segments[2]);
-	}
-	if($segments){
-
-		$output_string = implode("/", $segments);
-	}
-
-  if($output_string == "admin/ministry/ministryemployee" || $output_string == "admin/ministry/ministrymember"){
-
-		$ministry_name = \App\Models\Ministry::where('id', $ministry_id)->pluck('name_lc')->first();
-  }
 @endphp
 
 @section('header')
 	<section class="container-fluid">
 	  <h2>
-        <span class="text-capitalize">{!! $crud->getHeading() ?? $crud->entity_name_plural !!} - {!!  $ministry_name !!}</span>
+        <span class="text-capitalize">{!! $crud->getHeading() ?? $crud->entity_name_plural !!}</span>
         <small>{!! $crud->getSubheading() ?? trans('backpack::crud.add').' '.$crud->entity_name !!}.</small>
 
         @if ($crud->hasAccess('list'))
@@ -63,9 +34,9 @@ if(($crud->getRoute() == "admin/ministry")){
 
 		  <form method="post"
 		  		action="{{ url($crud->route) }}"
-				{{-- @if ($crud->hasUploadFields('create')) --}}
+				@if ($crud->hasUploadFields('create'))
 				enctype="multipart/form-data"
-				{{-- @endif --}}
+				@endif
 		  		>
 			  {!! csrf_field() !!}
 		      <!-- load the view from the application if it exists, otherwise load the one in the package -->

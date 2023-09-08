@@ -2,7 +2,7 @@
 	@if (!$crud->model->translationEnabled())
 
 	<!-- Single edit button -->
-	<a href="{{ url($crud->route.'/'.$entry->getKey().'/show') }}" class="btn btn-sm btn-link btn-primary show-btn" data-toggle="tooltip" title="Preview"><i class="la la-eye"></i></a>
+	<a href="{{ url($crud->route.'/'.$entry->getKey().'/show') }}" class="btn btn-sm btn-link"><i class="la la-eye"></i> {{ trans('backpack::crud.preview') }}</a>
 
 	@else
 

@@ -17,8 +17,7 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-        "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy"
+        "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues"
     },
     "config": {
         "platform": {

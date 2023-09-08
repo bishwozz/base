@@ -24,8 +24,6 @@ class MstFedLocalLevelTypeCrudController extends BaseCrudController
         CRUD::setModel(\App\Models\CoreMaster\MstFedLocalLevelType::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/mst-fed-local-level-type');
         CRUD::setEntityNameStrings(trans('menu.localLevelType'), trans('menu.localLevelType'));
-        // $this->crud->denyAccess(['create','update','delete']);
-        $this->checkPermission();
     }
 
     /**
@@ -40,7 +38,6 @@ class MstFedLocalLevelTypeCrudController extends BaseCrudController
             $this->addRowNumberColumn(),
             $this->addNameLcColumn(),
             $this->addNameEnColumn(),
-            $this->addIsActiveColumn(),
             ];
             $this->crud->addColumns($cols);
     }
@@ -60,7 +57,6 @@ class MstFedLocalLevelTypeCrudController extends BaseCrudController
             $this->addPlainHtml(),
             $this->addNameLcField(),
             $this->addNameEnField(),
-            $this->addIsActiveField()
         ];
          $this->crud->addFields($arr);
         /**

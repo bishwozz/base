@@ -8,7 +8,7 @@
     $multiple = isset($field['multiple']) && $field['multiple']===false ? '': 'multiple';
 @endphp
 
-@include('crud::fields.inc.wrapper_start')
+<div @include('crud::inc.field_wrapper_attributes') >
     <label>{!! $field['label'] !!}</label>
     @include('crud::inc.field_translatable_icon')
     <select
@@ -43,7 +43,7 @@
     @if (isset($field['hint']))
         <p class="help-block">{!! $field['hint'] !!}</p>
     @endif
-@include('crud::fields.inc.wrapper_end')
+</div>
 
 
 {{-- ########################################## --}}
@@ -66,7 +66,7 @@
         <!-- include select2 js-->
         <script src="{{ asset('packages/select2/dist/js/select2.full.min.js') }}"></script>
         @if (app()->getLocale() !== 'en')
-        <script src="{{ asset('packages/select2/dist/js/i18n/' . app()->getLocale() . '.js') }}"></script>
+        <!-- <script src="{{ asset('packages/select2/dist/js/i18n/' . app()->getLocale() . '.js') }}"></script> -->
         @endif
         <script>
             function bpFieldInitSelect2MultipleElement(element) {

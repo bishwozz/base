@@ -8,7 +8,6 @@ use Doctrine\Inflector\Inflector;
 use Illuminate\Support\Facades\DB;
 use app\Base\Operations\CreateOperation;
 use app\Base\Operations\UpdateOperation;
-use Doctrine\Inflector\NoopWordInflector;
 use Backpack\PermissionManager\app\Http\Requests\PermissionStoreCrudRequest as StoreRequest;
 use Backpack\PermissionManager\app\Http\Requests\PermissionUpdateCrudRequest as UpdateRequest;
 
@@ -130,9 +129,7 @@ class PermissionCrudController extends BaseCrudController
         $menu_items = modelCollection();
         $menu = $menu_items[$request->entity];
 
-        $inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
-
-        $link = $inflector->tableize($menu);        
+        $link = Inflector::tableize($menu);        
         $link = \str_replace('_','-',$link);
 
         DB::beginTransaction();

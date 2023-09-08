@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\User;
-use App\Models\Notifications;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -15,10 +13,6 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function (User $user, int $roles_id) {
+Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
-Broadcast::channel('data.{roles_id}', function ($user) {
-    return $user->id === Notifications::findOrNew($roles_id)->roles_id;
-});
-

@@ -1,4 +1,4 @@
-    const mix = require('laravel-mix');
+const mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,13 +11,6 @@
  |
  */
 
- mix.webpackConfig({
-    resolve: {
-        extensions: ['.js', '.vue', '.json'],
-    },
-});
-
-
 mix.js("resources/js/app.js", "public/js")
     .sass("resources/sass/app.scss", "public/css")
     .styles(
@@ -29,8 +22,7 @@ mix.js("resources/js/app.js", "public/js")
             "public/packages/select2-bootstrap-theme/dist/select2-bootstrap.min.css",
             "public/packages/dataTables-custom/css/dataTables.bootstrap4.min.css",
             "public/packages/dataTables-custom/css/select.dataTables.min.css",
-            "public/packages/sweetalert2/dist/sweetalert2.min.css",
-            // "public/packages/bootstrap-iconpicker/icon-fonts/font-awesome-4.7.0/css/font-awesome.min.css",
+            "public/packages/bootstrap-iconpicker/icon-fonts/font-awesome-4.7.0/css/font-awesome.min.css",
             "public/css/nepali.datepicker.v2.2.min.css",
             "public/css/jquery.fancybox.min.css",
         ],
@@ -42,14 +34,12 @@ mix.js("resources/js/app.js", "public/js")
             "public/packages/select2/dist/js/select2.full.min.js",
             "public/packages/moment/min/moment.min.js",
             "public/js/fancybox.v3.5.7.min.js",
+            'node_modules/gasparesganga-jquery-loading-overlay/dist/loadingoverlay.min.js',
             "public/packages/dataTables-custom/js/jquery.dataTables.min.js",
             "public/packages/dataTables-custom/js/dataTables.bootstrap4.min.js",
             "public/packages/dataTables-custom/js/dataTables.select.min.js",
             "public/js/nepali.datepicker.v2.2.min.js",
             "public/js/date_helper.js",
-            "public/packages/sweetalert2/dist/sweetalert2.min.js",
-            "public/js/custom.js",
-            "node_modules/gasparesganga-jquery-loading-overlay/dist/loadingoverlay.min.js"
         ],
         "public/js/vendor.js"
     )

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin\CoreMaster;
 
 use App\Base\BaseCrudController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use App\Models\CoreMaster\MstFedProvince;
 use App\Http\Requests\CoreMaster\MstFedProvinceRequest;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -23,8 +26,26 @@ class MstFedProvinceCrudController extends BaseCrudController
         CRUD::setModel(\App\Models\CoreMaster\MstFedProvince::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/mst-fed-province');
         CRUD::setEntityNameStrings(trans('menu.province'), trans('menu.province'));
-        // $this->crud->denyAccess(['create','update','delete']);
         $this->checkPermission();
+        
+        // $data = DB::table('mst_fed_coordinates')->get();
+
+        // array('id' => '',
+        // 'code' => '',
+        // 'level' => '',
+        // 'coordinates' =>''
+        // );
+
+        // $array='';
+        // foreach($data as $d){
+        //    $array .= "array('id'=>'$d->id','code'=>'$d->code','level'=>'$d->level','coordinates'=>'$d->coordinates'),"."\n"; 
+
+        // }
+
+        // Storage::put('geo_coordinates',$array);
+
+        // dd($array);
+    
     }
 
     /**
@@ -39,7 +60,6 @@ class MstFedProvinceCrudController extends BaseCrudController
         $this->addRowNumberColumn(),
         $this->addNameLcColumn(),
         $this->addNameEnColumn(),
-        $this->addIsActiveColumn(),
 
         ];
         $this->crud->addColumns($cols);
@@ -58,7 +78,6 @@ class MstFedProvinceCrudController extends BaseCrudController
             $this->addPlainHtml(),
             $this->addNameLcField(),
             $this->addNameEnField(),
-            $this->addIsActiveField()
         ];
         $this->crud->addFields($arr);
         /**

@@ -1,10 +1,6 @@
 @extends(backpack_view('blank'))
 
-
 @php
-  $ministry_id = null;
-  $ministry_name = null;
-  $output_string = null;
   $defaultBreadcrumbs = [
     trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
     $crud->entity_name_plural => url($crud->route),
@@ -13,35 +9,19 @@
 
   // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
   $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
-  $segments = explode("/", $crud->getRoute());
-
-	// Remove the segment at index 2 (0-based index)
-	if (isset($segments[2])) {
-		$ministry_id = $segments[2];
-		unset($segments[2]);
-	}
-	if($segments){
-
-		$output_string = implode("/", $segments);
-	}
-  if($output_string == "admin/ministry/ministryemployee" || $output_string == "admin/ministry/ministrymember"){
-
-		$ministry_name = \App\Models\Ministry::where('id', $ministry_id)->pluck('name_lc')->first();
-  }
 @endphp
 
 @section('header')
   <div class="container-fluid">
-    <h2>
-      <span class="text-capitalize">{!! $crud->getHeading() ?? $crud->entity_name_plural !!} - {!!  $ministry_name !!}</span>
-      <small id="datatable_info_stack">{!! $crud->getSubheading() ?? '' !!}</small>
-    </h2>
+  <h3>
+      @if(isset($custom_title))
+        <span class="text-capitalize">{{ $crud->entity_name_plural.' ('.$custom_title.')' }}</span>
+      @else
+        <span class="text-capitalize">{!! $crud->getHeading() ?? $crud->entity_name_plural !!}</span>
+        <small id="datatable_info_stack">{!! $crud->getSubheading() ?? '' !!}</small>
+      @endif
+    </h3>
   </div>
-  @if (isset($crud->back_url))
-  <small><a href="{{ backpack_url($crud->back_url) }}" class="hidden-print back-btn ml-5"><i class="la la-angle-double-left"></i> {{ trans('Back') }}</a></small>
-
-  {{-- <small><a href="{{ backpack_url($crud->back_url) }}" class="d-print-none font-sm back-btn"><i class="la la-angle-double-left"></i> <span>Back</span></a></small> --}}
-@endif
 @endsection
 
 @section('content')
@@ -50,15 +30,11 @@
 
     <!-- THE ACTUAL CONTENT -->
     <div class="{{ $crud->getListContentClass() }}">
-      @if(!empty($list_tab_header_view))
-        @include($list_tab_header_view)
-      @endif
-
-      @if(isset($tab_links))
-        @include('admin.tab', ['links' => $tab_links])
-      @endif
+        @if(isset($tab_links))
+            @include('tab.tab', ['links' => $tab_links])
+        @endif
         <div class="row mb-0">
-          <div class="col-sm-6">
+          <div class="col-sm-8">
             @if ( $crud->buttons()->where('stack', 'top')->count() ||  $crud->exportButtons())
               <div class="d-print-none {{ $crud->hasAccess('create')?'with-border':'' }}">
 
@@ -67,7 +43,7 @@
               </div>
             @endif
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-4">
             <div id="datatable_search_stack" class="mt-sm-0 mt-2 d-print-none"></div>
           </div>
         </div>
@@ -134,7 +110,7 @@
                     {!! $column['label'] !!}
                   </th>
                 @endforeach
-                
+
                 @if ( $crud->buttons()->where('stack', 'line')->count() )
                   <th data-orderable="false"
                       data-priority="{{ $crud->getActionsColumnPriority() }}"

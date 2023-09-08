@@ -26,6 +26,32 @@
     </script>
 @endif
 
+
+
+<!-- JavaScript Libraries -->
+    {{-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> --}}
+    {{-- <script src="{{asset('homepage/js/jquery.js')}}"></script> --}}
+
+    {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script> --}}
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
+
+    <script src="{{asset('js/easing.min.js')}}"></script>
+    <script src="{{asset('js/owl.carousel.min.js')}}"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="{{asset('js/jqBootstrapValidation.min.js')}}"></script>
+    <script src="{{asset('js/contact.js')}}"></script>
+    <!-- Template Javascript -->
+    <script src="{{asset('js/main.js')}}"></script>
+    <script src="{{asset('js/fancybox.v3.5.7.min.js')}}"></script>
+    <script src="{{asset('homepage/js/chart.min.js')}}"></script>
+
+    <script src="{{asset('homepage/js/jquery.parallax.js')}}"></script>
+    <script src="{{asset('homepage/js/moment.min.js')}}"></script>
+    
+    <script src="{{asset('homepage/js/currencyFormatter.min.js')}}"></script>
+
+
 <!-- page script -->
 <script type="text/javascript">
     // To make Pace works on Ajax calls

@@ -3,6 +3,7 @@
 namespace Backpack\Generators\Console\Commands;
 
 use Backpack\Generators\Services\BackpackCommand;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class CrudModelBackpackCommand extends BackpackCommand

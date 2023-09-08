@@ -20,14 +20,42 @@
         <link rel="stylesheet" type="text/css" href="{{ mix($path, $manifest) }}">
         @endforeach
     @endif
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css')}}">
+
+
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> 
+    
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+        <!-- Libraries Stylesheet -->
+        <link href="{{asset('css/owl.carousel.min.css')}}" rel="stylesheet">
+        <link href="{{asset('css/jquery.fancybox.min.css')}}" rel="stylesheet">
+    
+        <!-- custom css -->
+        <link rel="stylesheet" href="{{asset('homepage/css/custom.css')}}">
+    
+        <!-- Customized Bootstrap Stylesheet -->
+        {{-- <link href="{{asset('css/style.css')}}" rel="stylesheet"> --}}
+
+
     @yield('after_styles')
     @stack('after_styles')
 
+    
+    @if(!empty($load_css))
+    @foreach ($load_css as $css)
+        <link rel="stylesheet" href="{{ $css }}">
+    @endforeach
+    @endif
+
+    @if(!empty($style_css))
+    <style>
+        {{ $style_css }}
+    </style>
+    @endif
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

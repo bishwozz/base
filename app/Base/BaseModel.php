@@ -5,12 +5,12 @@ use App\Models\User;
 use App\Eloquent\SoftDeletes;
 use App\Base\Traits\ComboField;
 use Illuminate\Support\Facades\DB;
-use App\Models\CoreMaster\AppSetting;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\CoreMaster\MstFiscalYear;
 use App\Models\CoreMaster\MstFedDistrict;
 use App\Models\CoreMaster\MstFedProvince;
+use App\Models\CoreMaster\MstFiscalYear;
+use App\Models\CoreMaster\AppSetting;
 use App\Models\CoreMaster\MstFedLocalLevel;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use App\Models\CoreMaster\MstFedLocalLevelType;
@@ -19,7 +19,7 @@ class BaseModel extends Model
 {
     use CrudTrait;
     use ComboField;
-    use SoftDeletes; 
+    use SoftDeletes;
 
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -41,12 +41,24 @@ class BaseModel extends Model
                 $model->created_by =  !is_null(backpack_user()) ? backpack_user()->id : 1;
             }
 
+            if(in_array('sup_org_id', $columns) && in_array('created_by', $columns)){
+                if(!backpack_user()->hasRole('superadmin'))
+                {
+                    $model->created_by =  !is_null(backpack_user()) ? backpack_user()->id : 1;
+                }
+            }
         });
 
         static::updating(function ($model){
             $columns = Schema::getColumnListing($model->getTable());
             if(in_array('updated_by', $columns)){
                 $model->created_by =  !is_null(backpack_user()) ? backpack_user()->id : 1;
+            }
+            if(in_array('sup_org_id', $columns)){
+                if(!backpack_user()->hasRole('superadmin'))
+                {
+                    $model->sup_org_id =  backpack_user()->sup_org_id;
+                }
             }
         });
     }
@@ -91,17 +103,6 @@ class BaseModel extends Model
     public function localLevelTypeEntity()
     {
         return $this->belongsTo(MstFedLocalLevelType::class,'level_type_id','id');
-    }
-
-    public function createdByEntity(){
-        return $this->belongsTo(User::class,'created_by','id');
-    }
-    public function updatedByEntity(){
-        return $this->belongsTo(User::class,'updated_by','id');
-    }
-
-    public function fiscalYearEntity(){
-        return $this->belongsTo(MstFiscalYear::class,'fiscal_year_id','id');
     }
 
 

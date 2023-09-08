@@ -511,7 +511,8 @@ class ReflectionClosure extends ReflectionFunction
                         // named arguments...
                         case ':':
                             if ($lastState === 'closure' && $context === 'root') {
-                                $state = 'closure';
+                                $state = 'ignore_next';
+                                $lastState = 'closure';
                                 $code .= $id_start.$token;
                             }
 
@@ -650,7 +651,7 @@ class ReflectionClosure extends ReflectionFunction
                             $state = 'id_name';
                             $context = 'extends';
                             $lastState = 'anonymous';
-                            break;
+                        break;
                         case '{':
                             $state = 'closure';
                             if (! $inside_structure) {

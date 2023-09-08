@@ -4,9 +4,9 @@
 	filter-type="{{ $filter->type }}"
 	class="nav-item dropdown {{ Request::get($filter->name)?'active':'' }}">
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ $filter->label }} <span class="caret"></span></a>
-    <div class="dropdown-menu1 p-0">
+    <div class="dropdown-menu1 p-0 mb-0">
       <div class="form-group backpack-filter mb-0">
-			<select id="filter_{{ $filter->name }}" name="filter_{{ $filter->name }}" class="form-control input-sm select2" data-filter-type="select2" data-filter-name="{{ $filter->name }}" placeholder="{{ $filter->placeholder }}">
+			<select id="filter_{{ $filter->name }}" name="filter_{{ $filter->name }}" {{ isset($filter->options['attributes']['onChange']) ? 'onChange='.$filter->options['attributes']['onChange'] : '' }} class="form-control input-sm select2" data-filter-type="select2" data-filter-name="{{ $filter->name }}" placeholder="{{ $filter->placeholder }}">
 				<option value="">-</option>
 				@if (is_array($filter->values) && count($filter->values))
 					@foreach($filter->values as $key => $value)
@@ -51,10 +51,15 @@
 	  .select2-container--bootstrap .select2-dropdown {
 	  	margin-top: -2px;
 	  	margin-left: -1px;
+		width:270px !important;
 	  }
 	  .select2-container--bootstrap {
 	  	position: relative!important;
 	  	top: 0px!important;
+	  }
+
+	  .dropdown-menu1{
+		  width:150px !important;
 	  }
     </style>
 @endpush
@@ -67,7 +72,7 @@
 	<!-- include select2 js-->
     <script src="{{ asset('packages/select2/dist/js/select2.full.min.js') }}"></script>
     @if (app()->getLocale() !== 'en')
-    <script src="{{ asset('packages/select2/dist/js/i18n/' . app()->getLocale() . '.js') }}"></script>
+    <!-- <script src="{{ asset('packages/select2/dist/js/i18n/' . app()->getLocale() . '.js') }}"></script> -->
     @endif
     
     <script>
@@ -112,6 +117,14 @@
 						$("li[filter-name="+parameter+"]").removeClass("active");
 						$("li[filter-name="+parameter+"]").find('.dropdown-menu').removeClass("show");
 					}
+					$(this).select2('close');
+				}).on('select2:unselecting', function() {
+					$(this).data('unselecting', true);
+				}).on('select2:opening', function(e) {
+					if ($(this).data('unselecting')) {
+						$(this).removeData('unselecting');
+						e.preventDefault();
+					}
 				});
 
 				// when the dropdown is opened, autofocus on the select2
@@ -124,6 +137,7 @@
 					// console.log('select2 filter cleared');
 					$("li[filter-name="+filterName+"]").removeClass('active');
 	                $('#filter_'+filterName).val(null).trigger('change');
+					// $(this).select2('close');
 				});
             });
 		});

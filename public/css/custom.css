@@ -1,22 +1,21 @@
-/* css for login page */logo
+/* css for login page */
 .login-container {
-  height: 100%;
+  height: 100vh;
   background-image: url('../img/main-bg.png');
   background-repeat: no-repeat;
-  /* background-position: center; */
+  background-position: center;
 }
 .gov-logo {
-  max-width: 500px;
+  max-width: 229px;
 }
 .login-panel {
   background-image: url('../img/login-bg.png');
   background-size: contain;
   background-repeat: no-repeat;
   text-align: center;
-  width: 750px;
-  height: 650px;
-  padding: 30px 120px;
-  margin-top:20px;
+  width: 619px;
+  height: 492px;
+  padding: 0 120px;
 }
 .login-panel .cabinet-logo {
   max-width: 225px;
@@ -33,33 +32,9 @@
   background: unset;
   padding-left: 5px;
   border: 0;
-  border-radius: 0.25rem;
+  border-radius: 12px;
   border-bottom: 1px solid #636c74;
 }
-
-
-.text-white {
-  color: #fff !important;
-}
-
-.input-group-text {
-  align-items: center;
-  background-color: #E8F0FE;
-  border: 1px solid #f1f4f8;
-  border-radius: 0.25rem;
-  color: #506690;
-  display: flex;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  margin-bottom: 0;
-  padding: 0.375rem 0.75rem;
-  text-align: center;
-  white-space: nowrap;
-  height: 37px;
-}
-
-
 .login-panel input:focus {
   color: #fff;
   background-color: unset;
@@ -67,6 +42,47 @@
 .login-panel .form-check-input:checked {
   background-color: unset;
 }
+
+.print_export_button {
+  background-color: green !important;
+  color: white !important;
+  border-radius: 5px 5px 5px 5px;
+}
+.app-header{
+  /* background: #0d3879 !important; */
+  background-image: linear-gradient(to right, #047ae6 , #ab2624);
+  /* background: #1665c0 !important; */
+}
+
+
+.accordion {
+  background: #0d3879;
+    color: #fff;
+    text-align: start !important;
+}
+
+.accordion:hover {
+  background: #0d3879 !important;
+}
+
+.fancybox-container {
+  z-index: 2222 !important;
+}
+
+
+.swal2-container {
+  z-index: 22222 !important;
+}
+
+
+
+.sidebar {
+  background-image: linear-gradient(#047ae6 , #ab2624) !important;
+  /* background: #2196f3 !important; */
+}
+/* .print_export_button.buttons-colvis {
+  background-color: red !important;
+} */
 
 @media only screen and (min-width: 600px) and (max-width:1499px) {
   .login-container {
@@ -76,14 +92,14 @@
   }
 
   .login-panel {
-    width: 600px !important;
-    height: 600px !important;
+    width: 550px !important;
+    height: 450px;
     padding: 0 110px;
     align-items: center;
 
   }
   .gov-logo {
-    max-width: 400px;
+    max-width: 200px;
   }
   .login-panel .cabinet-logo {
     max-width: 200px;
@@ -180,7 +196,7 @@
 }
 
 .badge.primary {
-  background-color: #32579F;
+  background-color: #1b2a4e;
 }
 .badge.red {
   background-color: #f44336;
@@ -213,11 +229,215 @@
   display: block;
 }
 
-.show-btn-return {
-  margin-left: 2px;
-  padding: 0px 2px 0px 3px;
+.card-counter {
+  box-shadow: 2px 2px 10px #DADADA;
+  margin: 5px;
+  padding: 20px 10px;
+  background-color: #fff;
+  height: 100px;
+  border-radius: 5px;
+  transition: .3s linear all;
+}
+
+
+
+.card-counter.primary {
+  background-color: #007bff;
+  color: #FFF;
+}
+.card-counter.primary:hover {
+  box-shadow: 4px 4px 20px #DADADA;
+  transition: .3s linear all;
+  background-color: #053a73;
+
+}
+
+.card-counter.danger {
+  background-color: #ef5350;
+  color: #FFF;
+}
+
+.card-counter.danger:hover {
+  box-shadow: 4px 4px 20px #DADADA;
+  transition: .3s linear all;
+  background-color: #ef0804;
+
+}
+
+.card-counter.success {
+  background-color: #66bb6a;
+  color: #FFF;
+}
+
+.card-counter.success:hover {
+  box-shadow: 4px 4px 20px #DADADA;
+  transition: .3s linear all;
+  background-color: #06790b;
+}
+
+.card-counter.info-counter {
+  background-color: #26c6da;
+  color: #FFF;
+}
+
+.card-counter.info-counter:hover {
+  box-shadow: 4px 4px 20px #DADADA;
+  transition: .3s linear all;
+  background-color: #0196a9;
+}
+
+.card-counter.warning {
+  background-color:rgb(255, 159, 64);
+  color: #FFF;
+}
+.card-counter.warning:hover {
+  box-shadow: 4px 4px 20px #DADADA;
+  transition: .3s linear all;
+  background-color: rgb(210,107, 6);
+}
+
+.card-counter.purple {
+  background-color:rgb(153, 102, 255);
+  color: #FFF;
+}
+
+.card-counter.purple:hover {
+  box-shadow: 4px 4px 20px #DADADA;
+  transition: .3s linear all;
+  background-color:rgb(70, 20, 171);
+}
+
+.card-counter i {
+  font-size: 5em;
+  opacity: 0.2;
+}
+
+.card-counter .count-numbers {
+  position: absolute;
+  right: 35px;
+  top: 38px;
+  font-size: 32px;
+  display: block;
+}
+
+.card-counter .count-name {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 7px;
+  /* font-style: italic; */
+  text-transform: capitalize;
+  /* opacity: 0.5; */
+  display: block;
+  font-size: 18px;
+  text-align: center;
+}
+
+legend{
+  background-color:#0d3879;
   border-radius: 4px;
-  font-size: 16px;
-  border: 1px solid #055d78;
-  background-color: red;
+  color: white;
+  padding: 4px 0;
+  font-size: 18px;
+}
+
+.fixed-textarea {
+    resize: none;
+    overflow: auto;
+    height: 100px !important;
+}
+
+
+
+input.invalid-input {
+  border-color: red;
+}
+
+
+textarea.invalid-input {
+  border-color: red !important;
+}
+
+select.invalid-input {
+  border-color: red !important;
+}
+
+.hidden {
+	display: none !important;
+}
+
+#loadingDialog {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	z-index: 2222222222 !important;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+  }
+  
+  .loadingSpinner {
+	z-index: 22222222222 !important;
+	border: 4px solid #f3f3f3;
+	border-top: 4px solid #1b2a4e;
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	animation: spin 1s linear infinite;
+	margin-bottom: 10px;
+  }
+  
+  @keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+  }
+
+
+  label.required::after {
+    content: "*" !important;
+    color: red !important;
+  }
+
+  .styled-table {
+    border-collapse: collapse;
+    margin-bottom: 25px;
+    font-size: 1.2em;
+    font-family: sans-serif;
+    min-width: 400px;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+
+
+.styled-table thead tr {
+    background-color: #2A67B9 !important;
+    color: #ffffff !important;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #2A67B9 !important;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #2A67B9;
 }

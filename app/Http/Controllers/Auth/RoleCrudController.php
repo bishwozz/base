@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Role;
-use App\Models\Permission;
 use App\Base\BaseCrudController;
 use app\Base\Operations\CreateOperation;
 use app\Base\Operations\UpdateOperation;
@@ -37,40 +36,7 @@ class RoleCrudController extends BaseCrudController
         if(!backpack_user()->hasRole('superadmin')){
             if(backpack_user()->hasRole('admin')){
                 $this->crud->addClause('where', 'id','<>',1);
-            }else{
-                if(backpack_user()->hasRole('operator')){
-                    $this->crud->addClause('where', 'id','<>',1);
-                    $this->crud->addClause('where', 'id','<>',2);
-                }else{
-                    if(backpack_user()->hasRole('ministry')){
-                        $this->crud->addClause('where', 'id','<>',1);
-                        $this->crud->addClause('where', 'id','<>',2);
-                        $this->crud->addClause('where', 'id','<>',3);
-                    }else{
-                        $this->crud->addClause('where', 'id','<>',1);
-                        $this->crud->addClause('where', 'id','<>',2);
-                        $this->crud->addClause('where', 'id','<>',3);
-                        $this->crud->addClause('where', 'id','<>',4);
-                    }
-                }
             }
-        }
-
-        //assign default role by checking for user
-        $exclude_models = \excludeModels();
-
-        $query = Permission::query();
-
-        foreach ($exclude_models as $value) {
-            $query->orWhere('name', 'like', '%'.$value.'%');
-        }
-        $permissions = $query->get();
-
-        $roles = Role::all();
-
-        foreach($roles as $role)
-        {
-            $role->givePermissionTo($permissions);
         }
     }
 
@@ -79,8 +45,8 @@ class RoleCrudController extends BaseCrudController
         $this->crud->addColumn($this->addRowNumberColumn());
 
         $this->crud->addColumn([
-            'name'  => 'field_name',
-            'label' => trans('common.name'),
+            'name'  => 'name',
+            'label' => trans('backpack::permissionmanager.name'),
             'type'  => 'text',
         ]);
         
@@ -90,7 +56,7 @@ class RoleCrudController extends BaseCrudController
         if (config('backpack.permissionmanager.multiple_guards')) {
             $this->crud->addColumn([
                 'name'  => 'guard_name',
-                'label' => trans('common.guard_type'),
+                'label' => trans('backpack::permissionmanager.guard_type'),
                 'type'  => 'text',
             ]);
         }
@@ -100,7 +66,7 @@ class RoleCrudController extends BaseCrudController
          */
         $this->crud->addColumn([
             // n-n relationship (with pivot table)
-            'label'     => mb_ucfirst(trans('common.permission')),
+            'label'     => mb_ucfirst(trans('backpack::permissionmanager.permission_plural')),
             'type'      => 'custom_permission_grid',
             'name'      => 'permissions', // the method that defines the relationship in your Model
             'entity'    => 'permissions', // the method that defines the relationship in your Model
@@ -108,6 +74,31 @@ class RoleCrudController extends BaseCrudController
             'model'     => $this->permission_model, // foreign key model
             'pivot'     => true, // on create&update, do you need to add/delete pivot table entries?
         ]);
+    }
+    public function getPermissionsss(){
+        $user = User::find(backpack_user()->id);
+        $permissions = $user->getAllPermissions();
+
+        if ($user->isSystemUser()) {
+            return Permission::all();
+        } else {
+            // $permissions = $user->getAllPermissions();
+            $role_id = backpack_user()->getRoles()[0]->id;
+            $permissions = Role::where('roles.id', $role_id)
+            ->leftjoin('role_has_permissions as rhp', 'rhp.role_id', '=', 'roles.id')
+            ->leftjoin('permissions as p', 'p.id', '=', 'rhp.permission_id')
+            ->select('p.*')
+            ->get();
+        }
+
+        // $role_id = backpack_user()->getRoles()[0]->id;
+        // $permissions = Role::where('roles.id', $role_id)
+        // ->leftjoin('role_has_permissions as rhp', 'rhp.role_id', '=', 'roles.id')
+        // ->leftjoin('permissions as p', 'p.id', '=', 'rhp.permission_id')
+        // ->select('p.*')
+        // ->get();
+        // dd($permissions);
+        return $permissions;
     }
 
     public function setupCreateOperation()
@@ -131,17 +122,17 @@ class RoleCrudController extends BaseCrudController
     private function addFields()
     {
         $this->crud->addField([
-            'name'  => 'field_name',
-            'label' =>'Display Name',
+            'name'  => 'name',
+            'label' => trans('backpack::permissionmanager.name'),
             'type'  => 'text',
             'wrapper'=>[
                 'class' => 'form-group col-md-6 required',
             ]
         ]);
-        
+
         $this->crud->addField([
-            'name'  => 'name',
-            'label' => 'Field Name',
+            'name'  => 'field_name',
+            'label' =>'Field Name',
             'type'  => 'text',
             'wrapper'=>[
                 'class' => 'form-group col-md-6 required',
@@ -151,14 +142,14 @@ class RoleCrudController extends BaseCrudController
         if (config('backpack.permissionmanager.multiple_guards')) {
             $this->crud->addField([
                 'name'    => 'guard_name',
-                'label'   => trans('common.guard_type'),
+                'label'   => trans('backpack::permissionmanager.guard_type'),
                 'type'    => 'select_from_array',
                 'options' => $this->getGuardTypes(),
             ]);
         }
 
         $this->crud->addField([
-            'label'     => ucfirst(trans('common.permission')),
+            'label'     => ucfirst(trans('backpack::permissionmanager.permission_plural')),
             'type'      => 'custom_permission_checklist',
             'name'      => 'permissions',
             'entity'    => 'permissions',

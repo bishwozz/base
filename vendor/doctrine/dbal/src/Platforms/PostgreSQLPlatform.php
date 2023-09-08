@@ -10,7 +10,6 @@ use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\PostgreSQLSchemaManager;
 use Doctrine\DBAL\Schema\Sequence;
-use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
@@ -808,36 +807,6 @@ SQL
     public function getDropForeignKeySQL($foreignKey, $table)
     {
         return $this->getDropConstraintSQL($foreignKey, $table);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDropIndexSQL($index, $table = null)
-    {
-        if ($index instanceof Index && $index->isPrimary() && $table !== null) {
-            $constraintName = $index->getName() === 'primary' ? $this->tableName($table) . '_pkey' : $index->getName();
-
-            return $this->getDropConstraintSQL($constraintName, $table);
-        }
-
-        if ($index === '"primary"' && $table !== null) {
-            $constraintName = $this->tableName($table) . '_pkey';
-
-            return $this->getDropConstraintSQL($constraintName, $table);
-        }
-
-        return parent::getDropIndexSQL($index, $table);
-    }
-
-    /**
-     * @param Table|string|null $table
-     *
-     * @return string
-     */
-    private function tableName($table)
-    {
-        return $table instanceof Table ? $table->getName() : (string) $table;
     }
 
     /**

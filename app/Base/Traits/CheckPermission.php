@@ -20,6 +20,7 @@ trait CheckPermission
     protected $permissions = [
         //methods => Access Permission
         'index' => 'list',
+        'show' => 'list',
         'search' => 'list',
         'store' => 'create',
         'create' => 'create',
@@ -27,9 +28,15 @@ trait CheckPermission
         'edit' => 'update',
         'destroy' => 'delete',
         'delete' => 'delete',
-        'getEcMp' => 'list',
-        'fetchMinistryEmployeeDetail' => 'fetchMinistryEmployeeDetail',
-        'decisionDialog' => 'decisionDialog',
+        'addMilestone' => 'create',
+        'getMilestoneData' => 'list',
+        'getproject' => 'list',
+        'addprogressRecord' => 'create',
+        'importExcel' => 'index',
+        'editprogressRecord' => 'index',
+        'timelineChart' => 'index',
+        'printTimelineBar' => 'index',
+        'getMinBudget' => 'index',
     ];
 
     public function checkPermission($include_extra_permissions=NULL)
@@ -80,9 +87,9 @@ trait CheckPermission
         jump:
         $schema = Schema::getColumnListing($this->crud->model->getTable());
         // dd($schema);
-        // if(in_array('sup_org_id',$schema) && !backpack_user()->isSystemUser()) {
-        //     $this->crud->query->where('sup_org_id',backpack_user()->sup_org_id);
-        // }
+        if(in_array('ministry_id',$schema) && !backpack_user()->isSystemUser()) {
+            $this->crud->query->where('ministry_id',backpack_user()->ministry_id);
+        }
 
 
     }

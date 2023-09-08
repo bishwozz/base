@@ -2,7 +2,7 @@
 @php
     $column['value'] = $column['value'] ?? data_get($entry, $column['name']);
     $column['escaped'] = $column['escaped'] ?? true;
-    $column['limit'] = $column['limit'] ?? 150;
+    $column['limit'] = $column['limit'] ?? 200;
     $column['prefix'] = $column['prefix'] ?? '';
     $column['suffix'] = $column['suffix'] ?? '';
     $column['text'] = $column['default'] ?? '-';
@@ -23,7 +23,7 @@
 <span>
     @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_start')
         @if($column['escaped'])
-            {{ $column['text'] }}
+            {!! $column['text'] !!}
         @else
             {!! $column['text'] !!}
         @endif

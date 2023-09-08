@@ -27,10 +27,10 @@
     <div data-repeatable-holder="{{ $field['name'] }}"></div>
 
     @push('before_scripts')
-    <div class="col-md-12 well repeatable-element row m-1 p-2" data-repeatable-identifier="{{ $field['name'] }}">
+    <div class="col-md-12 well repeatable-element row m-1 p-2 mt-3" data-repeatable-identifier="{{ $field['name'] }}">
       @if (isset($field['fields']) && is_array($field['fields']) && count($field['fields']))
         <button type="button" class="close delete-element"><span aria-hidden="true">×</span></button>
-        @foreach($field['fields'] as $subfield)
+        @foreach(array_filter($field['fields']) as $subfield)
           @php
               $subfield = $crud->makeSureFieldHasNecessaryAttributes($subfield);
               $fieldViewNamespace = $subfield['view_namespace'] ?? 'crud::fields';
@@ -89,11 +89,11 @@
         /**
          * Takes all inputs and makes them an object.
          */
-        function repeatableInputToObj(container_name) {
+        function repeatableInputToObj(field_name) {
             var arr = [];
             var obj = {};
 
-            var container = $('[data-repeatable-holder={{ $field['name'] }}]');
+            var container = $('[data-repeatable-holder='+field_name+']');
 
             container.find('.well').each(function () {
                 $(this).find('input, select, textarea').each(function () {
@@ -104,8 +104,8 @@
                 arr.push(obj);
                 obj = {};
             });
-
             return arr;
+
         }
 
         /**
@@ -114,7 +114,6 @@
         function bpFieldInitRepeatableElement(element) {
 
             var field_name = element.attr('name');
-
             // element will be a jQuery wrapped DOM node
             var container = $('[data-repeatable-identifier='+field_name+']');
 
@@ -145,7 +144,9 @@
             });
 
             if (element.val()) {
+            
                 var repeatable_fields_values = JSON.parse(element.val());
+                console.log(repeatable_fields_values);
 
                 for (var i = 0; i < repeatable_fields_values.length; ++i) {
                     newRepeatableElement(container, field_group_clone, repeatable_fields_values[i]);

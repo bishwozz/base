@@ -66,7 +66,7 @@
   </div>
 
 
-  <button type="button" class="btn btn-outline-primary btn-sm ml-1 add-repeatable-element-button">+ {{ $field['new_item_label'] ?? trans('backpack::crud.new_item') }}</button>
+  <button type="button" class="btn btn-primary btn-sm ml-1 add-repeatable-element-button">+ {{ $field['new_item_label'] ?? trans('backpack::crud.new_item') }}</button>
 
 @include('crud::fields.inc.wrapper_end')
 
@@ -83,7 +83,7 @@
         .repeatable-element {
           border: 1px solid rgba(0,40,100,.12);
           border-radius: 5px;
-          background-color:#6969694f;
+          background-color:#c9b6b64f;
         }
         .container-repeatable-elements .controls {
           display: flex;
@@ -98,7 +98,7 @@
           height: 30px;
           width: 30px;
           border-radius: 50%;
-          background-color: #e8ebf0 !important;
+          background-color: #f8fbff !important;
           margin-bottom: 2px;
           overflow: hidden;
         }

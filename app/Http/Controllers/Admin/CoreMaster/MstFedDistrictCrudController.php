@@ -24,8 +24,6 @@ class MstFedDistrictCrudController extends BaseCrudController
         CRUD::setModel(\App\Models\CoreMaster\MstFedDistrict::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/mst-fed-district');
         CRUD::setEntityNameStrings(trans('menu.district'), trans('menu.district'));
-        // $this->crud->denyAccess(['create','update','delete']);
-        $this->checkPermission();
     }
 
     /**
@@ -41,9 +39,6 @@ class MstFedDistrictCrudController extends BaseCrudController
             $this->addProvinceColumn(),
             $this->addNameLcColumn(),
             $this->addNameEnColumn(),
-            
-            $this->addIsActiveColumn(),
-
         ];
         $this->crud->addColumns($cols);
     }
@@ -64,7 +59,6 @@ class MstFedDistrictCrudController extends BaseCrudController
             $this->addProvinceField(),
             $this->addNameLcField(),
             $this->addNameEnField(),
-            $this->addIsActiveField()
         ];
         $this->crud->addFields($arr);
 

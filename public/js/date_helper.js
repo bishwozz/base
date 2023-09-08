@@ -1,3 +1,4 @@
+
 function DateChange(bsSelector, adSelector)
 {
     FormatBs(bsSelector);

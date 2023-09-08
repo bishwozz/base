@@ -23,8 +23,6 @@ class MstGenderCrudController extends BaseCrudController
         CRUD::setModel(\App\Models\CoreMaster\MstGender::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/mst-gender');
         CRUD::setEntityNameStrings(trans('menu.gender'), trans('menu.gender'));
-        // $this->crud->denyAccess(['create','update','delete']);
-        $this->checkPermission();
     }
 
     /**

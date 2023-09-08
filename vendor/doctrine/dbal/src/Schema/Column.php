@@ -436,7 +436,7 @@ class Column extends AbstractAsset
      */
     public function getCustomSchemaOptions()
     {
-        Deprecation::triggerIfCalledFromOutside(
+        Deprecation::trigger(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pull/5476',
             'Column::getCustomSchemaOptions() is deprecated. Use getPlatformOptions() instead.',

@@ -8,6 +8,7 @@ use App\Base\Traits\UserLevelFilter;
 use App\Base\Operations\ListOperation;
 use App\Base\Operations\ShowOperation;
 use App\Base\Traits\ActivityLogTraits;
+use App\Models\CoreMaster\MstMinistry;
 use App\Base\Operations\CreateOperation;
 use App\Base\Operations\DeleteOperation;
 use App\Base\Operations\UpdateOperation;
@@ -26,10 +27,8 @@ class BaseCrudController extends CrudController
     use DeleteOperation;
     use ShowOperation;
     use ParentData;
-    use ActivityLogTraits;
     use CheckPermission;
 
-    protected $activity = ['index','create','edit','update','store','show','destroy'];
 
     public function __construct()
     {
@@ -45,7 +44,7 @@ class BaseCrudController extends CrudController
             $this->request = $request;
             $this->setupDefaults();
             $this->setup();
-            $this->setLogs();
+            $this->checkPermission();
             // $this->isAllowed(['show' => 'list']);
             $this->crud->denyAccess('show');
             $this->setupConfigurationForCurrentOperation();
@@ -53,6 +52,16 @@ class BaseCrudController extends CrudController
         });
         // parent::__construct();
     }
+
+    protected function addRowNumber()
+    {
+        return [
+            'name' => 'row_number',
+            'type' => 'row_number',
+            'label' => 'क्र.सं.',
+        ];
+    }
+
 
     protected function addCodeField()
     {
@@ -81,7 +90,85 @@ class BaseCrudController extends CrudController
             ],
         ];
     }
-
+    protected function addAddressLcField()
+    {
+        return [
+            'name' => 'address_name_lc',
+            'label' => trans('ठेगाना'),
+            'type' => 'text',
+            'wrapper' => [
+                'class' => 'form-group col-md-4',
+            ],
+        ];
+    }
+    protected function addAddressEnField()
+    {
+        return [
+            'name' => 'address_name_en',
+            'label' => trans('common.address_name_en'),
+            'type' => 'text',
+            'wrapper' => [
+                'class' => 'form-group col-md-4',
+            ],
+        ];
+    }
+    protected function addFiscalYearField()
+    {
+        return [
+            'name' => 'fiscal_year_id',
+            'type' => 'select2',
+            'entity' => 'fiscalYearEntity',
+            'attribute' => 'code',
+            'model' => MstFiscalYear::class,
+            'label' => trans('common.fiscal_year'),
+            // 'options'   => (function ($query) {
+            //     return (new MstFiscalYear())->getFieldComboFiscalOptions($query);
+            // }),
+            'options'   => (function ($query) {
+                // dd($query->get()->keyBy('id')->pluck('code', 'id')->toArray());
+                return $query->select('id','code')->orderBy('code', 'DESC')->get();
+            }),
+            'wrapper' => [
+                'class' => 'form-group col-md-4',
+            ],
+            'attributes' => [
+                'required' => 'required',
+            ],
+        ];
+    }
+    protected function addFaxField()
+    {
+        return [
+            'name' => 'fax',
+            'label' => trans('common.fax'),
+            'type' => 'number',
+            'wrapper' => [
+                'class' => 'form-group col-md-4',
+            ],
+        ];
+    }
+    protected function addEmailField()
+    {
+        return [
+            'name' => 'email',
+            'label' => trans('common.email'),
+            'type' => 'email',
+            'wrapper' => [
+                'class' => 'form-group col-md-4',
+            ],
+        ];
+    }
+    protected function addPhoneField()
+    {
+        return [
+            'name' => 'phone',
+            'label' => trans('common.phone_no'),
+            'type' => 'number',
+            'wrapper' => [
+                'class' => 'form-group col-md-4',
+            ],
+        ];
+    }
     protected function addPlainHtml()
     {
         return   [
@@ -145,7 +232,7 @@ class BaseCrudController extends CrudController
     {
         return [
             'name' => 'office_name_lc',
-            'label' => trans('common.name_lc'),
+            'label' => trans('नाम'),
             'type' => 'text',
             'attributes' => [
                 'id' => 'name-lc',
@@ -157,7 +244,7 @@ class BaseCrudController extends CrudController
             ],
         ];
     }
- 
+
     protected function addProvinceField()
     {
         return [
@@ -186,7 +273,7 @@ class BaseCrudController extends CrudController
             'entity' => 'districtEntity',
             'attribute' => 'name_en',
             'model' => MstFedDistrict::class,
-            'label' => trans('जिल्ला'),
+            'label' => 'District',
             'options'   => (function ($query) {
                 return (new MstFedDistrict())->getFieldComboOptions($query);
             }),
@@ -204,7 +291,7 @@ class BaseCrudController extends CrudController
             'entity' => 'levelTypeEntity',
             'attribute' => 'name_en',
             'model' => MstFedLocalLevelType::class,
-            'label' => trans('स्थानीय तह प्रकार'),
+            'label' => 'Local Level',
             'options'   => (function ($query) {
                 return (new MstFedLocalLevelType())->getFieldComboOptions($query);
             }),
@@ -362,8 +449,8 @@ class BaseCrudController extends CrudController
     protected function addSettingNameLcColumn()
     {
         return [
-            'name' => 'office_name_'.lang(),
-            'label' => trans('common.office_name_'.lang()),
+            'name' => 'office_name_lc',
+            'label' => trans('common.office_name_lc'),
             'type' => 'text',
         ];
     }
@@ -380,9 +467,9 @@ class BaseCrudController extends CrudController
             'label' => trans('common.province'),
         ];
     }
-    
 
-    
+
+
     protected function addDistrictColumn()
     {
         return [
@@ -407,8 +494,8 @@ class BaseCrudController extends CrudController
         ];
     }
 
-    
-   
+
+
     protected function addDateBsColumn()
     {
         return  [
@@ -433,7 +520,7 @@ class BaseCrudController extends CrudController
         return [
             'name' => 'is_active',
             'label' => trans('common.is_active'),
-            'type' => 'radio',
+            'type' => 'check',
             'options' =>
             [
                 1 => 'Yes',
@@ -459,87 +546,7 @@ class BaseCrudController extends CrudController
         ];
     }
 
-    protected function addFiscalYearField()
-    {
-        return [
-            'name' => 'fiscal_year_id',
-            'type' => 'select2',
-            'entity' => 'fiscalYearEntity',
-            'attribute' => 'code',
-            'model' => MstFiscalYear::class,
-            'label' => trans('common.fiscal_year'),
-            // 'options'   => (function ($query) {
-            //     return (new MstFiscalYear())->getFieldComboFiscalOptions($query);
-            // }),
-            'options'   => (function ($query) {
-                // dd($query->get()->keyBy('id')->pluck('code', 'id')->toArray());
-                return $query->select('id','code')->orderBy('code', 'DESC')->get();
-            }), 
-            'wrapper' => [
-                'class' => 'form-group col-md-4',
-            ],
-            'attributes' => [
-                'required' => 'required',
-            ],
-        ];
-    }
 
-    protected function addAddressEnField()
-    {
-        return [
-            'name' => 'address_name_en',
-            'label' => trans('common.address_name_en'),
-            'type' => 'text',
-            'wrapper' => [
-                'class' => 'form-group col-md-4',
-            ],
-        ];
-    }
-
-    protected function addAddressLcField()
-    {
-        return [
-            'name' => 'address_name_lc',
-            'label' => trans('common.address_name_lc'),
-            'type' => 'text',
-            'wrapper' => [
-                'class' => 'form-group col-md-4',
-            ],
-        ];
-    }
-    protected function addPhoneField()
-    {
-        return [
-            'name' => 'Phone',
-            'label' => trans('common.phone_no'),
-            'type' => 'number',
-            'wrapper' => [
-                'class' => 'form-group col-md-4',
-            ],
-        ];
-    }
-    protected function addFaxField()
-    {
-        return [
-            'name' => 'fax',
-            'label' => trans('common.fax'),
-            'type' => 'number',
-            'wrapper' => [
-                'class' => 'form-group col-md-4',
-            ],
-        ];
-    }
-    protected function addEmailField()
-    {
-        return [
-            'name' => 'email',
-            'label' => trans('common.email'),
-            'type' => 'email',
-            'wrapper' => [
-                'class' => 'form-group col-md-4',
-            ],
-        ];
-    }
 
 
 
@@ -587,5 +594,55 @@ class BaseCrudController extends CrudController
             $res[] = $arr;
         }
         return $res;
+    }
+
+
+    //ministry field
+
+    protected function addMinistryField()
+    {
+        if(backpack_user()->ministry_id){
+            return [
+                'name' => 'ministry_id',
+                'type' => 'hidden',
+                'value' =>backpack_user()->ministry_id,
+                'attributes' => [ 
+                    'id'=>'ministry_id',
+                ],
+            ];
+        }else{
+            return [
+                
+                'name' => 'ministry_id',
+                'type' => 'select2',
+                'entity'=>'ministry',
+                'attribute' => 'name_lc',
+                'model'=> MstMinistry::class,
+                'label' => 'मन्त्रालय नाम',
+                'wrapper' => [
+                    'class' => 'form-group col-md-4',
+                ],
+                'attributes' => [ 
+                    'placeholder'=>'select ministry',
+                    'id'=>'ministry_id',
+                ],
+            ];
+        }
+    }
+    protected function addMinistryColumn()
+    {
+        if(backpack_user()->ministry_id){
+            return null;
+        }else{
+            return [
+                
+                'name' => 'ministry_id',
+                'type' => 'select',
+                'entity'=>'ministry',
+                'attribute' => 'name_lc',
+                'model'=> MstMinistry::class,
+                'label' => 'मन्त्रालय नाम',
+            ];
+        }
     }
 }

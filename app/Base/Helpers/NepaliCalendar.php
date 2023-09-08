@@ -108,7 +108,7 @@ namespace App\Base\Helpers;
 		 * @param int $day
 		 * @return string
 		 */
-		public function _get_day_of_week($day)
+		private function _get_day_of_week($day)
 		{
 			switch ($day)
 			{
@@ -143,43 +143,6 @@ namespace App\Base\Helpers;
 			}
 			return $day;
 		}
-
-		public function get_day_of_week_eng_to_nep($eng_day)
-		{
-			switch ($eng_day)
-			{
-				case "Sunday":
-					// $day = "Sunday";
-					$eng_day = "आइतबार";
-					break;
-				case "Monday":
-					// $day = "Monday";
-					$eng_day = "सोमबार";
-					break;
-				case "Tuesday":
-					// $day = "Tuesday";
-					$eng_day = "मंगलबार";
-					break;
-				case "Wednesday":
-					// $day = "Wednesday";
-					$eng_day = "बुधबार";
-					break;
-				case "Thursday":
-					// $day = "Thursday";
-					$eng_day = "बिहिबार";
-					break;
-				case "Friday":
-					// $day = "Friday";
-					$eng_day = "शुक्रबार";
-					break;
-				case "Saturday":
-					// $day = "Saturday";
-					$eng_day = "शनिबार";
-					break;
-			}
-			return $eng_day;
-		}
-
 		/**
 		 * Return english month name
 		 *
@@ -229,7 +192,6 @@ namespace App\Base\Helpers;
 			}
 			return $eMonth;
 		}
-
 		/**
 		 * Return nepali month name
 		 *
@@ -292,62 +254,6 @@ namespace App\Base\Helpers;
 			}
 			return $n_month;
 		}
-
-        public function get_nepali_month($m) {
-            $n_month = FALSE;
-			switch ($m)
-			{
-				case 1:
-					// $n_month = "Baishak";
-					$n_month = "बैशाख";
-					break;
-				case 2:
-					// $n_month = "Jestha";
-					$n_month = "जेठ";
-					break;
-				case 3:
-					// $n_month = "Ashad";
-					$n_month = "आषाढ";
-					break;
-				case 4:
-					// $n_month = "Shrawn";
-					$n_month = "साउन";
-					break;
-				case 5:
-					// $n_month = "Bhadra";
-					$n_month = "भाद्र";
-					break;
-				case 6:
-					// $n_month = "Ashwin";
-					$n_month = "आश्विन";
-					break;
-				case 7:
-					// $n_month = "kartik";
-					$n_month = "कार्तिक";
-					break;
-				case 8:
-					// $n_month = "Mangshir";
-					$n_month = "मंसिर";
-					break;
-				case 9:
-					// $n_month = "Poush";
-					$n_month = "पौष";
-					break;
-				case 10:
-					// $n_month = "Magh";
-					$n_month = "माघ";
-					break;
-				case 11:
-					// $n_month = "Falgun";
-					$n_month = "फाल्गुण";
-					break;
-				case 12:
-					// $n_month = "Chaitra";
-					$n_month = "चैत्र";
-					break;
-			}
-			return $n_month;
-        }
 		/**
 		 * Check if date range is in english
 		 *
@@ -448,7 +354,7 @@ namespace App\Base\Helpers;
 			{
 				// Month data.
 				$month  = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-
+				
 				// Month for leap year
 				$lmonth = array(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 				$def_eyy     = 1944;	// initial english date.
@@ -505,7 +411,7 @@ namespace App\Base\Helpers;
 				while ($total_eDays != 0)
 				{
 					$a = $this->_bs[$i][$j];
-
+					
 					$total_nDays++;		//count the days
 					$day++;				//count the days interms of 7 days
 					if ($total_nDays > $a)
@@ -514,24 +420,24 @@ namespace App\Base\Helpers;
 						$total_nDays = 1;
 						$j++;
 					}
-
+					
 					if ($day > 7)
 					{
 						$day = 1;
 					}
-
+					
 					if ($m > 12)
 					{
 						$y++;
 						$m = 1;
 					}
-
+					
 					if ($j > 12)
 					{
 						$j = 1;
 						$i++;
 					}
-
+					
 					$total_eDays--;
 				}
 				$numDay = $day;
@@ -655,7 +561,7 @@ namespace App\Base\Helpers;
 					}
 					$total_nDays--;
 				}
-
+				
 				$numDay = $day;
 				$this->_eng_date['year']    = $y;
 				$this->_eng_date['month']   = $m;

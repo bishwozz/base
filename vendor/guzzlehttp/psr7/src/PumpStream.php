@@ -60,7 +60,6 @@ final class PumpStream implements StreamInterface
                 throw $e;
             }
             trigger_error(sprintf('%s::__toString exception: %s', self::class, (string) $e), E_USER_ERROR);
-
             return '';
         }
     }
@@ -170,7 +169,6 @@ final class PumpStream implements StreamInterface
                 $data = call_user_func($this->source, $length);
                 if ($data === false || $data === null) {
                     $this->source = null;
-
                     return;
                 }
                 $this->buffer->write($data);

@@ -1,31 +1,34 @@
 @php
-    $value = data_get($entry, $column['name']);
-    $value = json_decode($value);
+    $column['value'] = $column['value'] ?? data_get($entry, $column['name']);
+    $column['prefix'] = $column['prefix'] ?? '';
+    $column['suffix'] = $column['suffix'] ?? '';
+    $column['disk'] = $column['disk'] ?? null;
+    $column['escaped'] = $column['escaped'] ?? true;
+    $column['wrapper']['element'] = $column['wrapper']['element'] ?? 'a';
+    $column['wrapper']['target'] = $column['wrapper']['target'] ?? '_blank';
+    $column_wrapper_href = $column['wrapper']['href'] ?? function($file_path, $disk, $prefix) { return ( !is_null($disk) ?asset(\Storage::disk($disk)->url($file_path)):asset($prefix.$file_path) ); };
+
+    if($column['value'] instanceof \Closure) {
+        $column['value'] = $column['value']($entry);
+    }
 @endphp
 
 <span>
-    @if($value && count($value))
-        @foreach ($value as $file_path)
-            <?php
-                $data = explode('.', $file_path);
-                $extension = $data[1];
-                $path = $data[0];
-            ?>
-            @if($extension == 'pdf')
-                <a href="{{asset('storage/uploads/'. $file_path)}}" data-fancybox data-caption="" ><i class="las la-file-pdf"  style="color:red; font-size:40px "></i></a>
-            @elseif($extension == 'xlsx' || $extension == 'xls')
-                <a href="{{asset('storage/uploads/'. $file_path)}}"  ><i class="las la-file-excel" style="color:green;font-size:40px"></i></a>
-            @elseif($extension == 'doc' || $extension == 'docx')
-                <a href="{{asset('storage/uploads/'. $file_path)}}"  ><i class="las la-file-word" style="color:blue;font-size:40px"></i></a>
+    @if ($column['value'] && count($column['value']))
+        @foreach ($column['value'] as $file_path)
+        @php
+            $column['wrapper']['href'] = $column_wrapper_href instanceof \Closure ? $column_wrapper_href($file_path, $column['disk'], $column['prefix']) : $column_wrapper_href;
+            $text = $column['prefix'].$file_path.$column['suffix'];
+        @endphp
+            @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_start')
+            @if($column['escaped'])
+                - {{ $text }} <br/>
             @else
-                <a href="{{asset('storage/uploads/'. $file_path)}}" data-fancybox data-caption=""  >
-                    <img src="{{asset('storage/uploads/'. $file_path)}}" height='70px' width='70px'>
-                </a>
+                - {!! $text !!} <br/>
             @endif
+        @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_end')
         @endforeach
     @else
-        ----
+        {{ $column['default'] ?? '-' }}
     @endif
 </span>
-
-

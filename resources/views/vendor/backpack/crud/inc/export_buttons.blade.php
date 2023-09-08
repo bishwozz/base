@@ -12,23 +12,10 @@
         {
             extend: 'collection',
             text: '<i class="la la-download"></i> {{ trans('backpack::crud.export.export') }}',
-            dropup: true,
+            // dropup: true,
+            dropdown: true,
             buttons: [
-                {
-                    name: 'copyHtml5',
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: function ( idx, data, node ) {
-                            var $column = crud.table.column( idx );
-                                return  ($column.visible() && $(node).attr('data-visible-in-export') != 'false') || $(node).attr('data-force-export') == 'true';
-                        }
-                    },
-                    action: function(e, dt, button, config) {
-                        crud.responsiveToggle(dt);
-                        $.fn.DataTable.ext.buttons.copyHtml5.action.call(this, e, dt, button, config);
-                        crud.responsiveToggle(dt);
-                    }
-                },
+                
                 {
                     name: 'excelHtml5',
                     extend: 'excelHtml5',
@@ -41,37 +28,6 @@
                     action: function(e, dt, button, config) {
                         crud.responsiveToggle(dt);
                         $.fn.DataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
-                        crud.responsiveToggle(dt);
-                    }
-                },
-                {
-                    name: 'csvHtml5',
-                    extend: 'csvHtml5',
-                    exportOptions: {
-                        columns: function ( idx, data, node ) {
-                            var $column = crud.table.column( idx );
-                                return  ($column.visible() && $(node).attr('data-visible-in-export') != 'false') || $(node).attr('data-force-export') == 'true';
-                        }
-                    },
-                    action: function(e, dt, button, config) {
-                        crud.responsiveToggle(dt);
-                        $.fn.DataTable.ext.buttons.csvHtml5.action.call(this, e, dt, button, config);
-                        crud.responsiveToggle(dt);
-                    }
-                },
-                {
-                    name: 'pdfHtml5',
-                    extend: 'pdfHtml5',
-                    exportOptions: {
-                        columns: function ( idx, data, node ) {
-                            var $column = crud.table.column( idx );
-                                return  ($column.visible() && $(node).attr('data-visible-in-export') != 'false') || $(node).attr('data-force-export') == 'true';
-                        }
-                    },
-                    orientation: 'landscape',
-                    action: function(e, dt, button, config) {
-                        crud.responsiveToggle(dt);
-                        $.fn.DataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
                         crud.responsiveToggle(dt);
                     }
                 },
@@ -98,7 +54,8 @@
             columns: function ( idx, data, node ) {
                 return $(node).attr('data-visible-in-table') == 'false' && $(node).attr('data-can-be-visible-in-table') == 'true';
             },
-            dropup: true
+            // dropup: true
+            dropdown: true,
         }
     ];
 
@@ -107,7 +64,7 @@
       crud.table.buttons().each(function(button) {
         if (button.node.className.indexOf('buttons-columnVisibility') == -1 && button.node.nodeName=='BUTTON')
         {
-          button.node.className = button.node.className + " btn-sm";
+          button.node.className = button.node.className + " btn-sm print_export_button m-2";
         }
       })
       $(".dt-buttons").appendTo($('#datatable_button_stack' ));

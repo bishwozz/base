@@ -1,11 +1,6 @@
-
 @extends(backpack_view('blank'))
 
 @php
-
-  $ministry_id = null;
-  $ministry_name = null;
-  $output_string = null;
   $defaultBreadcrumbs = [
     trans('backpack::crud.admin') => backpack_url('dashboard'),
     $crud->entity_name_plural => url($crud->route),
@@ -14,30 +9,12 @@
 
   // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
   $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
-  if(($crud->getRoute() == "admin/ministry")){
-		$ministry_name = \App\Models\Ministry::where('id',$entry->getKey())->pluck('name_lc')->first();
-  }
-  $segments = explode("/", $crud->getRoute());
-
-	// Remove the segment at index 2 (0-based index)
-	if (isset($segments[2])) {
-		$ministry_id = $segments[2];
-		unset($segments[2]);
-	}
-	if($segments){
-
-		$output_string = implode("/", $segments);
-	}
-  if($output_string == "admin/ministry/ministryemployee" || $output_string == "admin/ministry/ministrymember"){
-
-		$ministry_name = \App\Models\Ministry::where('id', $ministry_id)->pluck('name_lc')->first();
-  }
 @endphp
 
 @section('header')
 	<section class="container-fluid">
 	  <h2>
-        <span class="text-capitalize">{!! $crud->getHeading() ?? $crud->entity_name_plural !!} - {!!  $ministry_name !!}</span>
+        <span class="text-capitalize">{!! $crud->getHeading() ?? $crud->entity_name_plural !!}</span>
         <small>{!! $crud->getSubheading() ?? trans('backpack::crud.edit').' '.$crud->entity_name !!}.</small>
 
         @if ($crud->hasAccess('list'))
@@ -52,17 +29,16 @@
 	<div class="{{ $crud->getEditContentClass() }}">
 		<!-- Default box -->
 		@if(isset($tab_links))
-			@include('admin.tab', ['links' => $tab_links])
-		@endif
-
-
+			@include('tab.tab', ['links' => $tab_links])
+	 	@endif
+        
 		@include('crud::inc.grouped_errors')
 
 		  <form method="post"
 		  		action="{{ url($crud->route.'/'.$entry->getKey()) }}"
-				{{-- @if ($crud->hasUploadFields('update', $entry->getKey())) --}}
+				@if ($crud->hasUploadFields('update', $entry->getKey()))
 				enctype="multipart/form-data"
-				{{-- @endif --}}
+				@endif
 		  		>
 		  {!! csrf_field() !!}
 		  {!! method_field('PUT') !!}
@@ -90,28 +66,9 @@
               @endif
               <!-- This makes sure that all field assets are loaded. -->
             <div class="d-none" id="parentLoadedAssets">{{ json_encode(Assets::loaded()) }}</div>
-			@if(isset($crud->denySave) && ($crud->denySave==true))
-			@else
             @include('crud::inc.form_save_buttons')
-			@endif
 		  </form>
 	</div>
 </div>
-<!-- loading custom scripts related to the FORM -->
-@if (isset($crud->enableDialog) && $crud->enableDialog)
-
-	@if(!empty($load_scripts))
-		@foreach ($load_scripts as $script)
-			<script type="text/javascript" src={{ $script }}></script>
-		@endforeach
-	@endif
-
-		{{-- Specific style in $this->data['script_js'] --}}
-		@if(!empty($script_js))
-		<script type="text/javascript">
-			{{!! html_entity_decode($script_js) !!}}
-		</script>
-	@endif
-@endif
 @endsection
 

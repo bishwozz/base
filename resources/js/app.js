@@ -1,4 +1,4 @@
 try {
     require('./bootstrap');
-    require('./ecabinet-libraries');
+    require('./progress_report-libraries');
 } catch (e) {}

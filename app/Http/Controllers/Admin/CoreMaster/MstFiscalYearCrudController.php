@@ -23,7 +23,6 @@ class MstFiscalYearCrudController extends BaseCrudController
         CRUD::setModel(\App\Models\CoreMaster\MstFiscalYear::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/mst-fiscal-year');
         CRUD::setEntityNameStrings(trans('menu.fiscalYear'), trans('menu.fiscalYear'));
-        $this->checkPermission();
     }
 
     /**
@@ -141,7 +140,6 @@ class MstFiscalYearCrudController extends BaseCrudController
             ],
         ],
 
-            $this->addRemarksField(),
     ];
 
     $this->crud->addFields($arr);

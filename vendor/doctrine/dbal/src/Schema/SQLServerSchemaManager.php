@@ -55,7 +55,7 @@ class SQLServerSchemaManager extends AbstractSchemaManager
      */
     public function listTableDetails($name)
     {
-        Deprecation::triggerIfCalledFromOutside(
+        Deprecation::trigger(
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/pull/5595',
             '%s is deprecated. Use introspectTable() instead.',
@@ -403,7 +403,7 @@ WHERE type = 'U'
 ORDER BY name
 SQL;
 
-        return $this->_conn->executeQuery($sql);
+        return $this->_conn->executeQuery($sql, [$databaseName]);
     }
 
     protected function selectTableColumns(string $databaseName, ?string $tableName = null): Result

@@ -2062,7 +2062,8 @@ module.exports = {
 
 try {
   __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-  __webpack_require__(/*! ./ecabinet-libraries */ "./resources/js/ecabinet-libraries.js");
+
+  __webpack_require__(/*! ./progress_report-libraries */ "./resources/js/progress_report-libraries.js");
 } catch (e) {}
 
 /***/ }),
@@ -2074,7 +2075,6 @@ try {
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -2083,39 +2083,13 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
  */
-
 // import Echo from 'laravel-echo';
-
 // window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true,
-//     encrypted: true,
-//     auth: {
-//         headers: {
-//             Authorization: 'Bearer ' + YourTokenLogin
-//         },
-//     },
-//     // enabledTransports: ['ws', 'wss'],
-// });
-// window.Echo.channel('messages').listen('.AgendaApprovedRejected', (event) => {
-//     console.log('New message event:', event);
-// });
-
-// import Echo from 'laravel-echo';
-// import Pusher from 'pusher-js';
-
-// window.Pusher = Pusher;
-
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: process.env.MIX_PUSHER_APP_KEY,
@@ -2125,436 +2099,39 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/ecabinet-libraries.js":
-/*!********************************************!*\
-  !*** ./resources/js/ecabinet-libraries.js ***!
-  \********************************************/
+/***/ "./resources/js/progress_report-libraries.js":
+/*!***************************************************!*\
+  !*** ./resources/js/progress_report-libraries.js ***!
+  \***************************************************/
 /***/ (() => {
 
-var swalWithDefaultButtons = Swal.mixin({
-  buttonsStyling: true // You can remove this line, as true is the default value
-});
-
-var ECABINET = {
+var PROGRESSREPORT = {
   _formSaveSingleKey: 113,
   // F2
   _formSaveGroupKey: 83,
   // S
-
-  loading: function loading(bool, text) {
-    var status = bool === true ? 'show' : 'hide';
-    $.LoadingOverlay(status, {
-      text: text,
-      textResizeFactor: 0.3,
-      size: 100
-    });
-  },
   validate: function validate(wrapperElement) {
+    debugger;
     var valid = true;
-    $(wrapperElement).find('input, select, textarea,number,time').each(function () {
+    $(wrapperElement).find("input, select, textarea,number,time").each(function () {
       /**
        * Validate if element has required attribute and no value/input given
        */
-      if ($(this).attr('required') !== undefined && $(this).val() === "") {
+      if ($(this).attr("required") !== undefined && $(this).val() === "") {
         valid = false;
-        $(this).addClass('is-invalid');
-        if ($(this).next().hasClass('select2')) {
-          $(this).next().addClass('is-invalid');
+        $(this).addClass("is-invalid");
+
+        if ($(this).next().hasClass("select2")) {
+          $(this).next().addClass("is-invalid");
         }
       } else {
-        $(this).removeClass('is-invalid');
+        $(this).removeClass("is-invalid");
       }
     });
     return valid;
-  },
-  fetchMpById: function fetchMpById(item) {
-    var mpId = item.value;
-    var url = '/admin/fetch-mp-detail';
-    if (mpId != '') {
-      $.ajax({
-        type: 'GET',
-        url: url,
-        data: {
-          mpId: mpId
-        },
-        success: function success(response) {
-          if (response.message === 'success') {
-            $('#full_name').val(response.user.name);
-            $('#email').val(response.user.email);
-          }
-        },
-        error: function error(_error) {}
-      });
-    }
-  },
-  fetchMinistryEmployeeById: function fetchMinistryEmployeeById(item) {
-    var ministry_employee_id = item.value;
-    var url = '/admin/fetch-ministry-employee-detail';
-    if (ministry_employee_id != '') {
-      $.ajax({
-        type: 'GET',
-        url: url,
-        data: {
-          ministry_employee_id: ministry_employee_id
-        },
-        success: function success(response) {
-          if (response.message === 'success') {
-            $('#full_name').val(response.user.full_name);
-            $('#email').val(response.user.email);
-          }
-        }
-      });
-    }
-  },
-  // Agenda Approval
-  confirmation: function confirmation(id, element, userObjectJSON) {
-    var route, custom_title, custom_body;
-    var userObject = JSON.parse(userObjectJSON);
-    var userArray = Object.keys(userObject).map(function (userId) {
-      return {
-        id: userId,
-        name: userObject[userId].name,
-        post_name: userObject[userId].post_name
-      };
-    });
-    if (element.id == 'approveAgenda') {
-      route = "agenda-approve/".concat(id);
-      custom_title = "स्वीकृत";
-      custom_body = "स्वीकृत गरिसकेको";
-    } else if (element.id == 'submit-agenda') {
-      route = "agenda-submit/".concat(id);
-      custom_title = "पेश";
-      custom_body = "पेश गरिसकेको";
-    } else if (element.id == 'approveAgenda-submit') {
-      route = "agenda-approve/".concat(id);
-      custom_title = "पेश";
-      custom_body = "पेश गरिसकेको";
-    }
-    var checkboxesHTML = userArray.map(function (user, index) {
-      return "\n        <div style=\"text-align:left;\">\n        <label style=\"margin-left: 20px;  cursor: pointer; color:blue\">\n          <input type=\"radio\" name=\"selectedUsers[]\" value=\"".concat(user.id, "\" ").concat(index === 0 ? 'checked' : '', ">\n          ").concat(user.post_name ? user.post_name + ' - ' : '', " ").concat(user.name, "\n        </label></div>\n        ");
-    }).join('');
-    var swalOptions = {
-      title: "".concat(custom_title, " \u0917\u0930\u094D\u0928\u0947 \u0939\u094B?"),
-      html: "\n            <div>\n              <p>".concat(custom_body, " \u0916\u0923\u094D\u0921\u092E\u093E \u0924\u094D\u092F\u0938\u0932\u093E\u0908 \u092A\u0941\u0928: \u0938\u092E\u094D\u092A\u093E\u0926\u0928 \u0917\u0930\u094D\u0928 \u0938\u0915\u093F\u0928\u0947 \u091B\u0948\u0928</p>\n              ").concat(checkboxesHTML, "\n            </div>\n          "),
-      showCancelButton: true,
-      confirmButtonText: 'हो',
-      cancelButtonText: 'होइन',
-      reverseButtons: true
-    };
-    var confirmSwal = Swal.mixin({
-      customClass: {
-        confirmButton: 'btn btn-success mx-2',
-        cancelButton: 'btn btn-danger mx-2',
-        title: 'btn btn-success'
-      },
-      buttonsStyling: false
-    });
-    confirmSwal.fire(swalOptions).then(function (result) {
-      if (result.isConfirmed) {
-        var selectedUsers = Array.from(document.querySelectorAll('input[name="selectedUsers[]"]:checked')).map(function (checkbox) {
-          return checkbox.value;
-        });
-        if (selectedUsers.length === 0) {
-          // Display a validation error
-          Swal.fire({
-            icon: 'error',
-            title: 'कृपया एकजना प्रयोगकर्ता छानुहोस'
-          });
-          return; // Exit the function, preventing further processing
-        } else if (selectedUsers.length > 1) {
-          Swal.fire({
-            icon: 'error',
-            title: 'कृपया एकजना मात्र प्रयोगकर्ता छानुहोस'
-          });
-          return;
-        }
-        $.ajax({
-          url: route,
-          type: 'POST',
-          data: {
-            selectedUsers: selectedUsers
-          },
-          success: function success(result) {
-            if (result.status == 'success') {
-              var successSwalOptions = {
-                title: "".concat(custom_body),
-                text: "\u092F\u094B \u092A\u094D\u0930\u0938\u094D\u0924\u093E\u0935 \u0938\u092B\u0932\u0924\u093E\u092A\u0941\u0930\u094D\u092C\u0915 ".concat(custom_title, " \u092D\u090F\u0915\u094B \u091B"),
-                icon: "success",
-                timer: 10000,
-                showConfirmButton: false,
-                allowOutsideClick: false
-              };
-              Swal.fire(successSwalOptions);
-              location.reload();
-            }
-            if (result.status == 'failed') {
-              var listItems = result.message.map(function (error) {
-                return "<li>".concat(error, "</li>");
-              }).join('');
-              var errorSwalOptions = {
-                title: "Error",
-                html: "<ol>".concat(listItems, "</ol>"),
-                icon: "error",
-                timer: 10000,
-                showCloseButton: true
-              };
-              Swal.fire(errorSwalOptions);
-            }
-          }
-        });
-      }
-    });
-  },
-  // Agenda Rejection
-  confirmationRejection: function confirmationRejection(id, element, userObjectJSON) {
-    var route, custom_title, custom_body;
-    var userObject = JSON.parse(userObjectJSON);
-    console.log(userObject);
-    var userArray = Object.keys(userObject).map(function (rejectionUserIds) {
-      return {
-        id: rejectionUserIds,
-        name: userObject[rejectionUserIds].name,
-        post_name: userObject[rejectionUserIds].post_name
-      };
-    });
-    if (element.id == 'rejectAgenda') {
-      route = "agenda-reject/".concat(id);
-      custom_title = "फिर्ता";
-      custom_body = "फिर्ता गरिसकेको";
-    } else if (element.id == 'submit-agenda') {
-      route = "agenda-submit/".concat(id);
-      custom_title = "पेश";
-      custom_body = "पेश गरिसकेको";
-    } else if (element.id == 'approveAgenda-submit') {
-      route = "agenda-approve/".concat(id);
-      custom_title = "पेश";
-      custom_body = "पेश गरिसकेको";
-    }
-    var checkboxesHTML = userArray.map(function (user, index) {
-      return "\n        <div style=\"text-align:left;\">\n          <label style=\"margin-left: 20px;  cursor: pointer; color:blue\">\n            <input type=\"radio\" name=\"selectedUsers[]\" value=\"".concat(user.id, "\" ").concat(index === 0 ? 'checked' : '', ">\n            ").concat(user.post_name ? user.post_name + ' - ' : '', " ").concat(user.name, "\n          </label></div>\n        ");
-    }).join('');
-    var swalOptions = {
-      title: "".concat(custom_title, " \u0917\u0930\u094D\u0928\u0947 \u0939\u094B?"),
-      html: "\n            <div>\n              <p>".concat(custom_body, " \u0916\u0923\u094D\u0921\u092E\u093E \u0924\u094D\u092F\u0938\u0932\u093E\u0908 \u092A\u0941\u0928: \u0938\u092E\u094D\u092A\u093E\u0926\u0928 \u0917\u0930\u094D\u0928 \u0938\u0915\u093F\u0928\u0947 \u091B\u0948\u0928</p>\n              ").concat(checkboxesHTML, "\n            </div>\n          "),
-      showCancelButton: true,
-      confirmButtonText: 'हो',
-      cancelButtonText: 'होइन',
-      reverseButtons: true,
-      input: 'textarea',
-      inputLabel: 'फिर्ता गर्नुको कारण लेख्नुहोस',
-      inputPlaceholder: 'Type your message here...',
-      inputAttributes: {
-        'aria-label': 'Type your message here'
-      },
-      preConfirm: function preConfirm(reason) {
-        if (!reason) {
-          Swal.showValidationMessage('कृपया फिर्ता गर्नुको कारण अनिवार्य गरिएको छ');
-        }
-        return reason;
-      }
-    };
-    var confirmSwal = Swal.mixin({
-      customClass: {
-        confirmButton: 'btn btn-success mx-2',
-        cancelButton: 'btn btn-danger mx-2',
-        inputLabel: 'btn btn-info',
-        title: 'btn btn-danger'
-      },
-      buttonsStyling: false
-    });
-    confirmSwal.fire(swalOptions).then(function (result) {
-      if (result.isConfirmed) {
-        var selectedUsers = Array.from(document.querySelectorAll('input[name="selectedUsers[]"]:checked')).map(function (checkbox) {
-          return checkbox.value;
-        });
-        // if (selectedUsers.length === 0) {
-
-        // Display a validation error
-        // Swal.fire({
-        //   showCancelButton: true,
-        //   confirmButtonText: 'हो',
-        //   cancelButtonText: 'होइन',
-        //   reverseButtons: true,
-        //   text: 'कृपया एकजना प्रयोगकर्ता छानुहोस',
-        // }).then((res) =>{
-        //   if(!res.isConfirmed){
-        //     return
-        //   }
-        // });
-        // Swal.fire({
-        //   text: "कुनै पनि प्रयोगकर्ता नछानेको हुदा सो प्रस्ताब पठाउने प्रयोगकर्ता लाइ फिर्ता गर्दै छौ!",
-        //   showCancelButton: true,
-        //   confirmButtonColor: '#3085d6',
-        //   cancelButtonColor: '#d33',
-        //   cancelButtonText: 'अन्य प्रयोगकर्ता लाइ पठाउन चाहन्छु',
-        //   confirmButtonText: 'हुन्छ'
-        // }).then((res) => {
-        //   debugger
-        //   // if (!res.isConfirmed) {
-        //   //   return
-        //   // }
-        // })
-        // }else if(selectedUsers.length > 1){
-        //   Swal.fire({
-        //     icon: 'error',
-        //     title: 'कृपया एकजना मात्र प्रयोगकर्ता छानुहोस',
-        //   });
-        //   return;
-        // }
-        var reason = result.value;
-        if (reason.length === 0) {
-          // Display a validation error
-          Swal.fire({
-            icon: 'error',
-            title: 'कृपया फिर्ता गर्नुको कारण लेख्नुहोस'
-          });
-          return; // Exit the function, preventing further processing
-        }
-
-        $.ajax({
-          url: route,
-          type: 'POST',
-          data: {
-            selectedUsers: selectedUsers,
-            AgendaId: id,
-            remarks: reason
-          },
-          success: function success(result) {
-            if (result.status == 'success') {
-              var successSwalOptions = {
-                title: "".concat(custom_body),
-                text: "\u092F\u094B \u092A\u094D\u0930\u0938\u094D\u0924\u093E\u0935 \u0938\u092B\u0932\u0924\u093E\u092A\u0941\u0930\u094D\u092C\u0915 ".concat(custom_title, " \u092D\u090F\u0915\u094B \u091B"),
-                icon: "success",
-                timer: 10000,
-                showConfirmButton: false,
-                allowOutsideClick: false
-              };
-              Swal.fire(successSwalOptions);
-              location.reload();
-            }
-            if (result.status == 'failed') {
-              var listItems = result.message.map(function (error) {
-                return "<li>".concat(error, "</li>");
-              }).join('');
-              var errorSwalOptions = {
-                title: "Error",
-                html: "<ol>".concat(listItems, "</ol>"),
-                icon: "error",
-                timer: 10000,
-                showCloseButton: true
-              };
-              Swal.fire(errorSwalOptions);
-            }
-          }
-        });
-      }
-    });
-  },
-  // Meeting Request
-  confirmationMeetingRequest: function confirmationMeetingRequest(id, element) {
-    var route, custom_title, custom_body;
-    if (element.id == 'submit-meeting-request') {
-      route = "submit-meeting-request/".concat(id);
-      custom_title = "पेश";
-      custom_body = "पेश गरिसकेको";
-    }
-    if (element.id == 'meetingRequestapprove') {
-      route = "meeting-request-approve/".concat(id);
-      custom_title = "स्वीकृत";
-      custom_body = "स्वीकृत गरिसकेको";
-    } else if (element.id == 'meetingRequestapprove-submit') {
-      route = "meeting-request-approve/".concat(id);
-      custom_title = "पेश";
-      custom_body = "पेश गरिसकेको";
-    }
-    swalWithDefaultButtons.fire({
-      title: "".concat(custom_title, " \u0917\u0930\u094D\u0928\u0947 \u0939\u094B?"),
-      text: "\u090F\u0915 \u092A\u091F\u0915 \u092C\u0948\u0920\u0915 \u0906\u0939\u0935\u093E\u0928   ".concat(custom_body, " \u0916\u0923\u094D\u0921\u092E\u093E \u0924\u094D\u092F\u0938\u0932\u093E\u0908 \u092A\u0941\u0928: \u0938\u092E\u094D\u092A\u093E\u0926\u0928 \u0917\u0930\u094D\u0928 \u0938\u0915\u093F\u0928\u0947 \u091B\u0948\u0928"),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'हो',
-      cancelButtonText: 'होइन',
-      reverseButtons: true
-    }).then(function (result) {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: route,
-          type: 'POST',
-          success: function success(result) {
-            if (result.status == 'success') {
-              Swal.fire({
-                title: "".concat(custom_body),
-                text: "\u092F\u094B \u092C\u0948\u0920\u0915 \u0906\u0939\u0935\u093E\u0928  \u0938\u092B\u0932\u0924\u093E\u092A\u0941\u0930\u094D\u092C\u0915 ".concat(custom_title, " \u092D\u090F\u0915\u094B \u091B"),
-                icon: "success",
-                timer: 10000,
-                buttons: false
-              });
-              location.reload();
-            }
-          }
-        });
-      }
-    });
-  },
-  // Meeting Minute
-  confirmationMeetingMinute: function confirmationMeetingMinute(id, element) {
-    var route, custom_title, custom_body;
-    if (element.id == 'submit-meeting-minute') {
-      route = "submit-meeting-minute/".concat(id);
-      custom_title = "पेश";
-      custom_body = "पेश गरिसकेको";
-    }
-    if (element.id == 'approvemeetingMinute') {
-      route = "meeting-minute-approve/".concat(id);
-      custom_title = "स्वीकृत";
-      custom_body = "स्वीकृत गरिसकेको";
-    } else if (element.id == 'approvemeetingMinute-submit') {
-      route = "meeting-minute-approve/".concat(id);
-      custom_title = "पेश";
-      custom_body = "पेश गरिसकेको";
-    }
-    swalWithDefaultButtons.fire({
-      title: "".concat(custom_title, " \u0917\u0930\u094D\u0928\u0947 \u0939\u094B?"),
-      text: "\u090F\u0915 \u092A\u091F\u0915 \u092C\u0948\u0920\u0915 \u092E\u093E\u0907\u0928\u0941\u091F  ".concat(custom_body, " \u0916\u0923\u094D\u0921\u092E\u093E \u0924\u094D\u092F\u0938\u0932\u093E\u0908 \u092A\u0941\u0928: \u0938\u092E\u094D\u092A\u093E\u0926\u0928 \u0917\u0930\u094D\u0928 \u0938\u0915\u093F\u0928\u0947 \u091B\u0948\u0928"),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'हो',
-      cancelButtonText: 'होइन',
-      reverseButtons: true
-    }).then(function (result) {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: route,
-          type: 'POST',
-          success: function success(result) {
-            if (result.status == 'success') {
-              Swal.fire({
-                title: "".concat(custom_body),
-                text: "\u092F\u094B \u092C\u0948\u0920\u0915 \u092E\u093E\u0907\u0928\u0941\u091F \u0938\u092B\u0932\u0924\u093E\u092A\u0941\u0930\u094D\u092C\u0915 ".concat(custom_title, " \u092D\u090F\u0915\u094B \u091B"),
-                icon: "success",
-                timer: 10000,
-                buttons: false
-              });
-              location.reload();
-            } else if (result.status == 'failed') {
-              var listItems = result.message.map(function (error) {
-                return "<li>".concat(error, "</li>");
-              }).join('');
-              Swal.fire({
-                title: "Error",
-                html: "<ol>".concat(listItems, "</ol>"),
-                icon: "error",
-                timer: 10000,
-                showCloseButton: true
-              });
-            }
-          }
-        });
-      }
-    });
   }
 };
-window.ECABINET = ECABINET;
+window.PROGRESSREPORT = PROGRESSREPORT;
 
 /***/ }),
 

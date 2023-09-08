@@ -4,7 +4,7 @@
 	filter-type="{{ $filter->type }}"
 	class="nav-item dropdown {{ Request::get($filter->name)?'active':'' }}">
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ $filter->label }} <span class="caret"></span></a>
-    <div class="dropdown-menu p-0">
+    <div class="dropdown-menu1 p-0">
       <div class="form-group backpack-filter mb-0">
 			<select id="filter_{{ $filter->name }}" name="filter_{{ $filter->name }}" data-filter-name="{{ $filter->name }}" class="form-control input-sm select2" data-filter-type="select2_multiple" placeholder="{{ $filter->placeholder }}" multiple>
 				@if (is_array($filter->values) && count($filter->values))
@@ -66,7 +66,7 @@
 	<!-- include select2 js-->
     <script src="{{ asset('packages/select2/dist/js/select2.full.min.js') }}"></script>
     @if (app()->getLocale() !== 'en')
-    <script src="{{ asset('packages/select2/dist/js/i18n/' . app()->getLocale() . '.js') }}"></script>
+    <!-- <script src="{{ asset('packages/select2/dist/js/i18n/' . app()->getLocale() . '.js') }}"></script> -->
     @endif
     
     <script>

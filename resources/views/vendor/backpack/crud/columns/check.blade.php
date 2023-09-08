@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <span>
     @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_start')
-    <center><i class="fas {{ $column['icon'] }}" style="font-size: 18px;"></i></center>
+    <i class="fas {{ $column['icon'] }}" style="font-size: 18px;"></i>
     @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_end')
 </span>
 

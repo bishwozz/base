@@ -3,18 +3,17 @@
 <head>
     @include(backpack_view('inc.head'))
 </head>
-{{-- <body class="app flex-row align-items-center"> --}}
-<body>
+<body class="app flex-row align-items-center">
 
   @yield('header')
 
-  {{-- <div class="container"> --}}
+  <div class="container">
   @yield('content')
-  {{-- </div> --}}
+  </div>
 
-  {{-- <footer class="app-footer sticky-footer">
+  <footer class="app-footer sticky-footer">
     @include('backpack::inc.footer')
-  </footer> --}}
+  </footer>
 
   @yield('before_scripts')
   @stack('before_scripts')
