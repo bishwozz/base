@@ -63,7 +63,7 @@
                                         </select>
                                     </td>
                                     
-                                    @unless($ministry_dashboard)
+                                    {{-- @unless($ministry_dashboard)
                                     <td>
                                         <label for="ministry_id" class="font-weight-bold">मन्त्रालय</label>
                                         <select class="form-control-sm" name="ministry_id" id="ministry_id" onchange="loadDashboardData()">
@@ -73,29 +73,9 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    @endunless
+                                    @endunless --}}
                                     
-                                    <td>
-                                        <label for="fiscal_year_id" class="font-weight-bold">आ.व.</label>
-                                        <select class="form-control-sm" name="fiscal_year_id" id="fiscal_year_id" onchange="loadDashboardData()">
-                                            @foreach ($fiscal_years as $option)
-                                            @if (intval($fiscal_year_id) === $option->getKey())
-                                            <option value="{{ $fiscal_year_id }}" selected>{{ $option->code }}</option>
-                                            @else
-                                            <option value="{{ $option->getKey() }}">{{ $option->code }}</option>
-                                            @endif
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <label for="month_id" class="font-weight-bold">महिना</label>
-                                        <select class="form-control-sm" name="month_id" id="month_id" onchange="loadDashboardData()">
-                                            <option value="">{{'-- महिना छान्नुहोस् --' }}</option>
-                                            @foreach ($months as $option)
-                                            <option value="{{ $option->getKey() }}">{{ $option->name_lc }}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
+                           
                                 </tr>
                             </table>
                             
@@ -120,105 +100,5 @@
 
 
 @section('after_scripts')
-    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
-    
-    <script src="{{asset('homepage/js/chart.min.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/html2pdf.js"></script> --}}
-    <script src="{{asset('js/plotchart.js')}}"></script>
-    <script>
-        $(document).ready(function() {
-
-        //get ministry and fiscal year value
-        let ministryId = $('#ministry_id').val();
-        let fiscalYearId = $('#fiscal_year_id').val();
-
-        loadDashboardData();
-        
-    });
-
-        function printDiv(divId) {
-
-            addPrintStyles();
-            var printContents = document.getElementById(divId).innerHTML;
-            var originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-            window.print();
-            
-            document.body.innerHTML = originalContents;
-            
-        }
-
-        function addPrintStyles() {
-            var style = document.createElement('style');
-            style.innerHTML = '@media print {\
-                .printbtn {\
-                    display: none !important; /* Hide the print button while printing */\
-                }\
-            }';
-
-            document.head.appendChild(style);
-        }
-
-        function exportChart(elementId,filename) {
-            // Get the canvas element
-            var canvas = document.getElementById(elementId);
-
-            // Create a new HTML2PDF instance
-                var pdf = new html2pdf();
-            // Add the canvas element to the PDF document
-            var options = {
-                filename: filename+'.pdf',
-                image: { type: 'pdf' },
-                html2canvas: { scale: 2 },
-                jsPDF: { format: 'a3', orientation: 'landscape' }
-            };
-
-            // Add the canvas element to the PDF document
-            pdf.set(options).from(canvas).save();
-
-            }
-
-        function exportCombinedCharts(elementIds, filename) {
-            // Create a new HTML2PDF instance
-            var pdf = new html2pdf();
-
-            // Create a new canvas to combine the pie charts
-            var combinedCanvas = document.createElement('canvas');
-            var ctx = combinedCanvas.getContext('2d');
-
-            // Define the dimensions for the combined canvas
-            var width = 1600; // Adjust as needed
-            var height = 400; // Adjust as needed
-            combinedCanvas.width = width;
-            combinedCanvas.height = height;
-
-            // Calculate the width for each pie chart
-            var chartWidth = width / elementIds.length;
-
-            // Iterate through each canvas element
-            elementIds.forEach(function(elementId, index) {
-                // Get the canvas element
-                var canvas = document.getElementById(elementId);
-
-                // Draw each pie chart on the combined canvas
-                ctx.drawImage(canvas, index * chartWidth, 0, chartWidth, height);
-            });
-
-            // Export the combined canvas as PDF
-            var options = {
-                filename: filename + '.pdf',
-                image: { type: 'pdf' },
-                html2canvas: { scale: 1 },
-                jsPDF: { format: 'a3', orientation: 'landscape' }
-            };
-
-            // Add the combined canvas to the PDF document
-            pdf.set(options).from(combinedCanvas).save();
-            }
-
-
-
-    </script>
- @endsection
+   
+@endsection

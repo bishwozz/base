@@ -29,7 +29,7 @@
 @hasanyrole('superadmin|admin')
         <hr class="hr-line m-2">
         <li class="nav-item nav-dropdown">
-        <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> {{ trans('User app') }}</a>
+        <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> {{ trans('menu.users_roles') }}</a>
         <ul class="nav-dropdown-items">
                 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon la la-user"></i> <span>{{ trans('menu.user') }}</span></a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('role') }}"><i class="nav-icon la la-id-badge"></i> <span>{{ trans('menu.role') }}</span></a></li>
@@ -41,7 +41,7 @@
 @hasanyrole('superadmin|admin')
         <hr class="hr-line m-2">
         <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-tasks"></i>Masrer</a>
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-tasks"></i>{{ trans('menu.master') }}</a>
                 <ul class="nav-dropdown-items" style="overflow-x:hidden">
                     <li class='nav-item'><a class='nav-link' href='{{ backpack_url('mst-fed-province') }}'><i class='nav-icon la la-cogs'></i>{{ trans('menu.province') }}</a></li>
                     <li class='nav-item'><a class='nav-link' href='{{ backpack_url('mst-fed-district') }}'><i class='nav-icon la la-cogs'></i> {{ trans('menu.district') }}</a></li>

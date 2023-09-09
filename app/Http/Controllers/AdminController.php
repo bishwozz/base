@@ -27,23 +27,11 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        // $this->data['title'] = trans('backpack::base.dashboard'); // set the page title
 
-        $fiscal_year_id = '';
-        $ministry_dashboard = false;
-        if(backpack_user()->ministry_id){
-            $fiscal_year_id = AppSetting::where('ministry_id',backpack_user()->ministry_id)->pluck('ministry_id')->first();
-            $ministry_dashboard = true;
-        }
         $this->data= [
             'title' => trans('backpack::base.dashboard'),
             trans('backpack::crud.admin')     => backpack_url('dashboard'),
-            trans('backpack::base.dashboard') => false,
-            'fiscal_years' => MstFiscalYear::orderBy('from_date_ad', 'desc')->get(),
-            'fiscal_year_id' => $fiscal_year_id,
-            'months' => MstNepaliMonth::all(),
-            'ministry_dashboard' => $ministry_dashboard,
-            'ministries'=> MstMinistry::orderBy('id','asc')->get(),
+            trans('backpack::base.dashboard') => true,
 
         ];
 
