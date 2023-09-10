@@ -25,6 +25,7 @@ Route::group([
     Route::crud('contact-us', 'ContactUsCrudController');
     Route::crud('faq', 'FaqCrudController');
     Route::crud('slider', 'SliderCrudController');
+    Route::crud('games', 'GamesCrudController');
     Route::crud('mst-class', 'MstClassCrudController');
     Route::crud('header', 'HeaderCrudController');
     Route::crud('footer-address', 'FooterAddressCrudController');

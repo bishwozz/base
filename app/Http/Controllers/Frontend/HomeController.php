@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Menu;
 use App\Models\Page;
 use App\Models\Event;
+use App\Models\Games;
 use App\Models\Course;
 use App\Models\Header;
 use App\Models\Saying;
@@ -26,14 +27,15 @@ class HomeController extends Controller
     public function index()
     {
         $header_footer_data = $this->getApplicationSettingsData();
-        // dd($header_footer_data);
-        // $menus = Menu::where('type_id','main')->where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $sliders = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
+        $games = Games::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $about_us = AboutUs::where('deleted_uq_code',1)->first();
+
         $this->data = [
-            // 'menus' => $menus,
+            'sliders' => $sliders,
             'header_footer_data' => $header_footer_data,
             'about_us' => $about_us,
+            'games' => $games,
         ];
         return view('frontend.index', $this->data);
     }

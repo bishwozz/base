@@ -16,43 +16,7 @@ class CreateTableForCollege extends Migration
     public function up()
     {
 
-        Schema::create('menus', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('title',200);
-            $table->unsignedInteger('display_order')->nullable();
-            $table->unsignedSmallInteger('type_id')->nullable();
-            $table->string('link', 255)->nullable();
-            $table->unsignedSmallInteger('parent_id')->nullable();
 
-            $table->timestamps();
-            $table->boolean('is_active')->nullable()->default(true);
-            $table->unsignedInteger('created_by')->nullable();
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->softDeletes();
-            $table->unsignedSmallInteger('deleted_by')->nullable();
-            $table->boolean('is_deleted')->nullable();
-            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
-            
-            $table->foreign('parent_id','fk_menus_parent_id')->references('id')->on('menus')->onDelete('cascade')->change();
-        });
-
-
-        Schema::create('categories', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('name',100)->nullable();
-            $table->unsignedSmallInteger('menu_id')->nullable();
-
-            $table->timestamps();
-            $table->unsignedInteger('created_by')->nullable();
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->softDeletes();
-            $table->unsignedSmallInteger('deleted_by')->nullable();
-            $table->boolean('is_deleted')->nullable();
-            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
-
-            $table->foreign('menu_id','fk_categories_menu_id')->references('id')->on('menus')->onDelete('cascade')->change();
-        });
-        
         Schema::create('about_us', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('title',255);
@@ -68,28 +32,6 @@ class CreateTableForCollege extends Migration
             $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
         });
 
-
-        Schema::create('galleries', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('title',200);
-            $table->text('description')->nullable();
-            $table->unsignedInteger('display_order')->nullable();
-            $table->string('display_image',500)->nullable();
-            $table->unsignedSmallInteger('category_id')->nullable();
-            $table->text('gallery_images')->nullable();
-
-            $table->timestamps();
-            $table->boolean('is_active')->nullable()->default(true);
-            $table->unsignedInteger('created_by')->nullable();
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->softDeletes();
-            $table->unsignedSmallInteger('deleted_by')->nullable();
-            $table->boolean('is_deleted')->nullable();
-            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
-
-            $table->foreign('category_id','fk_galleries_category_id')->references('id')->on('categories')->onDelete('cascade')->change();
-
-        });
        
 
         Schema::create('contact_us', function (Blueprint $table) {
@@ -144,6 +86,22 @@ class CreateTableForCollege extends Migration
                     
         });
 
+        Schema::create('games', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('title',200);
+            $table->string('game_img',500)->nullable();
+            $table->unsignedInteger('display_order')->nullable();
+            $table->timestamps();
+            $table->boolean('is_active')->nullable()->default(true);
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
+            $table->softDeletes();
+            $table->unsignedSmallInteger('deleted_by')->nullable();
+            $table->boolean('is_deleted')->nullable();
+            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
+                    
+        });
+
 
         Schema::create('mst_social_media', function (Blueprint $table) {
             $table->smallIncrements('id');
@@ -161,71 +119,6 @@ class CreateTableForCollege extends Migration
         });
         
 
-
-
-
-
-        Schema::create('blogs', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('title',100)->nullable();
-            $table->text('description',500)->nullable();
-            $table->date('date')->nullable();
-            $table->unsignedInteger('visit_counts')->nullable();
-            $table->string('image')->nullable();
-            $table->unsignedSmallInteger('category_id')->nullable();
-            $table->string('author')->nullable();
-            $table->string('author_image')->nullable();
-
-            $table->unsignedInteger('display_order')->nullable();
-            $table->timestamps();
-            $table->unsignedInteger('created_by')->nullable();
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->softDeletes();
-            $table->unsignedSmallInteger('deleted_by')->nullable();
-            $table->boolean('is_deleted')->nullable();
-            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
-
-            $table->foreign('category_id','fk_blogs_category_id')->references('id')->on('categories');
-        });
-
-        Schema::create('pages', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('title',100)->nullable();
-            $table->unsignedSmallInteger('sub_menu_id')->nullable();
-            $table->string('description',500)->nullable();
-            $table->unsignedSmallInteger('type')->nullable();
-            $table->string('slug',50);
-            $table->string('file_upload')->nullable();
-            $table->string('external_redirect_url')->nullable();
-            $table->timestamps();
-            $table->unsignedInteger('created_by')->nullable();
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->softDeletes();
-            $table->unsignedSmallInteger('deleted_by')->nullable();
-            $table->boolean('is_deleted')->nullable();
-            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
-
-            $table->foreign('sub_menu_id','fk_pages_sub_menu_id')->references('id')->on('menus');
-        });
-
-        // Schema::create('sayings', function (Blueprint $table) {
-        //     $table->smallIncrements('id');
-        //     $table->string('said_by',100)->nullable();
-        //     $table->string('saying',500)->nullable();
-        //     $table->string('image')->nullable();
-        //     $table->unsignedSmallInteger('human_resource_id')->nullable();
-
-        //     $table->unsignedInteger('display_order')->nullable();
-        //     $table->timestamps();
-        //     $table->unsignedInteger('created_by')->nullable();
-        //     $table->unsignedInteger('updated_by')->nullable();
-        //     $table->softDeletes();
-        //     $table->unsignedSmallInteger('deleted_by')->nullable();
-        //     $table->boolean('is_deleted')->nullable();
-        //     $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
-
-        //     $table->foreign('human_resource_id','fk_sayings_human_resource_id')->references('id')->on('human_resources');
-        // });
 
         Schema::create('product', function (Blueprint $table) {
             $table->smallIncrements('id');

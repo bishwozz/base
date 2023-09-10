@@ -1,7 +1,8 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
-{{-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li> --}}
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('menu') }}'><i class='nav-icon la la-bars'></i> Menus</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('slider') }}'><i class='nav-icon la la-sliders'></i> Slider</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('games') }}'><i class='nav-icon la la-sliders'></i> games</a></li>
+{{-- 
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('course') }}'><i class='nav-icon la la-graduation-cap'></i> Courses</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('news-notice') }}'><i class='nav-icon la la-newspaper-o'></i> News Notice</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('gallery') }}'><i class='nav-icon la la-picture-o'></i> Gallery</a></li>
@@ -11,7 +12,7 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('event') }}'><i class='nav-icon la la-calendar'></i> Events</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('page') }}'><i class='nav-icon la la-file'></i> Page</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('category') }}'><i class='nav-icon la la-list-alt'></i> Categories</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('college-details') }}'><i class='nav-icon la la-copyright'></i> College Details</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('college-details') }}'><i class='nav-icon la la-copyright'></i> College Details</a></li> --}}
 
 <li class="nav-item nav-dropdown">
 	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-database"></i>Master</a>
@@ -37,5 +38,4 @@
 	  <li class="nav-item"><a class="nav-link" href="{{ backpack_url('permission') }}"><i class="nav-icon la la-key"></i> <span>Permissions</span></a></li>
 	</ul>
 </li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('services') }}'><i class='nav-icon la la-question'></i> Services</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('app-settings') }}'><i class='nav-icon la la-question'></i> AppSettings</a></li>
