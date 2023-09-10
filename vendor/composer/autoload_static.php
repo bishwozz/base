@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8b938007230815dd44913f5725df1fab
+class ComposerStaticInitb3e54892da4f0e04e6af6257c82f15f1
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -106,6 +106,7 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
             'Psr\\Http\\Client\\' => 16,
             'Psr\\EventDispatcher\\' => 20,
             'Psr\\Container\\' => 14,
+            'Psr\\Clock\\' => 10,
             'Psr\\Cache\\' => 10,
             'Prologue\\Alerts\\' => 16,
             'PhpParser\\' => 10,
@@ -372,6 +373,10 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Psr\\Clock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
         'Psr\\Cache\\' => 
         array (
@@ -657,19 +662,7 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
         'App\\Http\\Controllers\\Admin\\CoreMaster\\MstMinistryCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CoreMaster/MstMinistryCrudController.php',
         'App\\Http\\Controllers\\Admin\\CoreMaster\\MstNepaliMonthCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CoreMaster/MstNepaliMonthCrudController.php',
         'App\\Http\\Controllers\\Admin\\CoreMaster\\MstPostsCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CoreMaster/MstPostsCrudController.php',
-        'App\\Http\\Controllers\\Admin\\MinistryActLawCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/MinistryActLawCrudController.php',
-        'App\\Http\\Controllers\\Admin\\MinistryBudgetInfoCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/MinistryBudgetInfoCrudController.php',
-        'App\\Http\\Controllers\\Admin\\MinistryDataController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/MinistryDataController.php',
-        'App\\Http\\Controllers\\Admin\\MinistryProgramProgressCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/MinistryProgramProgressCrudController.php',
-        'App\\Http\\Controllers\\Admin\\MinistryProgressInfoCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/MinistryProgressInfoCrudController.php',
-        'App\\Http\\Controllers\\Admin\\MinistryReportCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/MinistryReportCrudController.php',
-        'App\\Http\\Controllers\\Admin\\MstMilestonesStatusCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/MstMilestonesStatusCrudController.php',
-        'App\\Http\\Controllers\\Admin\\OfficeDetailCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/OfficeDetailCrudController.php',
-        'App\\Http\\Controllers\\Admin\\OfficeDetailReportCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/OfficeDetailReportCrudController.php',
-        'App\\Http\\Controllers\\Admin\\OfficeInitiativeCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/OfficeInitiativeCrudController.php',
-        'App\\Http\\Controllers\\Admin\\PivotReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PivotReportController.php',
-        'App\\Http\\Controllers\\Admin\\PtProjectCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PtProjectCrudController.php',
-        'App\\Http\\Controllers\\Admin\\PtProjectMilestoneCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PtProjectMilestoneCrudController.php',
+        'App\\Http\\Controllers\\Admin\\SliderCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SliderCrudController.php',
         'App\\Http\\Controllers\\Auth\\PermissionCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/PermissionCrudController.php',
         'App\\Http\\Controllers\\Auth\\RoleCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RoleCrudController.php',
         'App\\Http\\Controllers\\Auth\\UserCrudController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/UserCrudController.php',
@@ -726,22 +719,9 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
         'App\\Models\\CoreMaster\\MstNepaliMonth' => __DIR__ . '/../..' . '/app/Models/CoreMaster/MstNepaliMonth.php',
         'App\\Models\\CoreMaster\\MstPosts' => __DIR__ . '/../..' . '/app/Models/CoreMaster/MstPosts.php',
         'App\\Models\\CoreMaster\\MstWard' => __DIR__ . '/../..' . '/app/Models/CoreMaster/MstWard.php',
-        'App\\Models\\MinistryActLaw' => __DIR__ . '/../..' . '/app/Models/MinistryActLaw.php',
-        'App\\Models\\MinistryBudgetInfo' => __DIR__ . '/../..' . '/app/Models/MinistryBudgetInfo.php',
-        'App\\Models\\MinistryDarbandi' => __DIR__ . '/../..' . '/app/Models/MinistryDarbandi.php',
-        'App\\Models\\MinistryMembers' => __DIR__ . '/../..' . '/app/Models/MinistryMembers.php',
-        'App\\Models\\MinistryProgramProgress' => __DIR__ . '/../..' . '/app/Models/MinistryProgramProgress.php',
-        'App\\Models\\MinistryProgressInfo' => __DIR__ . '/../..' . '/app/Models/MinistryProgressInfo.php',
-        'App\\Models\\MinistryReport' => __DIR__ . '/../..' . '/app/Models/MinistryReport.php',
-        'App\\Models\\MstLevel' => __DIR__ . '/../..' . '/app/Models/MstLevel.php',
-        'App\\Models\\MstMilestonesStatus' => __DIR__ . '/../..' . '/app/Models/MstMilestonesStatus.php',
-        'App\\Models\\OfficeDetail' => __DIR__ . '/../..' . '/app/Models/OfficeDetail.php',
-        'App\\Models\\OfficeInitiative' => __DIR__ . '/../..' . '/app/Models/OfficeInitiative.php',
         'App\\Models\\Permission' => __DIR__ . '/../..' . '/app/Models/Permission.php',
-        'App\\Models\\PtProject' => __DIR__ . '/../..' . '/app/Models/PtProject.php',
-        'App\\Models\\PtProjectMilestone' => __DIR__ . '/../..' . '/app/Models/PtProjectMilestone.php',
-        'App\\Models\\PtProjectMilestoneDetails' => __DIR__ . '/../..' . '/app/Models/PtProjectMilestoneDetails.php',
         'App\\Models\\Role' => __DIR__ . '/../..' . '/app/Models/Role.php',
+        'App\\Models\\Slider' => __DIR__ . '/../..' . '/app/Models/Slider.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -911,6 +891,7 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
         'Brick\\Math\\Internal\\Calculator\\GmpCalculator' => __DIR__ . '/..' . '/brick/math/src/Internal/Calculator/GmpCalculator.php',
         'Brick\\Math\\Internal\\Calculator\\NativeCalculator' => __DIR__ . '/..' . '/brick/math/src/Internal/Calculator/NativeCalculator.php',
         'Brick\\Math\\RoundingMode' => __DIR__ . '/..' . '/brick/math/src/RoundingMode.php',
+        'CURLStringFile' => __DIR__ . '/..' . '/symfony/polyfill-php81/Resources/stubs/CURLStringFile.php',
         'Carbon\\AbstractTranslator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/AbstractTranslator.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonConverterInterface' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonConverterInterface.php',
@@ -4165,6 +4146,7 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
         'League\\Flysystem\\Util\\MimeType' => __DIR__ . '/..' . '/league/flysystem/src/Util/MimeType.php',
         'League\\Flysystem\\Util\\StreamHasher' => __DIR__ . '/..' . '/league/flysystem/src/Util/StreamHasher.php',
         'League\\MimeTypeDetection\\EmptyExtensionToMimeTypeMap' => __DIR__ . '/..' . '/league/mime-type-detection/src/EmptyExtensionToMimeTypeMap.php',
+        'League\\MimeTypeDetection\\ExtensionLookup' => __DIR__ . '/..' . '/league/mime-type-detection/src/ExtensionLookup.php',
         'League\\MimeTypeDetection\\ExtensionMimeTypeDetector' => __DIR__ . '/..' . '/league/mime-type-detection/src/ExtensionMimeTypeDetector.php',
         'League\\MimeTypeDetection\\ExtensionToMimeTypeMap' => __DIR__ . '/..' . '/league/mime-type-detection/src/ExtensionToMimeTypeMap.php',
         'League\\MimeTypeDetection\\FinfoMimeTypeDetector' => __DIR__ . '/..' . '/league/mime-type-detection/src/FinfoMimeTypeDetector.php',
@@ -4686,6 +4668,7 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
         'PHPUnit\\Framework\\Constraint\\LogicalXor' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Operator/LogicalXor.php',
         'PHPUnit\\Framework\\Constraint\\ObjectEquals' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Object/ObjectEquals.php',
         'PHPUnit\\Framework\\Constraint\\ObjectHasAttribute' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Object/ObjectHasAttribute.php',
+        'PHPUnit\\Framework\\Constraint\\ObjectHasProperty' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Object/ObjectHasProperty.php',
         'PHPUnit\\Framework\\Constraint\\Operator' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Operator/Operator.php',
         'PHPUnit\\Framework\\Constraint\\RegularExpression' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/String/RegularExpression.php',
         'PHPUnit\\Framework\\Constraint\\SameSize' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Constraint/Cardinality/SameSize.php',
@@ -5825,6 +5808,7 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
         'Psr\\Cache\\CacheItemInterface' => __DIR__ . '/..' . '/psr/cache/src/CacheItemInterface.php',
         'Psr\\Cache\\CacheItemPoolInterface' => __DIR__ . '/..' . '/psr/cache/src/CacheItemPoolInterface.php',
         'Psr\\Cache\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/cache/src/InvalidArgumentException.php',
+        'Psr\\Clock\\ClockInterface' => __DIR__ . '/..' . '/psr/clock/src/ClockInterface.php',
         'Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
         'Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
         'Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',
@@ -7281,10 +7265,10 @@ class ComposerStaticInit8b938007230815dd44913f5725df1fab
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8b938007230815dd44913f5725df1fab::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8b938007230815dd44913f5725df1fab::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit8b938007230815dd44913f5725df1fab::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit8b938007230815dd44913f5725df1fab::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb3e54892da4f0e04e6af6257c82f15f1::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb3e54892da4f0e04e6af6257c82f15f1::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitb3e54892da4f0e04e6af6257c82f15f1::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb3e54892da4f0e04e6af6257c82f15f1::$classMap;
 
         }, null, ClassLoader::class);
     }

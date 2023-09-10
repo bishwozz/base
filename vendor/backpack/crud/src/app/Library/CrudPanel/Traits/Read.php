@@ -162,7 +162,7 @@ trait Read
      */
     public function enableDetailsRow()
     {
-        if (backpack_pro()) {
+        if (! backpack_pro()) {
             throw new BackpackProRequiredException('Details row');
         }
 
@@ -349,7 +349,7 @@ trait Read
      */
     public function enableExportButtons()
     {
-        if (backpack_pro()) {
+        if (! backpack_pro()) {
             throw new BackpackProRequiredException('Export buttons');
         }
 

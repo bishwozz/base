@@ -21,11 +21,6 @@
     ::placeholder{
         color: #797979 !important;
     }
-    /* .login-img{
-        background-image: url('/assets/login-04.png');
-        background-repeat: no-repeat;
-        background-size: cover;
-    } */
     .login-img img{
         width: 100%;
         object-fit: cover;

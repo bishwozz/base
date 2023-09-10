@@ -83,8 +83,8 @@ class BuildBackpackCommand extends Command
 
             // Try to load it from file content
             $fileContent = Str::of(file_get_contents($filepath));
-            $namespace = $fileContent->match('/namespace (.*);/')->value();
-            $classname = $fileContent->match('/class (\w+)/')->value();
+            $namespace = (string) $fileContent->match('/namespace (.*);/');
+            $classname = (string) $fileContent->match('/class (\w+)/');
 
             $result = $this->validateModelClass("$namespace\\$classname");
             if ($result) {
