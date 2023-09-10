@@ -41,7 +41,7 @@ class CrudFilter
 
     public function __construct($options, $values, $logic, $fallbackLogic)
     {
-        if (! backpack_pro()) {
+        if (backpack_pro()) {
             throw new BackpackProRequiredException('Filter');
         }
         // if filter exists

@@ -72,8 +72,8 @@ class CreateMainTables extends Migration
             $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
         });
 
-        $DbSeed = new DatabaseSeeder();
-        $DbSeed->run();
+        // $DbSeed = new DatabaseSeeder();
+        // $DbSeed->run();
     }
 
     /**

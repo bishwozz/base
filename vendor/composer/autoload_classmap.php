@@ -8,7 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Base\\BaseCrudController' => $baseDir . '/app/Base/BaseCrudController.php',
     'App\\Base\\BaseModel' => $baseDir . '/app/Base/BaseModel.php',
-    'App\\Base\\BasePivotController' => $baseDir . '/app/Base/BasePivotController.php',
     'App\\Base\\Helpers\\GetNepaliServerDate' => $baseDir . '/app/Base/Helpers/GetNepaliServerDate.php',
     'App\\Base\\Helpers\\NepaliCalendar' => $baseDir . '/app/Base/Helpers/NepaliCalendar.php',
     'App\\Base\\Helpers\\NepaliNumber' => $baseDir . '/app/Base/Helpers/NepaliNumber.php',
@@ -98,7 +97,6 @@ return array(
     'App\\Http\\Requests\\SliderRequest' => $baseDir . '/app/Http/Requests/SliderRequest.php',
     'App\\Models\\AboutUs' => $baseDir . '/app/Models/AboutUs.php',
     'App\\Models\\AppSettings' => $baseDir . '/app/Models/AppSettings.php',
-    'App\\Models\\BaseModel' => $baseDir . '/app/Models/BaseModel.php',
     'App\\Models\\Blog' => $baseDir . '/app/Models/Blog.php',
     'App\\Models\\Category' => $baseDir . '/app/Models/Category.php',
     'App\\Models\\ContactUs' => $baseDir . '/app/Models/ContactUs.php',

@@ -626,7 +626,6 @@ class ComposerStaticInitf506d8ed94195b59240f0c83566b22cc
     public static $classMap = array (
         'App\\Base\\BaseCrudController' => __DIR__ . '/../..' . '/app/Base/BaseCrudController.php',
         'App\\Base\\BaseModel' => __DIR__ . '/../..' . '/app/Base/BaseModel.php',
-        'App\\Base\\BasePivotController' => __DIR__ . '/../..' . '/app/Base/BasePivotController.php',
         'App\\Base\\Helpers\\GetNepaliServerDate' => __DIR__ . '/../..' . '/app/Base/Helpers/GetNepaliServerDate.php',
         'App\\Base\\Helpers\\NepaliCalendar' => __DIR__ . '/../..' . '/app/Base/Helpers/NepaliCalendar.php',
         'App\\Base\\Helpers\\NepaliNumber' => __DIR__ . '/../..' . '/app/Base/Helpers/NepaliNumber.php',
@@ -716,7 +715,6 @@ class ComposerStaticInitf506d8ed94195b59240f0c83566b22cc
         'App\\Http\\Requests\\SliderRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SliderRequest.php',
         'App\\Models\\AboutUs' => __DIR__ . '/../..' . '/app/Models/AboutUs.php',
         'App\\Models\\AppSettings' => __DIR__ . '/../..' . '/app/Models/AppSettings.php',
-        'App\\Models\\BaseModel' => __DIR__ . '/../..' . '/app/Models/BaseModel.php',
         'App\\Models\\Blog' => __DIR__ . '/../..' . '/app/Models/Blog.php',
         'App\\Models\\Category' => __DIR__ . '/../..' . '/app/Models/Category.php',
         'App\\Models\\ContactUs' => __DIR__ . '/../..' . '/app/Models/ContactUs.php',

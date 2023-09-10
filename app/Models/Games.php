@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
+use App\Base\BaseModel;
 use Illuminate\Support\Str;
-use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class Games extends BaseModel
 {

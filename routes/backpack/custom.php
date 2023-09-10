@@ -44,5 +44,7 @@ Route::group([
     Route::get('/home', 'HomeController@index');
     Route::get('/login', 'HomeController@showLoginForm')->name('user_login');
     Route::post('/login', 'HomeController@login')->name('check_login');
-
+    Route::post('/logout', 'HomeController@logout')->name('logout');
+    
+    Route::get('/payment', 'HomeController@payment')->name('payment');
 });

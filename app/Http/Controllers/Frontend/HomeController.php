@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Menu;
 use App\Models\Page;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Games;
 use App\Models\Course;
@@ -17,25 +18,23 @@ use App\Models\FooterAddress;
 use App\Models\HumanResource;
 use App\Models\MstDepartmentType;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Base\Traits\HeaderFooterData;
 use Illuminate\Support\Facades\Redirect;
 
 class HomeController extends Controller
 {
-    use HeaderFooterData;
-
     public function index()
     {
-        $header_footer_data = $this->getApplicationSettingsData();
         $sliders = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $games = Games::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
-        $about_us = AboutUs::where('deleted_uq_code',1)->first();
+        // $auth = Auth::user();
 
         $this->data = [
             'sliders' => $sliders,
-            'header_footer_data' => $header_footer_data,
-            'about_us' => $about_us,
             'games' => $games,
+            // 'auth' => $auth,
         ];
         return view('frontend.index', $this->data);
     }
@@ -119,6 +118,26 @@ class HomeController extends Controller
     }
 
     public function login(Request $request){
-        
+        $user = User::where('email', $request->email)->first();
+
+        if($user && Hash::check($request->password, $user->password)){
+            auth::login($user);
+            return redirect('/');
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'failed',
+        ], 200);
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/'); // Redirect to the homepage or any other page after logout
+    }
+    public function payment()
+    {
+        return view('frontend.payment');
     }
 }
