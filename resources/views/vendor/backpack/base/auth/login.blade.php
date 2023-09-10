@@ -32,19 +32,16 @@
     }
     .card-back{
         background-color: #ffffff !important;
-        max-width: 900px;
+        max-width: 40%;
         border-radius: 20px !important;
         box-shadow: 5px 5px 5px 5px #00000020 !important;
     }
 </style>
 @section('content')
     <div class="row justify-content-center align-items-center card-back mx-auto py-3">
-        <div class="col-md-6 login-img p-0">
-            <img src="{{url('/assets/login-03.png')}}" alt="login img">
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="py-3">
-                <h3 class="text-left mb-1 ml-3 font-weight-bold text-color">प्रगति प्रतिवेदन प्रणाली</h3>
+                <h3 class="text-left mb-1 ml-3 font-weight-bold text-color"> login </h3>
                 <div class="card-body">
                     <form class="col-md-12 p-t-10" role="form" method="POST" action="{{ route('backpack.auth.login') }}">
                         {!! csrf_field() !!}

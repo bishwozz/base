@@ -13,9 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return redirect('/admin');
-});
+
+Route::get('/', 'App\Http\Controllers\HomeController@index');
+
+
+
+// Route::get('/', function () {
+//     return redirect('/admin');
+// });
+
 Route::get('home', function () {
     return redirect('/admin');
 });
