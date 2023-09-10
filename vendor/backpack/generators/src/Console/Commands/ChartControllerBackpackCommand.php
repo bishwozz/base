@@ -94,19 +94,7 @@ class ChartControllerBackpackCommand extends GeneratorCommand
         $stub = $this->files->get($this->getStub());
 
         return $this->replaceNamespace($stub, $name)
-                    ->replaceRouteStrings($stub)
-                    ->replaceClass($stub, $name);
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-
-        ];
+            ->replaceRouteStrings($stub)
+            ->replaceClass($stub, $name);
     }
 }

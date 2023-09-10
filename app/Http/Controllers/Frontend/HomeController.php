@@ -113,4 +113,12 @@ class HomeController extends Controller
     public function contactFormSend(){
         return true;
     }
+
+    public function showLoginForm(){
+        return view('frontend.auth.login');
+    }
+
+    public function login(Request $request){
+        
+    }
 }

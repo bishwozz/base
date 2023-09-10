@@ -13,12 +13,12 @@
 
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-permission.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-permission)
-![](https://github.com/spatie/laravel-permission/workflows/Run%20Tests/badge.svg?branch=master)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-permission/run-tests-L8.yml?branch=main&label=Tests)](https://github.com/spatie/laravel-permission/actions?query=workflow%3ATests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-permission.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-permission)
 
 ## Documentation, Installation, and Usage Instructions
 
-See the [DOCUMENTATION](https://docs.spatie.be/laravel-permission/v4/introduction/) for detailed installation and usage instructions.
+See the [documentation](https://spatie.be/docs/laravel-permission/) for detailed installation and usage instructions.
 
 ## What It Does
 This package allows you to manage user permissions and roles in a database.
@@ -61,11 +61,11 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security-related issues, please email [freek@spatie.be](mailto:freek@spatie.be) instead of using the issue tracker.
+If you discover any security-related issues, please email [security@spatie.be](mailto:security@spatie.be) instead of using the issue tracker.
 
 ## Postcardware
 

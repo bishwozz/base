@@ -57,7 +57,7 @@ class ModelBackpackCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace;
+        return $rootNamespace.'\Models';
     }
 
     /**
@@ -89,17 +89,5 @@ class ModelBackpackCommand extends GeneratorCommand
         $stub = $this->files->get($this->getStub());
 
         return $this->replaceNamespace($stub, $name)->replaceTable($stub, $name)->replaceClass($stub, $name);
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-
-        ];
     }
 }

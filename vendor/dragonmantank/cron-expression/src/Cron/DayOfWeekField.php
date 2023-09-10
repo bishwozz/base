@@ -68,9 +68,8 @@ class DayOfWeekField extends AbstractField
         $lastDayOfMonth = (int) $date->format('t');
 
         // Find out if this is the last specific weekday of the month
-        if (strpos($value, 'L')) {
-            /** @phpstan-ignore-next-line */
-            $weekday = $this->convertLiterals(substr($value, 0, strpos($value, 'L')));
+        if ($lPosition = strpos($value, 'L')) {
+            $weekday = $this->convertLiterals(substr($value, 0, $lPosition));
             $weekday %= 7;
 
             $daysInMonth = (int) $date->format('t');
@@ -151,10 +150,10 @@ class DayOfWeekField extends AbstractField
     public function increment(DateTimeInterface &$date, $invert = false, $parts = null): FieldInterface
     {
         if (! $invert) {
-            $date = $this->timezoneSafeModify($date, '+1 day');
+            $date = $date->add(new \DateInterval('P1D'));
             $date = $date->setTime(0, 0);
         } else {
-            $date = $this->timezoneSafeModify($date, '-1 day');
+            $date = $date->sub(new \DateInterval('P1D'));
             $date = $date->setTime(23, 59);
         }
 

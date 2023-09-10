@@ -36,22 +36,15 @@
 <body class="theme-light" data-highlight="highlight-red" data-gradient="body-default">
 
     @include('inc.loader')
+    <div id="page">
 
-    @include('inc.header')
-    <div id="main-wrapper">
+        @include('inc.header')
 
         @yield('content')
         @include('inc.footer')
         @include('inc.extra')
     </div>
 
-    <!-- JS -->
-
-    <!-- jQuery JS -->
-    {{-- <script src="{{ asset('frontend/js/vendor/jquery-3.5.1.min.js') }}"></script> --}}
-
-    <!-- Bootstrap JS -->
-    {{-- <script src="{{ asset('frontend/js/vendor/bootstrap.min.js') }}"></script> --}}
 
     <!-- Main JS -->
     <script src="{{ asset('frontend/js/bootstrap.min.js') }}"></script>

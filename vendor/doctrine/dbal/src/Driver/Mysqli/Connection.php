@@ -11,9 +11,6 @@ use Doctrine\Deprecations\Deprecation;
 use mysqli;
 use mysqli_sql_exception;
 
-use function floor;
-use function stripos;
-
 final class Connection implements ServerInfoAwareConnection
 {
     /**
@@ -21,12 +18,9 @@ final class Connection implements ServerInfoAwareConnection
      */
     public const OPTION_FLAGS = 'flags';
 
-    /** @var mysqli */
-    private $connection;
+    private mysqli $connection;
 
-    /**
-     * @internal The connection can be only instantiated by its driver.
-     */
+    /** @internal The connection can be only instantiated by its driver. */
     public function __construct(mysqli $connection)
     {
         $this->connection = $connection;
@@ -36,32 +30,24 @@ final class Connection implements ServerInfoAwareConnection
      * Retrieves mysqli native resource handle.
      *
      * Could be used if part of your application is not using DBAL.
+     *
+     * @deprecated Call {@see getNativeConnection()} instead.
      */
     public function getWrappedResourceHandle(): mysqli
     {
-        return $this->connection;
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/5037',
+            '%s is deprecated, call getNativeConnection() instead.',
+            __METHOD__,
+        );
+
+        return $this->getNativeConnection();
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * The server version detection includes a special case for MariaDB
-     * to support '5.5.5-' prefixed versions introduced in Maria 10+
-     *
-     * @link https://jira.mariadb.org/browse/MDEV-4088
-     */
     public function getServerVersion(): string
     {
-        $serverInfos = $this->connection->get_server_info();
-        if (stripos($serverInfos, 'mariadb') !== false) {
-            return $serverInfos;
-        }
-
-        $majorVersion = floor($this->connection->server_version / 10000);
-        $minorVersion = floor(($this->connection->server_version - $majorVersion * 10000) / 100);
-        $patchVersion = floor($this->connection->server_version - $majorVersion * 10000 - $minorVersion * 100);
-
-        return $majorVersion . '.' . $minorVersion . '.' . $patchVersion;
+        return $this->connection->get_server_info();
     }
 
     public function prepare(string $sql): DriverStatement
@@ -85,7 +71,7 @@ final class Connection implements ServerInfoAwareConnection
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function quote($value, $type = ParameterType::STRING)
     {
@@ -108,7 +94,7 @@ final class Connection implements ServerInfoAwareConnection
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function lastInsertId($name = null)
     {
@@ -116,7 +102,7 @@ final class Connection implements ServerInfoAwareConnection
             Deprecation::triggerIfCalledFromOutside(
                 'doctrine/dbal',
                 'https://github.com/doctrine/dbal/issues/4687',
-                'The usage of Connection::lastInsertId() with a sequence name is deprecated.'
+                'The usage of Connection::lastInsertId() with a sequence name is deprecated.',
             );
         }
 
@@ -146,5 +132,10 @@ final class Connection implements ServerInfoAwareConnection
         } catch (mysqli_sql_exception $e) {
             return false;
         }
+    }
+
+    public function getNativeConnection(): mysqli
+    {
+        return $this->connection;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DummyNamespace;
 
-use App\Http\Requests\DummyClassRequest;
+use App\Http\Requests\DummyModelClassRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -26,7 +26,7 @@ class DummyClassCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\DummyClass::class);
+        CRUD::setModel(\App\Models\DummyModelClass::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/dummy-class');
         CRUD::setEntityNameStrings('dummy singular', 'dummy plural');
     }

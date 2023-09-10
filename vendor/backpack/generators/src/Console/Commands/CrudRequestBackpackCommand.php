@@ -2,10 +2,13 @@
 
 namespace Backpack\Generators\Console\Commands;
 
-use Illuminate\Console\GeneratorCommand;
+use Backpack\Generators\Services\BackpackCommand;
+use Illuminate\Support\Str;
 
-class CrudRequestBackpackCommand extends GeneratorCommand
+class CrudRequestBackpackCommand extends BackpackCommand
 {
+    use \Backpack\CRUD\app\Console\Commands\Traits\PrettyCommandOutput;
+
     /**
      * The console command name.
      *
@@ -33,6 +36,42 @@ class CrudRequestBackpackCommand extends GeneratorCommand
      * @var string
      */
     protected $type = 'Request';
+
+    /**
+     * Execute the console command.
+     *
+     * @return bool|null
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function handle()
+    {
+        $name = $this->getNameInput();
+        $nameTitle = $this->buildCamelName($name);
+        $qualifiedClassName = $this->qualifyClass($nameTitle);
+        $path = $this->getPath($qualifiedClassName);
+        $relativePath = Str::of($path)->after(base_path())->trim('\\/');
+
+        $this->progressBlock("Creating Request <fg=blue>$relativePath</>");
+
+        // Next, We will check to see if the class already exists. If it does, we don't want
+        // to create the class and overwrite the user's code. So, we will bail out so the
+        // code is untouched. Otherwise, we will continue generating this class' files.
+        if ((! $this->hasOption('force') || ! $this->option('force')) && $this->alreadyExists($this->getNameInput())) {
+            $this->closeProgressBlock('Already existed', 'yellow');
+
+            return false;
+        }
+
+        // Next, we will generate the path to the location where this class' file should get
+        // written. Then, we will build the class and make the proper replacements on the
+        // stub files so that it gets the correctly formatted namespace and class name.
+        $this->makeDirectory($path);
+
+        $this->files->put($path, $this->sortImports($this->buildClass($qualifiedClassName)));
+
+        $this->closeProgressBlock();
+    }
 
     /**
      * Get the destination class path.
@@ -66,17 +105,5 @@ class CrudRequestBackpackCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace)
     {
         return $rootNamespace.'\Http\Requests';
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-
-        ];
     }
 }

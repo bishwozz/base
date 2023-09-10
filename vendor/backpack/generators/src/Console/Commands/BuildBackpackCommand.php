@@ -3,17 +3,20 @@
 namespace Backpack\Generators\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class BuildBackpackCommand extends Command
 {
+    use \Backpack\CRUD\app\Console\Commands\Traits\PrettyCommandOutput;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'backpack:build';
+    protected $signature = 'backpack:build
+        {--validation=request : Validation type, must be request, array or field}';
 
     /**
      * The console command description.
@@ -30,46 +33,80 @@ class BuildBackpackCommand extends Command
     public function handle()
     {
         // make a list of all models
-        $models = $this->getModels(base_path().'/app');
+        $models = $this->getModels(base_path('app'));
 
         if (! count($models)) {
-            $this->error('No models found.');
+            $this->errorBlock('No models found.');
 
             return false;
         }
 
-        foreach ($models as $key => $model) {
-            $this->info("--- $model ---");
-            // Create the CrudController & Request
-            // Attach CrudTrait to Model
-            // Add sidebar item
-            // Add routes
-            $this->call('backpack:crud', ['name' => $model]);
+        foreach ($models as $model) {
+            $this->call('backpack:crud', ['name' => $model, '--validation' => $this->option('validation')]);
+            $this->line('  <fg=gray>----------</>');
         }
+
+        $this->deleteLines();
     }
 
-    private function getModels($path)
+    private function getModels(string $path): array
     {
         $out = [];
         $results = scandir($path);
 
         foreach ($results as $result) {
-            if ($result === '.' or $result === '..') {
+            $filepath = "$path/$result";
+
+            // ignore `.` (dot) prefixed files
+            if ($result[0] === '.') {
                 continue;
             }
-            $filename = $path.'/'.$result;
 
-            if (is_dir($filename)) {
-                $out = array_merge($out, $this->getModels($filename));
-            } else {
-                $file_content = file_get_contents($filename);
-                if (Str::contains($file_content, 'Illuminate\Database\Eloquent\Model') &&
-                    Str::contains($file_content, 'extends Model')) {
-                    $out[] = Arr::last(explode('/', substr($filename, 0, -4)));
-                }
+            if (is_dir($filepath)) {
+                $out = array_merge($out, $this->getModels($filepath));
+                continue;
+            }
+
+            // Try to load it by path as namespace
+            $class = (string) Str::of($filepath)
+                ->after(base_path())
+                ->trim('\\/')
+                ->replace('/', '\\')
+                ->before('.php')
+                ->ucfirst();
+
+            $result = $this->validateModelClass($class);
+            if ($result) {
+                $out[] = $result;
+                continue;
+            }
+
+            // Try to load it from file content
+            $fileContent = Str::of(file_get_contents($filepath));
+            $namespace = (string) $fileContent->match('/namespace (.*);/');
+            $classname = (string) $fileContent->match('/class (\w+)/');
+
+            $result = $this->validateModelClass("$namespace\\$classname");
+            if ($result) {
+                $out[] = $result;
+                continue;
             }
         }
 
         return $out;
+    }
+
+    private function validateModelClass(string $class): ?string
+    {
+        try {
+            $reflection = new \ReflectionClass($class);
+
+            if ($reflection->isSubclassOf(Model::class) && ! $reflection->isAbstract()) {
+                return Str::of($class)->afterLast('\\');
+            }
+        } catch (\Throwable$e) {
+        }
+
+        return null;
     }
 }

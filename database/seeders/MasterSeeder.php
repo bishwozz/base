@@ -3,9 +3,13 @@
 namespace Database\Seeders;
 
 use Carbon\Carbon;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Artisan;
 
 class MasterSeeder extends Seeder
 {
@@ -31,7 +35,29 @@ class MasterSeeder extends Seeder
     public function userSeeder(){
         DB::table('users')->insert([
             ['id' => 1,'name' => 'admin', 'email' => 'admin@gmail.com','password'=> \Hash::make('1')],
+            ['id' => 2,'name' => 'user', 'email' => 'user@gmail.com','password'=> \Hash::make('1')],
         ]); 
+
+        //call artisan commands
+        Artisan::call('generate:permissions');
+        Artisan::call('disable:backpack_pro');
+
+        $permissions = Permission::all();
+        $super_admin_role = Role::find(1);
+        $user_role =Role::find(2);
+
+
+        $super_admin_role->givePermissionTo($permissions);
+        $user_role->givePermissionTo($permissions);
+
+
+        //assign role for superadmin
+        $user = User::findOrFail(1);
+        $normal_user = User::findOrFail(2);
+
+        $user->assignRoleCustom("superadmin", $user->id);
+        $user->assignRoleCustom("user", $normal_user->id);
+    
     }
 
     private function mst_social_media(){

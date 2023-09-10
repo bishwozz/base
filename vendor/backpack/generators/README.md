@@ -42,6 +42,15 @@ php artisan backpack:crud {Entity_name}
 # our CrudTrait to the model if it already exists.
 ```
 
+- **Generate all files for a custom admin panel page:**
+
+``` bash
+php artisan backpack:page {PageName}
+
+# You can use either PascalCase, snake_case or kebab-case.
+# This will generate you a Controller, a view and a route.
+```
+
 - Generate a new Backpack\CRUD file:
 ``` bash
 php artisan backpack:crud-controller {Entity_name}
@@ -71,6 +80,48 @@ php artisan backpack:view {Entity_name}
 
 ``` bash
 php artisan backpack:config {Entity_name}
+```
+
+- Generate a button
+
+``` bash
+php artisan backpack:button {button_name}
+```
+
+- Generate a field
+
+``` bash
+php artisan backpack:field {field_name}
+
+// or generate a field starting from another field
+php artisan backpack:field {field_name} --from={original_field_name}
+```
+
+- Generate a column
+
+``` bash
+php artisan backpack:column {column_name}
+
+// or generate a column starting from another column
+php artisan backpack:column {column_name} --from={original_column_name}
+```
+
+- Generate a filter
+
+``` bash
+php artisan backpack:filter {filter_name}
+
+// or generate a filter starting from another filter
+php artisan backpack:filter {filter_name} --from={original_filter_name}
+```
+
+- Generate a widget
+
+``` bash
+php artisan backpack:widget {widget_name}
+
+// or generate a widget starting from another widget
+php artisan backpack:widget {widget_name} --from={original_widget_name}
 ```
 
 ## Change log

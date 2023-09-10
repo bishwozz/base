@@ -1,23 +1,35 @@
 {{-- image column type --}}
 @php
-  $value = data_get($entry, $column['name']);
-  
-  if($value) {
+  $column['value'] = $column['value'] ?? data_get($entry, $column['name']);
+
+  if($column['value']) {
     $column['height'] = $column['height'] ?? "25px";
     $column['width'] = $column['width'] ?? "auto";
     $column['radius'] = $column['radius'] ?? "3px";
     $column['prefix'] = $column['prefix'] ?? '';
+    $column['temporary'] = $column['temporary'] ?? false;
+    $column['expiration'] = $column['expiration'] ?? 1;
 
-    if (is_array($value)) {
-      $value = json_encode($value);
+    if($column['value'] instanceof \Closure) {
+      $column['value'] = $column['value']($entry);
     }
 
-    if (preg_match('/^data\:image\//', $value)) { // base64_image
-      $href = $src = $value;
+    if (is_array($column['value'])) {
+      $column['value'] = json_encode($column['value']);
+    }
+
+    if (preg_match('/^data\:image\//', $column['value'])) { // base64_image
+      $href = $src = $column['value'];
     } elseif (isset($column['disk'])) { // image from a different disk (like s3 bucket)
-      $href = $src = Storage::disk($column['disk'])->url($column['prefix'].$value);
+
+      if (!empty($column['temporary'])) {
+          $href = $src = Storage::disk($column['disk'])->temporaryUrl($column['prefix'].$column['value'], now()->addMinutes((int) $column['expiration']));
+      } else {
+          $href = $src = Storage::disk($column['disk'])->url($column['prefix'].$column['value']);
+      }
+
     } else { // plain-old image, from a local disk
-      $href = $src = asset( $column['prefix'] . $value);
+      $href = $src = asset($column['prefix'] . $column['value']);
     }
 
     $column['wrapper']['element'] = $column['wrapper']['element'] ?? 'a';
@@ -27,8 +39,8 @@
 @endphp
 
 <span>
-  @if( empty($value) )
-    -
+  @if(empty($column['value']))
+    {{ $column['default'] ?? '-' }}
   @else
     @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_start')
         <img src="{{ $src }}" style="

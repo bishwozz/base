@@ -3,6 +3,7 @@
 namespace Doctrine\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\Deprecations\Deprecation;
 use JsonException;
 
 use function is_resource;
@@ -10,6 +11,7 @@ use function json_decode;
 use function json_encode;
 use function stream_get_contents;
 
+use const JSON_PRESERVE_ZERO_FRACTION;
 use const JSON_THROW_ON_ERROR;
 
 /**
@@ -18,7 +20,7 @@ use const JSON_THROW_ON_ERROR;
 class JsonType extends Type
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform)
     {
@@ -26,7 +28,13 @@ class JsonType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @param T $value
+     *
+     * @return (T is null ? null : string)
+     *
+     * @template T
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
@@ -35,14 +43,14 @@ class JsonType extends Type
         }
 
         try {
-            return json_encode($value, JSON_THROW_ON_ERROR);
+            return json_encode($value, JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION);
         } catch (JsonException $e) {
             throw ConversionException::conversionFailedSerialization($value, 'json', $e->getMessage(), $e);
         }
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -62,7 +70,7 @@ class JsonType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -70,10 +78,19 @@ class JsonType extends Type
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @deprecated
      */
     public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/5509',
+            '%s is deprecated.',
+            __METHOD__,
+        );
+
         return ! $platform->hasNativeJsonType();
     }
 }

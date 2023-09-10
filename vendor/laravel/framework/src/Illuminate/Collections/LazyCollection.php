@@ -796,8 +796,8 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
         return new static(function () use ($step, $offset) {
             $position = 0;
 
-            foreach ($this as $item) {
-                if ($position % $step === $offset) {
+            foreach ($this->slice($offset) as $item) {
+                if ($position % $step === 0) {
                     yield $item;
                 }
 
@@ -1286,6 +1286,17 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     public function sortKeysDesc($options = SORT_REGULAR)
     {
         return $this->passthru('sortKeysDesc', func_get_args());
+    }
+
+    /**
+     * Sort the collection keys using a callback.
+     *
+     * @param  callable  $callback
+     * @return static
+     */
+    public function sortKeysUsing(callable $callback)
+    {
+        return $this->passthru('sortKeysUsing', func_get_args());
     }
 
     /**

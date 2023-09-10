@@ -25,7 +25,7 @@ class HoursField extends AbstractField
     /**
      * @var array|null Transitions returned by DateTimeZone::getTransitions()
      */
-    protected $transitions = null;
+    protected $transitions = [];
 
     /**
      * @var int|null Timestamp of the start of the transitions range
@@ -50,7 +50,7 @@ class HoursField extends AbstractField
 
         // Are we on the edge of a transition
         $lastTransition = $this->getPastTransition($date);
-        if (($lastTransition !== null) && ($lastTransition["ts"] > ($date->format('U') - 3600))) {
+        if (($lastTransition !== null) && ($lastTransition["ts"] > ((int) $date->format('U') - 3600))) {
             $dtLastOffset = clone $date;
             $this->timezoneSafeModify($dtLastOffset, "-1 hour");
             $lastOffset = $dtLastOffset->getOffset();
@@ -92,6 +92,9 @@ class HoursField extends AbstractField
                 $dtLimitStart->getTimestamp(),
                 $dtLimitEnd->getTimestamp()
             );
+            if (empty($this->transitions)) {
+                return null;
+            }
             $this->transitionsStart = $dtLimitStart->getTimestamp();
             $this->transitionsEnd = $dtLimitEnd->getTimestamp();
         }

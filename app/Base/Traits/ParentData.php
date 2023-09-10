@@ -1,6 +1,8 @@
 <?php
 namespace App\Base\Traits;
 
+use ReflectionClass;
+
 
 /**
  * 
@@ -11,6 +13,7 @@ trait ParentData
 
     public function parent($name)
     {
+        // dd($this->crud);
         $request = $this->request;
         return $request->route($name) ?? null;
     }
@@ -24,33 +27,13 @@ trait ParentData
         }
     }
 
-
-    public function setHumanResourceTabs()
+    public function enableDialog( $enable = true)
     {
-        $parameters = array_values(request()->route()->parameters);
-        $links = [];
-        $links[] = ['label' => trans('Human Resource'), 'href' => backpack_url('human-resource/'.$parameters[0].'/edit')];
-        $links[] = ['label' => trans('Hr Social Media'), 'href' => backpack_url('human-resource/'.$parameters[0].'/hr-social-media')];
-        return $links;
+        $this->data['controller'] = (new \ReflectionClass($this))->getShortName();
+        $this->crud->controller = $this->data['controller'];
+        $this->enableDialog = $enable;
+        $this->data['enableDialog'] = property_exists($this, 'enableDialog') ? $this->enableDialog : false;
+        $this->crud->enableDialog = property_exists($this, 'enableDialog') ? $this->enableDialog : false;
     }
 
-    public function setCollegeDetailsTabs()
-    {
-        $parameters = array_values(request()->route()->parameters);
-        $links = [];
-        $links[] = ['label' => trans('College Details'), 'href' => backpack_url('college-details/'.$parameters[0].'/edit')];
-        $links[] = ['label' => trans('Social Media'), 'href' => backpack_url('college-details/'.$parameters[0].'/college-social-media')];
-        return $links;
-
-    }
-
-    public function setAgentDetailsTabs()
-    {
-        $parameters = array_values(request()->route()->parameters);
-        $links = [];
-        $links[] = ['label' => trans('Agent Detail'), 'href' => backpack_url('agent-detail/'.$parameters[0].'/edit')];
-        $links[] = ['label' => trans('Social Media'), 'href' => backpack_url('agent-detail/'.$parameters[0].'/agent-social-media')];
-        return $links;
-
-    }
 }

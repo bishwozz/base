@@ -4,74 +4,36 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Logging;
 
-use Doctrine\DBAL\Connection as DBALConnection;
 use Doctrine\DBAL\Driver as DriverInterface;
-use Doctrine\DBAL\Driver\API\ExceptionConverter;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\VersionAwarePlatformDriver;
+use Doctrine\DBAL\Driver\Middleware\AbstractDriverMiddleware;
 use Psr\Log\LoggerInterface;
+use SensitiveParameter;
 
-final class Driver implements VersionAwarePlatformDriver
+final class Driver extends AbstractDriverMiddleware
 {
-    /** @var DriverInterface */
-    private $driver;
+    private LoggerInterface $logger;
 
-    /** @var LoggerInterface */
-    private $logger;
-
-    /**
-     * @internal This driver can be only instantiated by its middleware.
-     */
+    /** @internal This driver can be only instantiated by its middleware. */
     public function __construct(DriverInterface $driver, LoggerInterface $logger)
     {
-        $this->driver = $driver;
+        parent::__construct($driver);
+
         $this->logger = $logger;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function connect(array $params)
-    {
+    public function connect(
+        #[SensitiveParameter]
+        array $params
+    ) {
         $this->logger->info('Connecting with parameters {params}', ['params' => $this->maskPassword($params)]);
 
         return new Connection(
-            $this->driver->connect($params),
-            $this->logger
+            parent::connect($params),
+            $this->logger,
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDatabasePlatform()
-    {
-        return $this->driver->getDatabasePlatform();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSchemaManager(DBALConnection $conn, AbstractPlatform $platform)
-    {
-        return $this->driver->getSchemaManager($conn, $platform);
-    }
-
-    public function getExceptionConverter(): ExceptionConverter
-    {
-        return $this->driver->getExceptionConverter();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createDatabasePlatformForVersion($version)
-    {
-        if ($this->driver instanceof VersionAwarePlatformDriver) {
-            return $this->driver->createDatabasePlatformForVersion($version);
-        }
-
-        return $this->driver->getDatabasePlatform();
     }
 
     /**
@@ -79,10 +41,16 @@ final class Driver implements VersionAwarePlatformDriver
      *
      * @return array<string,mixed>
      */
-    private function maskPassword(array $params): array
-    {
+    private function maskPassword(
+        #[SensitiveParameter]
+        array $params
+    ): array {
         if (isset($params['password'])) {
             $params['password'] = '<redacted>';
+        }
+
+        if (isset($params['url'])) {
+            $params['url'] = '<redacted>';
         }
 
         return $params;

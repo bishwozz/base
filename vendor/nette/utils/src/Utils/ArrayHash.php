@@ -15,6 +15,8 @@ use Nette;
 /**
  * Provides objects to work as array.
  * @template T
+ * @implements \RecursiveArrayIterator<array-key, T>
+ * @implements \ArrayAccess<array-key, T>
  */
 class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -31,6 +33,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 				? static::from($value, true)
 				: $value;
 		}
+
 		return $obj;
 	}
 
@@ -56,7 +59,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 
 	/**
 	 * Replaces or appends a item.
-	 * @param  string|int  $key
+	 * @param  array-key  $key
 	 * @param  T  $value
 	 */
 	public function offsetSet($key, $value): void
@@ -64,13 +67,14 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 		if (!is_scalar($key)) { // prevents null
 			throw new Nette\InvalidArgumentException(sprintf('Key must be either a string or an integer, %s given.', gettype($key)));
 		}
+
 		$this->$key = $value;
 	}
 
 
 	/**
 	 * Returns a item.
-	 * @param  string|int  $key
+	 * @param  array-key  $key
 	 * @return T
 	 */
 	#[\ReturnTypeWillChange]
@@ -82,7 +86,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 
 	/**
 	 * Determines whether a item exists.
-	 * @param  string|int  $key
+	 * @param  array-key  $key
 	 */
 	public function offsetExists($key): bool
 	{
@@ -92,7 +96,7 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 
 	/**
 	 * Removes the element from this list.
-	 * @param  string|int  $key
+	 * @param  array-key  $key
 	 */
 	public function offsetUnset($key): void
 	{

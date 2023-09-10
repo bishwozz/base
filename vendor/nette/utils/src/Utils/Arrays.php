@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nette\Utils;
 
+use JetBrains\PhpStorm\Language;
 use Nette;
 use function is_array, is_int, is_object, count;
 
@@ -38,9 +39,11 @@ class Arrays
 				if (func_num_args() < 3) {
 					throw new Nette\InvalidArgumentException("Missing item '$k'.");
 				}
+
 				return $default;
 			}
 		}
+
 		return $array;
 	}
 
@@ -62,6 +65,7 @@ class Arrays
 				throw new Nette\InvalidArgumentException('Traversed item is not an array.');
 			}
 		}
+
 		return $array;
 	}
 
@@ -84,6 +88,7 @@ class Arrays
 				$res[$k] = self::mergeTree($v, $array2[$k]);
 			}
 		}
+
 		return $res;
 	}
 
@@ -166,6 +171,7 @@ class Arrays
 		if ($key === null || ($offset = self::getKeyOffset($array, $key)) === null) {
 			$offset = count($array) - 1;
 		}
+
 		$array = array_slice($array, 0, $offset + 1, true)
 			+ $inserted
 			+ array_slice($array, $offset + 1, count($array), true);
@@ -183,6 +189,7 @@ class Arrays
 		if ($offset === null) {
 			return false;
 		}
+
 		$val = &$array[$oldKey];
 		$keys = array_keys($array);
 		$keys[$offset] = $newKey;
@@ -197,7 +204,12 @@ class Arrays
 	 * @param  string[]  $array
 	 * @return string[]
 	 */
-	public static function grep(array $array, string $pattern, int $flags = 0): array
+	public static function grep(
+		array $array,
+		#[Language('RegExp')]
+		string $pattern,
+		int $flags = 0
+	): array
 	{
 		return Strings::pcre('preg_grep', [$pattern, $array, $flags]);
 	}
@@ -223,7 +235,10 @@ class Arrays
 	 */
 	public static function isList($value): bool
 	{
-		return is_array($value) && (!$value || array_keys($value) === range(0, count($value) - 1));
+		return is_array($value) && (PHP_VERSION_ID < 80100
+			? !$value || array_keys($value) === range(0, count($value) - 1)
+			: array_is_list($value)
+		);
 	}
 
 
@@ -258,17 +273,16 @@ class Arrays
 						$x = $row[$parts[$i]];
 						$row = null;
 					}
-
 				} elseif ($part === '->') {
 					if (isset($parts[++$i])) {
 						if ($x === null) {
 							$x = new \stdClass;
 						}
+
 						$x = &$x->{$row[$parts[$i]]};
 					} else {
 						$row = is_object($rowOrig) ? $rowOrig : (object) $row;
 					}
-
 				} elseif ($part !== '|') {
 					$x = &$x[(string) $row[$part]];
 				}
@@ -293,6 +307,7 @@ class Arrays
 		foreach ($array as $k => $v) {
 			$res[is_int($k) ? $v : $k] = is_int($k) ? $filling : $v;
 		}
+
 		return $res;
 	}
 
@@ -334,6 +349,7 @@ class Arrays
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -349,6 +365,7 @@ class Arrays
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -363,6 +380,7 @@ class Arrays
 		foreach ($array as $k => $v) {
 			$res[$k] = $callback($v, $k, $array);
 		}
+
 		return $res;
 	}
 
@@ -377,6 +395,7 @@ class Arrays
 		foreach ($callbacks as $k => $cb) {
 			$res[$k] = $cb(...$args);
 		}
+
 		return $res;
 	}
 
@@ -391,6 +410,7 @@ class Arrays
 		foreach ($objects as $k => $obj) {
 			$res[$k] = $obj->$method(...$args);
 		}
+
 		return $res;
 	}
 
@@ -406,6 +426,7 @@ class Arrays
 		foreach ($array as $k => $v) {
 			$object->$k = $v;
 		}
+
 		return $object;
 	}
 
@@ -433,6 +454,7 @@ class Arrays
 		foreach ($array as $k => $v) {
 			$res[$k] = $prefix . $v . $suffix;
 		}
+
 		return $res;
 	}
 }

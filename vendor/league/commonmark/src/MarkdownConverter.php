@@ -14,13 +14,14 @@ declare(strict_types=1);
 namespace League\CommonMark;
 
 use League\CommonMark\Environment\EnvironmentInterface;
+use League\CommonMark\Exception\CommonMarkException;
 use League\CommonMark\Output\RenderedContentInterface;
 use League\CommonMark\Parser\MarkdownParser;
 use League\CommonMark\Parser\MarkdownParserInterface;
 use League\CommonMark\Renderer\HtmlRenderer;
 use League\CommonMark\Renderer\MarkdownRendererInterface;
 
-class MarkdownConverter implements MarkdownConverterInterface
+class MarkdownConverter implements ConverterInterface, MarkdownConverterInterface
 {
     /** @psalm-readonly */
     protected EnvironmentInterface $environment;
@@ -47,28 +48,46 @@ class MarkdownConverter implements MarkdownConverterInterface
     /**
      * Converts Markdown to HTML.
      *
-     * @param string $markdown The Markdown to convert
+     * @param string $input The Markdown to convert
      *
      * @return RenderedContentInterface Rendered HTML
      *
-     * @throws \RuntimeException
+     * @throws CommonMarkException
      */
-    public function convertToHtml(string $markdown): RenderedContentInterface
+    public function convert(string $input): RenderedContentInterface
     {
-        $documentAST = $this->markdownParser->parse($markdown);
+        $documentAST = $this->markdownParser->parse($input);
 
         return $this->htmlRenderer->renderDocument($documentAST);
     }
 
     /**
+     * Converts Markdown to HTML.
+     *
+     * @deprecated since 2.2; use {@link convert()} instead
+     *
+     * @param string $markdown The Markdown to convert
+     *
+     * @return RenderedContentInterface Rendered HTML
+     *
+     * @throws CommonMarkException
+     */
+    public function convertToHtml(string $markdown): RenderedContentInterface
+    {
+        \trigger_deprecation('league/commonmark', '2.2.0', 'Calling "convertToHtml()" on a %s class is deprecated, use "convert()" instead.', self::class);
+
+        return $this->convert($markdown);
+    }
+
+    /**
      * Converts CommonMark to HTML.
      *
-     * @see Converter::convertToHtml
+     * @see MarkdownConverter::convert()
      *
-     * @throws \RuntimeException
+     * @throws CommonMarkException
      */
     public function __invoke(string $markdown): RenderedContentInterface
     {
-        return $this->convertToHtml($markdown);
+        return $this->convert($markdown);
     }
 }

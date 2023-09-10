@@ -2,7 +2,6 @@
 
 namespace App\Base\Operations;
 
-use Prologue\Alerts\Facades\Alert;
 use Illuminate\Support\Facades\Route;
 
 trait CreateOperation
@@ -72,17 +71,14 @@ trait CreateOperation
     public function store()
     {
         $this->crud->hasAccessOrFail('create');
-
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
-        $user_id = backpack_user()->id;
-        if(!isset($request->display_order)){
-            $max_order=$this->crud->model->max('display_order');
-            $request->request->set('display_order', $max_order+1);
-        }
-        $request->request->set('created_by', $user_id);
-        $item = $this->crud->create($request->except(['save_action', '_token', '_method', 'http_referrer']));
 
+        // register any Model Events defined on fields
+        $this->crud->registerFieldEvents();
+
+        // insert item in the db
+        $item = $this->crud->create($this->crud->getStrippedSaveRequest($request));
         $this->data['entry'] = $this->crud->entry = $item;
 
         // show a success message

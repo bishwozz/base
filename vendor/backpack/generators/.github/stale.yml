@@ -4,7 +4,7 @@
 # https://probot.github.io/apps/stale/
 
 # Number of days of inactivity before an issue becomes stale
-daysUntilStale: 60
+daysUntilStale: 120
 # Number of days of inactivity before a stale issue is closed
 daysUntilClose: 14
 # Issues with these labels will never be considered stale

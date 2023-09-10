@@ -78,10 +78,13 @@ class CrudOperationBackpackCommand extends GeneratorCommand
      */
     protected function replaceNameStrings(&$stub, $name)
     {
-        $table = Str::plural(ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', str_replace($this->getNamespace($name).'\\', '', $name))), '_'));
+        $name = Str::of($name)->afterLast('\\');
 
-        $stub = str_replace('DummyTable', $table, $stub);
-        $stub = str_replace('dummy_class', strtolower(str_replace($this->getNamespace($name).'\\', '', $name)), $stub);
+        $stub = str_replace('DummyClass', $name->studly(), $stub);
+        $stub = str_replace('dummyClass', $name->lcfirst(), $stub);
+        $stub = str_replace('Dummy Class', $name->snake()->replace('_', ' ')->title(), $stub);
+        $stub = str_replace('dummy-class', $name->snake('-'), $stub);
+        $stub = str_replace('dummy_class', $name->snake(), $stub);
 
         return $this;
     }
@@ -96,18 +99,21 @@ class CrudOperationBackpackCommand extends GeneratorCommand
     {
         $stub = $this->files->get($this->getStub());
 
-        return $this->replaceNamespace($stub, $name)->replaceNameStrings($stub, $name)->replaceClass($stub, $name);
+        return $this
+            ->replaceNamespace($stub, $name)
+            ->replaceNameStrings($stub, $name)
+            ->replaceClass($stub, $name);
     }
 
     /**
-     * Get the console command options.
+     * Get the desired class name from the input.
      *
-     * @return array
+     * @return string
      */
-    protected function getOptions()
+    protected function getNameInput()
     {
-        return [
-
-        ];
+        return Str::of($this->argument('name'))
+            ->trim()
+            ->studly();
     }
 }

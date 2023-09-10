@@ -6,15 +6,16 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "backpack/crud": "4.1.*",
+        "backpack/crud": "^5.0",
         "backpack/permissionmanager": "^6.0",
-        "backpack/revise-operation": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "laravel/framework": "^8.75",
+        "laravel/helpers": "^1.5",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
         "backpack/generators": "^3.1",
@@ -35,7 +36,10 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "app/Http/helpers.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [
@@ -60,7 +64,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

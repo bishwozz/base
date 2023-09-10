@@ -3,6 +3,7 @@
 namespace DummyNamespace;
 
 use Illuminate\Support\Facades\Route;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 trait DummyClassOperation
 {
@@ -15,10 +16,10 @@ trait DummyClassOperation
      */
     protected function setupDummyClassRoutes($segment, $routeName, $controller)
     {
-        Route::get($segment.'/dummy_class', [
-            'as'        => $routeName.'.dummy_class',
-            'uses'      => $controller.'@dummy_class',
-            'operation' => 'dummy_class',
+        Route::get($segment.'/dummy-class', [
+            'as'        => $routeName.'.dummyClass',
+            'uses'      => $controller.'@dummyClass',
+            'operation' => 'dummyClass',
         ]);
     }
 
@@ -27,15 +28,15 @@ trait DummyClassOperation
      */
     protected function setupDummyClassDefaults()
     {
-        $this->crud->allowAccess('dummy_class');
+        CRUD::allowAccess('dummyClass');
 
-        $this->crud->operation('dummy_class', function () {
-            $this->crud->loadDefaultOperationSettingsFromConfig();
+        CRUD::operation('dummyClass', function () {
+            CRUD::loadDefaultOperationSettingsFromConfig();
         });
 
-        $this->crud->operation('list', function () {
-            // $this->crud->addButton('top', 'dummy_class', 'view', 'crud::buttons.dummy_class');
-            // $this->crud->addButton('line', 'dummy_class', 'view', 'crud::buttons.dummy_class');
+        CRUD::operation('list', function () {
+            // CRUD::addButton('top', 'dummy_class', 'view', 'crud::buttons.dummy_class');
+            // CRUD::addButton('line', 'dummy_class', 'view', 'crud::buttons.dummy_class');
         });
     }
 
@@ -44,15 +45,15 @@ trait DummyClassOperation
      *
      * @return Response
      */
-    public function dummy_class()
+    public function dummyClass()
     {
-        $this->crud->hasAccessOrFail('dummy_class');
+        CRUD::hasAccessOrFail('dummyClass');
 
         // prepare the fields you need to show
         $this->data['crud'] = $this->crud;
-        $this->data['title'] = $this->crud->getTitle() ?? 'dummy_class '.$this->crud->entity_name;
+        $this->data['title'] = CRUD::getTitle() ?? 'Dummy Class '.$this->crud->entity_name;
 
         // load the view
-        return view("crud::operations.dummy_class", $this->data);
+        return view('crud::operations.dummy_class', $this->data);
     }
 }

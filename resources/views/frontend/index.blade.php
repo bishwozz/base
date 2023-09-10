@@ -1,15 +1,7 @@
 @extends('layout.base')
 @section('content')
 
-    <div id="page">
 
-      <div id="footer-bar" class="footer-bar-1">
-        <a href="index.html" class="active-nav"><i class="fa fa-home"></i><span>Home</span></a>
-        <a href="index-components.html"><i class="fa fa-star"></i><span>Features</span></a>
-        <a href="index-pages.html"><i class="fa fa-heart"></i><span>Pages</span></a>
-        <a href="index-search.html"><i class="fa fa-search"></i><span>Search</span></a>
-        <a href="#" data-menu="menu-settings"><i class="fa fa-cog"></i><span>Settings</span></a>
-      </div>
 
       <div class="page-content header-clear-small">
         <div class="splide single-slider slider-no-arrows slider-no-dots" id="single-slider-home">
@@ -318,9 +310,10 @@
             </div>
           </div>
         </div>
+
         <div class="card card-style">
           <div class="content mb-0">
-            <h1 class="text-center mb-0">Get Sticky Today</h1>
+            <h1 class="text-center mb-0"> Our Services </h1>
             <p class="text-center color-highlight font-11 mt-n1 pb-0">Tons of Awesome Features just for You.</p>
             <p class="boxed-text-xl mt-n3">
               Fast, easy to use and filled with features. Get Sticky Today and give your site the Mobile Feeling it
@@ -331,6 +324,21 @@
               $25</a>
           </div>
         </div>
+
+        <div class="card card-style">
+          <div class="content mb-0">
+            <h1 class="text-center mb-0"> Our Services </h1>
+            <p class="text-center color-highlight font-11 mt-n1 pb-0">Tons of Awesome Features just for You.</p>
+            <p class="boxed-text-xl mt-n3">
+              Fast, easy to use and filled with features. Get Sticky Today and give your site the Mobile Feeling it
+              deserves.
+            </p>
+            <a href="#"
+              class="btn btn-m btn-center-l text-uppercase font-900 bg-highlight rounded-sm shadow-xl mb-4">Purchase Now -
+              $25</a>
+          </div>
+        </div>
+
         <div class="footer card card-style">
           <a href="#" class="footer-title"><span class="color-highlight">StickyMobile</span></a>
           <p class="footer-text"><span>Made with <i class="fa fa-heart color-highlight font-16 ps-2 pe-2"></i> by
@@ -355,43 +363,7 @@
       </div>
   
   
-      <div id="menu-settings" class="menu menu-box-bottom menu-box-detached">
-        <div class="menu-title mt-0 pt-0">
-          <h1>Settings</h1>
-          <p class="color-highlight">Flexible and Easy to Use</p><a href="#" class="close-menu"><i
-              class="fa fa-times"></i></a>
-        </div>
-        <div class="divider divider-margins mb-n2"></div>
-        <div class="content">
-          <div class="list-group list-custom-small">
-            <a href="#" data-toggle-theme data-trigger-switch="switch-dark-mode" class="pb-2 ms-n1">
-              <i class="fa font-12 fa-moon rounded-s bg-highlight color-white me-3"></i>
-              <span>Dark Mode</span>
-              <div class="custom-control scale-switch ios-switch">
-                <input data-toggle-theme type="checkbox" class="ios-input" id="switch-dark-mode">
-                <label class="custom-control-label" for="switch-dark-mode"></label>
-              </div>
-              <i class="fa fa-angle-right"></i>
-            </a>
-          </div>
-          <div class="list-group list-custom-large">
-            <a data-menu="menu-highlights" href="#">
-              <i class="fa font-14 fa-tint bg-green-dark rounded-s"></i>
-              <span>Page Highlight</span>
-              <strong>16 Colors Highlights Included</strong>
-              <span class="badge bg-highlight color-white">HOT</span>
-              <i class="fa fa-angle-right"></i>
-            </a>
-            <a data-menu="menu-backgrounds" href="#" class="border-0">
-              <i class="fa font-14 fa-cog bg-blue-dark rounded-s"></i>
-              <span>Background Color</span>
-              <strong>10 Page Gradients Included</strong>
-              <span class="badge bg-highlight color-white">NEW</span>
-              <i class="fa fa-angle-right"></i>
-            </a>
-          </div>
-        </div>
-      </div>
+
   
       <div id="menu-highlights" class="menu menu-box-bottom menu-box-detached">
         <div class="menu-title">
@@ -540,12 +512,7 @@
           <a href="#" class="pwa-dismiss close-menu color-highlight text-uppercase font-700">Maybe later</a>
         </div>
       </div>
-    </div>
-    <!-- Messenger Chat Plugin Code -->
-    <div id="fb-root"></div>
-  
-    <!-- Your Chat Plugin code -->
-    <div id="fb-customer-chat" class="fb-customerchat">
-    </div>
+
+
   
 @endsection

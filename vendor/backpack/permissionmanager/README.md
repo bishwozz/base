@@ -15,7 +15,7 @@ As opposed to some other packages:
 
 This package is just a user interface for [spatie/laravel-permission](https://github.com/spatie/laravel-permission). It will install it, and let you use its API in code. Please refer to their README for more information on how to use in code.
 
-![Edit a user in Backpack/PermissionManager](https://backpackforlaravel.com/uploads/screenshots/permissions_users_edit.png)
+![Edit a user in Backpack/PermissionManager](https://user-images.githubusercontent.com/1032474/149489620-a3e54d6e-db5f-4241-9afc-dc9451e54b64.gif)
 
 
 
@@ -35,9 +35,9 @@ composer require backpack/permissionmanager
 
 2) Finish all installation steps for [spatie/laravel-permission](https://github.com/spatie/laravel-permission#installation), which as been pulled as a dependency. Run its migrations. Publish its config files. Most likely it's:
 ```shell
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="permission-migrations"
 php artisan migrate
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="permission-config"
 // then, add the Spatie\Permission\Traits\HasRoles trait to your User model(s)
 ```
 
@@ -52,7 +52,7 @@ php artisan vendor:publish --provider="Backpack\PermissionManager\PermissionMana
 php artisan migrate
 ```
 
-5) The package assumes it's ok to use ```App\Models\BackpackUser``` to administer Users. Use a different one if you'd like by changing the user model in the ```config/backpack/permissionmanager.php``` file. Any model you're using, make sure it's using the ```CrudTrait``` and ```HasRoles``` traits:
+5) The package assumes it's ok to use the default Backpack user model (most likely ```App\Models\User``` to administer Users. Use a different one if you'd like by changing the user model in the ```config/backpack/permissionmanager.php``` file. Any model you're using, make sure it's using the ```CrudTrait``` and ```HasRoles``` traits:
 ```php
 <?php namespace App\Models;
 
@@ -105,11 +105,11 @@ OR
     'middleware_class' => [
         App\Http\Middleware\CheckIfAdmin::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-+       Backpack\Base\app\Http\Middleware\UseBackpackAuthGuardInsteadOfDefaultAuthGuard::class,
++       Backpack\CRUD\app\Http\Middleware\UseBackpackAuthGuardInsteadOfDefaultAuthGuard::class,
     ],
 ```
 
-Why? spatie/laravel-permission uses the ```Auth``` facade for determining permissions with ```@can```. The ```Auth``` facade uses the default guard defined in ```config/auth.php```, NOT our backpack guard. 
+Why? `spatie/laravel-permission` uses the ```Auth``` facade for determining permissions with ```@can```. The ```Auth``` facade uses the default guard defined in ```config/auth.php```, NOT our backpack guard.
 
 Please note:
 - this will make ```auth()``` return the exact same thing as ```backpack_auth()``` on Backpack routes;
@@ -246,10 +246,6 @@ If you are upgrading to a Laravel 8 instalation, please note that User Model may
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
-## Screenshots
-
-![Roles table view in Backpack/PermissionManager](https://backpackforlaravel.com/uploads/screenshots/permissions_roles.png)
 
 ## Overwriting functionality
 

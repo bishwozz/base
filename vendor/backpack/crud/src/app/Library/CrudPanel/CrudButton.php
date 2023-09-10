@@ -2,6 +2,9 @@
 
 namespace Backpack\CRUD\app\Library\CrudPanel;
 
+use Backpack\CRUD\ViewNamespaces;
+use Illuminate\Support\Traits\Conditionable;
+
 /**
  * Adds fluent syntax to Backpack CRUD Buttons.
  *
@@ -16,6 +19,8 @@ namespace Backpack\CRUD\app\Library\CrudPanel;
  */
 class CrudButton
 {
+    use Conditionable;
+
     public $stack;
     public $name;
     public $type;
@@ -257,14 +262,38 @@ class CrudButton
         }
 
         if ($this->type == 'view') {
-            if (view()->exists($button->content)) {
-                return view($button->content, compact('button', 'crud', 'entry'));
-            } else {
-                abort(500, 'Button view "'.$button->content.'" does not exist');
-            }
+            return view($button->getFinalViewPath(), compact('button', 'crud', 'entry'));
         }
 
         abort(500, 'Unknown button type');
+    }
+
+    /**
+     * Get an array of full paths to the filter view, consisting of:
+     * - the path given in the button definition
+     * - fallback view paths as configured in backpack/config/crud.php.
+     *
+     * @return array
+     */
+    private function getViewPathsWithFallbacks()
+    {
+        $type = $this->name;
+        $paths = array_map(function ($item) use ($type) {
+            return $item.'.'.$type;
+        }, ViewNamespaces::getFor('buttons'));
+
+        return array_merge([$this->content], $paths);
+    }
+
+    private function getFinalViewPath()
+    {
+        foreach ($this->getViewPathsWithFallbacks() as $path) {
+            if (view()->exists($path)) {
+                return $path;
+            }
+        }
+
+        abort(500, 'Button view and fallbacks do not exist for '.$this->name.' button.');
     }
 
     /**
@@ -379,6 +408,8 @@ class CrudButton
      * Dump the current object to the screen,
      * so that the developer can see its contents.
      *
+     * @codeCoverageIgnore
+     *
      * @return CrudButton
      */
     public function dump()
@@ -392,6 +423,8 @@ class CrudButton
      * Dump and die. Duumps the current object to the screen,
      * so that the developer can see its contents, then stops
      * the execution.
+     *
+     * @codeCoverageIgnore
      *
      * @return CrudButton
      */
