@@ -65,7 +65,7 @@ trait Base
 	}
 
 
-	public function assert(callable $handler, ?string $description = null): self
+	public function assert(callable $handler, string $description = null): self
 	{
 		$this->asserts[] = [$handler, $description];
 		return $this;
@@ -85,11 +85,10 @@ trait Base
 		if ($this->required) {
 			$context->addError(
 				'The mandatory item %path% is missing.',
-				Nette\Schema\Message::MissingItem
+				Nette\Schema\Message::MISSING_ITEM
 			);
 			return null;
 		}
-
 		return $this->default;
 	}
 
@@ -99,7 +98,6 @@ trait Base
 		if ($this->before) {
 			$value = ($this->before)($value);
 		}
-
 		return $value;
 	}
 
@@ -109,7 +107,7 @@ trait Base
 		if ($this->deprecated !== null) {
 			$context->addWarning(
 				$this->deprecated,
-				Nette\Schema\Message::Deprecated
+				Nette\Schema\Message::DEPRECATED
 			);
 		}
 	}
@@ -121,12 +119,11 @@ trait Base
 			$expected = str_replace(['|', ':'], [' or ', ' in range '], $expected);
 			$context->addError(
 				'The %label% %path% expects to be %expected%, %value% given.',
-				Nette\Schema\Message::TypeMismatch,
+				Nette\Schema\Message::TYPE_MISMATCH,
 				['value' => $value, 'expected' => $expected]
 			);
 			return false;
 		}
-
 		return true;
 	}
 
@@ -143,20 +140,20 @@ trait Base
 			if (!self::isInRange($length, $range)) {
 				$context->addError(
 					"The length of %label% %path% expects to be in range %expected%, %length% $label given.",
-					Nette\Schema\Message::LengthOutOfRange,
+					Nette\Schema\Message::LENGTH_OUT_OF_RANGE,
 					['value' => $value, 'length' => $length, 'expected' => implode('..', $range)]
 				);
 				return false;
 			}
+
 		} elseif ((is_int($value) || is_float($value)) && !self::isInRange($value, $range)) {
 			$context->addError(
 				'The %label% %path% expects to be in range %expected%, %value% given.',
-				Nette\Schema\Message::ValueOutOfRange,
+				Nette\Schema\Message::VALUE_OUT_OF_RANGE,
 				['value' => $value, 'expected' => implode('..', $range)]
 			);
 			return false;
 		}
-
 		return true;
 	}
 
@@ -178,7 +175,6 @@ trait Base
 				foreach ($value as $k => $v) {
 					$object->$k = $v;
 				}
-
 				$value = $object;
 			}
 		}
@@ -188,7 +184,7 @@ trait Base
 				$expected = $description ?: (is_string($handler) ? "$handler()" : "#$i");
 				$context->addError(
 					'Failed assertion ' . ($description ? "'%assertion%'" : '%assertion%') . ' for %label% %path% with value %value%.',
-					Nette\Schema\Message::FailedAssertion,
+					Nette\Schema\Message::FAILED_ASSERTION,
 					['value' => $value, 'assertion' => $expected]
 				);
 				return;

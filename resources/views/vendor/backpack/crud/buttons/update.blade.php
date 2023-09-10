@@ -1,21 +1,10 @@
 @if ($crud->hasAccess('update'))
 	@if (!$crud->model->translationEnabled())
 
-	@if(isset($crud->reporting_module))
-		@if($entry->is_approved == false)
-			<a href="{{ url($crud->route.'/'.$entry->getKey().'/edit') }}" class="btn btn-sm btn-success edit-btn" data-toggle="tooltip" title="Edit">
-				<i class="la la-edit"></i>
-			</a>
-		@endif
 	<!-- Single edit button -->
-	@else
-		<a href="{{ url($crud->route.'/'.$entry->getKey().'/edit') }}" class="btn btn-sm btn-success edit-btn"
-			data-toggle="tooltip" title="Edit"><i class="la la-edit"></i></a>
-	@endif
+	<a href="{{ url($crud->route.'/'.$entry->getKey().'/edit') }}" class="btn btn-sm btn-success edit-btn" data-toggle="tooltip" title="Edit"><i class="la la-edit"></i></a>
 
-	<!-- Single edit button -->
-	{{-- <a href="{{ url($crud->route.'/'.$entry->getKey().'/edit') }}" class="btn btn-sm btn-success edit-btn"
-		data-toggle="tooltip" title="Edit"><i class="la la-edit"></i></a> --}}
+
 	@else
 
 	<!-- Edit button group -->
@@ -27,7 +16,7 @@
 	  <ul class="dropdown-menu dropdown-menu-right">
   	    <li class="dropdown-header">{{ trans('backpack::crud.edit_translations') }}:</li>
 	  	@foreach ($crud->model->getAvailableLocales() as $key => $locale)
-		  	<a class="dropdown-item" href="{{ url($crud->route.'/'.$entry->getKey().'/edit') }}?_locale={{ $key }}">{{ $locale }}</a>
+		  	<a class="dropdown-item" href="{{ url($crud->route.'/'.$entry->getKey().'/edit') }}?locale={{ $key }}">{{ $locale }}</a>
 	  	@endforeach
 	  </ul>
 	</div>

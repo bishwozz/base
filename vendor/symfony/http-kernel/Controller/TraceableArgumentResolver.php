@@ -35,10 +35,10 @@ class TraceableArgumentResolver implements ArgumentResolverInterface
     {
         $e = $this->stopwatch->start('controller.get_arguments');
 
-        try {
-            return $this->resolver->getArguments($request, $controller);
-        } finally {
-            $e->stop();
-        }
+        $ret = $this->resolver->getArguments($request, $controller);
+
+        $e->stop();
+
+        return $ret;
     }
 }

@@ -49,7 +49,7 @@ class DayOfMonthField extends AbstractField
     private static function getNearestWeekday(int $currentYear, int $currentMonth, int $targetDay): ?DateTime
     {
         $tday = str_pad((string) $targetDay, 2, '0', STR_PAD_LEFT);
-        $target = DateTime::createFromFormat('Y-m-d', "{$currentYear}-{$currentMonth}-{$tday}");
+        $target = DateTime::createFromFormat('Y-m-d', "${currentYear}-${currentMonth}-${tday}");
 
         if ($target === false) {
             return null;
@@ -94,20 +94,17 @@ class DayOfMonthField extends AbstractField
         }
 
         // Check to see if this is the nearest weekday to a particular value
-        if ($wPosition = strpos($value, 'W')) {
+        if (strpos($value, 'W')) {
             // Parse the target day
-            $targetDay = (int) substr($value, 0, $wPosition);
+            /** @phpstan-ignore-next-line */
+            $targetDay = (int) substr($value, 0, strpos($value, 'W'));
             // Find out if the current day is the nearest day of the week
-            $nearest = self::getNearestWeekday(
+            /** @phpstan-ignore-next-line */
+            return $date->format('j') === self::getNearestWeekday(
                 (int) $date->format('Y'),
                 (int) $date->format('m'),
                 $targetDay
-            );
-            if ($nearest) {
-                return $date->format('j') === $nearest->format('j');
-            }
-
-            throw new \RuntimeException('Unable to return nearest weekday');
+            )->format('j');
         }
 
         return $this->isSatisfied((int) $date->format('d'), $value);
@@ -121,10 +118,10 @@ class DayOfMonthField extends AbstractField
     public function increment(DateTimeInterface &$date, $invert = false, $parts = null): FieldInterface
     {
         if (! $invert) {
-            $date = $date->add(new \DateInterval('P1D'));
+            $date = $this->timezoneSafeModify($date, '+1 day');
             $date = $date->setTime(0, 0);
         } else {
-            $date = $date->sub(new \DateInterval('P1D'));
+            $date = $this->timezoneSafeModify($date, '-1 day');
             $date = $date->setTime(23, 59);
         }
 

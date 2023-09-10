@@ -19,18 +19,18 @@ class Floats
 {
 	use Nette\StaticClass;
 
-	private const Epsilon = 1e-10;
+	private const EPSILON = 1e-10;
 
 
 	public static function isZero(float $value): bool
 	{
-		return abs($value) < self::Epsilon;
+		return abs($value) < self::EPSILON;
 	}
 
 
 	public static function isInteger(float $value): bool
 	{
-		return abs(round($value) - $value) < self::Epsilon;
+		return abs(round($value) - $value) < self::EPSILON;
 	}
 
 
@@ -48,7 +48,7 @@ class Floats
 		}
 
 		$diff = abs($a - $b);
-		if (($diff < self::Epsilon || ($diff / max(abs($a), abs($b)) < self::Epsilon))) {
+		if (($diff < self::EPSILON || ($diff / max(abs($a), abs($b)) < self::EPSILON))) {
 			return 0;
 		}
 

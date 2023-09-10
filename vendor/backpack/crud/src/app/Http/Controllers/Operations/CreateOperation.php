@@ -75,11 +75,8 @@ trait CreateOperation
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
 
-        // register any Model Events defined on fields
-        $this->crud->registerFieldEvents();
-
         // insert item in the db
-        $item = $this->crud->create($this->crud->getStrippedSaveRequest($request));
+        $item = $this->crud->create($this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
 
         // show a success message

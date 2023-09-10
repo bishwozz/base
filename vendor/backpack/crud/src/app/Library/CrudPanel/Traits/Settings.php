@@ -26,8 +26,7 @@ trait Settings
      * Setter for the settings key-value store.
      *
      * @param  string  $key  Usually operation.name (ex: reorder.max_level)
-     * @param  mixed  $value  The value you want to store.
-     * @return mixed Setting value.
+     * @param  bool  $value  True/false depending on success.
      */
     public function set(string $key, $value)
     {
@@ -142,7 +141,7 @@ trait Settings
     public function loadDefaultOperationSettingsFromConfig($configPath = null)
     {
         $operation = $this->getCurrentOperation();
-        $configPath = $configPath ?? 'backpack.operations.'.$operation;
+        $configPath = $configPath ?? 'backpack.crud.operations.'.$operation;
         $configSettings = config($configPath);
 
         if (is_array($configSettings) && count($configSettings)) {

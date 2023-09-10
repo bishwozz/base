@@ -114,7 +114,6 @@ final class MockBuilder
      * @throws \PHPUnit\Framework\InvalidArgumentException
      * @throws ClassAlreadyExistsException
      * @throws ClassIsFinalException
-     * @throws ClassIsReadonlyException
      * @throws DuplicateMethodException
      * @throws InvalidMethodNameException
      * @throws OriginalConstructorInvocationRequiredException
@@ -138,7 +137,7 @@ final class MockBuilder
             $this->callOriginalMethods,
             $this->proxyTarget,
             $this->allowMockingUnknownTypes,
-            $this->returnValueGeneration,
+            $this->returnValueGeneration
         );
 
         $this->testCase->registerMockObject($object);
@@ -165,7 +164,7 @@ final class MockBuilder
             $this->originalClone,
             $this->autoload,
             $this->methods,
-            $this->cloneArguments,
+            $this->cloneArguments
         );
 
         $this->testCase->registerMockObject($object);
@@ -192,7 +191,7 @@ final class MockBuilder
             $this->originalClone,
             $this->autoload,
             $this->methods,
-            $this->cloneArguments,
+            $this->cloneArguments
         );
 
         $this->testCase->registerMockObject($object);
@@ -242,8 +241,8 @@ final class MockBuilder
         } catch (\ReflectionException $e) {
             throw new ReflectionException(
                 $e->getMessage(),
-                $e->getCode(),
-                $e,
+                (int) $e->getCode(),
+                $e
             );
         }
         // @codeCoverageIgnoreEnd
@@ -284,8 +283,8 @@ final class MockBuilder
         } catch (\ReflectionException $e) {
             throw new ReflectionException(
                 $e->getMessage(),
-                $e->getCode(),
-                $e,
+                (int) $e->getCode(),
+                $e
             );
         }
         // @codeCoverageIgnoreEnd
@@ -313,8 +312,8 @@ final class MockBuilder
         return $this->setMethods(
             array_diff(
                 $this->generator->getClassMethods($this->type),
-                $methods,
-            ),
+                $methods
+            )
         );
     }
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -34,8 +34,10 @@ class GNUReadline implements Readline
      *
      * NOTE: As of PHP 7.4, PHP sometimes has history support in the Libedit
      * wrapper, so that will use the GNUReadline implementation as well!
+     *
+     * @return bool
      */
-    public static function isSupported(): bool
+    public static function isSupported()
     {
         return \function_exists('readline') && \function_exists('readline_list_history');
     }
@@ -45,24 +47,34 @@ class GNUReadline implements Readline
      *
      * Currently, the GNU readline implementation does, but the libedit wrapper does not.
      */
-    public static function supportsBracketedPaste(): bool
+    public static function supportsBracketedPaste()
     {
-        return self::isSupported() && \stripos(\readline_info('library_version') ?: '', 'editline') === false;
+        return self::isSupported() && \stripos(\readline_info('library_version'), 'editline') === false;
     }
 
+    /**
+     * GNU Readline constructor.
+     *
+     * @param string|false $historyFile
+     * @param int          $historySize
+     * @param bool         $eraseDups
+     */
     public function __construct($historyFile = null, $historySize = 0, $eraseDups = false)
     {
         $this->historyFile = ($historyFile !== null) ? $historyFile : false;
         $this->historySize = $historySize;
         $this->eraseDups = $eraseDups;
 
-        \readline_info('readline_name', 'psysh');
+        // HHVM errors on this, so HHVM doesn't get a readline_name.
+        if (!\defined('HHVM_VERSION')) {
+            \readline_info('readline_name', 'psysh');
+        }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addHistory(string $line): bool
+    public function addHistory($line)
     {
         if ($res = \readline_add_history($line)) {
             $this->writeHistory();
@@ -74,7 +86,7 @@ class GNUReadline implements Readline
     /**
      * {@inheritdoc}
      */
-    public function clearHistory(): bool
+    public function clearHistory()
     {
         if ($res = \readline_clear_history()) {
             $this->writeHistory();
@@ -86,7 +98,7 @@ class GNUReadline implements Readline
     /**
      * {@inheritdoc}
      */
-    public function listHistory(): array
+    public function listHistory()
     {
         return \readline_list_history();
     }
@@ -94,9 +106,17 @@ class GNUReadline implements Readline
     /**
      * {@inheritdoc}
      */
-    public function readHistory(): bool
+    public function readHistory()
     {
-        \readline_read_history();
+        // Workaround PHP bug #69054
+        //
+        // If open_basedir is set, readline_read_history() segfaults. This was fixed in 5.6.7:
+        //
+        //     https://github.com/php/php-src/blob/423a057023ef3c00d2ffc16a6b43ba01d0f71796/NEWS#L19-L21
+        //
+        if (\version_compare(\PHP_VERSION, '5.6.7', '>=') || !\ini_get('open_basedir')) {
+            \readline_read_history();
+        }
         \readline_clear_history();
 
         return \readline_read_history($this->historyFile);
@@ -105,7 +125,7 @@ class GNUReadline implements Readline
     /**
      * {@inheritdoc}
      */
-    public function readline(string $prompt = null)
+    public function readline($prompt = null)
     {
         return \readline($prompt);
     }
@@ -121,7 +141,7 @@ class GNUReadline implements Readline
     /**
      * {@inheritdoc}
      */
-    public function writeHistory(): bool
+    public function writeHistory()
     {
         // We have to write history first, since it is used
         // by Libedit to list history

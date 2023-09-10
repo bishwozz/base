@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace League\CommonMark\Node;
 
 use Dflydev\DotAccessData\Data;
-use League\CommonMark\Exception\InvalidArgumentException;
 
 abstract class Node
 {
@@ -256,7 +255,7 @@ abstract class Node
     public static function assertInstanceOf(Node $node): void
     {
         if (! $node instanceof static) {
-            throw new InvalidArgumentException(\sprintf('Incompatible node type: expected %s, got %s', static::class, \get_class($node)));
+            throw new \InvalidArgumentException(\sprintf('Incompatible node type: expected %s, got %s', static::class, \get_class($node)));
         }
     }
 }

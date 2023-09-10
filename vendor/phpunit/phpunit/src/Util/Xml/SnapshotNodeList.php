@@ -9,7 +9,6 @@
  */
 namespace PHPUnit\Util\Xml;
 
-use function count;
 use ArrayIterator;
 use Countable;
 use DOMNode;
@@ -18,8 +17,6 @@ use IteratorAggregate;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
- *
- * @template-implements IteratorAggregate<int, DOMNode>
  */
 final class SnapshotNodeList implements Countable, IteratorAggregate
 {

@@ -65,15 +65,15 @@ final class CompleteCommand extends Command
     {
         try {
             // uncomment when a bugfix or BC break has been introduced in the shell completion scripts
-            // $version = $input->getOption('symfony');
-            // if ($version && version_compare($version, 'x.y', '>=')) {
+            //$version = $input->getOption('symfony');
+            //if ($version && version_compare($version, 'x.y', '>=')) {
             //    $message = sprintf('Completion script version is not supported ("%s" given, ">=x.y" required).', $version);
             //    $this->log($message);
 
             //    $output->writeln($message.' Install the Symfony completion script again by using the "completion" command.');
 
             //    return 126;
-            // }
+            //}
 
             $shell = $input->getOption('shell');
             if (!$shell) {
@@ -105,12 +105,11 @@ final class CompleteCommand extends Command
             } elseif (
                 $completionInput->mustSuggestArgumentValuesFor('command')
                 && $command->getName() !== $completionInput->getCompletionValue()
-                && !\in_array($completionInput->getCompletionValue(), $command->getAliases(), true)
             ) {
                 $this->log('  No command found, completing using the Application class.');
 
                 // expand shortcut names ("cache:cl<TAB>") into their full name ("cache:clear")
-                $suggestions->suggestValues(array_filter(array_merge([$command->getName()], $command->getAliases())));
+                $suggestions->suggestValue($command->getName());
             } else {
                 $command->mergeApplicationDefinition();
                 $completionInput->bind($command->getDefinition());
@@ -155,10 +154,10 @@ final class CompleteCommand extends Command
                 throw $e;
             }
 
-            return 2;
+            return self::FAILURE;
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 
     private function createCompletionInput(InputInterface $input): CompletionInput

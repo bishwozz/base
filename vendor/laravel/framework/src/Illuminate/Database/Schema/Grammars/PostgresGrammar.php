@@ -4,6 +4,7 @@ namespace Illuminate\Database\Schema\Grammars;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Fluent;
+use RuntimeException;
 
 class PostgresGrammar extends Grammar
 {
@@ -189,14 +190,15 @@ class PostgresGrammar extends Grammar
     {
         $language = $command->language ?: 'english';
 
-        $columns = array_map(function ($column) use ($language) {
-            return "to_tsvector({$this->quoteString($language)}, {$this->wrap($column)})";
-        }, $command->columns);
+        if (count($command->columns) > 1) {
+            throw new RuntimeException('The PostgreSQL driver does not support fulltext index creation using multiple columns.');
+        }
 
-        return sprintf('create index %s on %s using gin ((%s))',
+        return sprintf('create index %s on %s using gin (to_tsvector(%s, %s))',
             $this->wrap($command->index),
             $this->wrapTable($blueprint),
-            implode(' || ', $columns)
+            $this->quoteString($language),
+            $this->wrap($command->columns[0])
         );
     }
 
@@ -390,7 +392,7 @@ class PostgresGrammar extends Grammar
      * @param  \Illuminate\Support\Fluent  $command
      * @return string
      */
-    public function compileDropFullText(Blueprint $blueprint, Fluent $command)
+    public function compileDropFulltext(Blueprint $blueprint, Fluent $command)
     {
         return $this->compileDropIndex($blueprint, $command);
     }

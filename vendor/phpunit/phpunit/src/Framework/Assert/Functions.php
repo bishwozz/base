@@ -10,7 +10,6 @@
 namespace PHPUnit\Framework;
 
 use function func_get_args;
-use function function_exists;
 use ArrayAccess;
 use Countable;
 use DOMDocument;
@@ -1444,42 +1443,6 @@ if (!function_exists('PHPUnit\Framework\assertObjectNotHasAttribute')) {
     }
 }
 
-if (!function_exists('PHPUnit\Framework\assertObjectHasProperty')) {
-    /**
-     * Asserts that an object has a specified property.
-     *
-     * @throws ExpectationFailedException
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     * @throws Exception
-     *
-     * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
-     *
-     * @see Assert::assertObjectHasProperty
-     */
-    function assertObjectHasProperty(string $attributeName, object $object, string $message = ''): void
-    {
-        Assert::assertObjectHasProperty(...func_get_args());
-    }
-}
-
-if (!function_exists('PHPUnit\Framework\assertObjectNotHasProperty')) {
-    /**
-     * Asserts that an object does not have a specified property.
-     *
-     * @throws ExpectationFailedException
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
-     * @throws Exception
-     *
-     * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
-     *
-     * @see Assert::assertObjectNotHasProperty
-     */
-    function assertObjectNotHasProperty(string $attributeName, object $object, string $message = ''): void
-    {
-        Assert::assertObjectNotHasProperty(...func_get_args());
-    }
-}
-
 if (!function_exists('PHPUnit\Framework\assertSame')) {
     /**
      * Asserts that two variables have the same type and value.
@@ -1490,9 +1453,7 @@ if (!function_exists('PHPUnit\Framework\assertSame')) {
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      *
      * @psalm-template ExpectedType
-     *
      * @psalm-param ExpectedType $expected
-     *
      * @psalm-assert =ExpectedType $actual
      *
      * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
@@ -1533,9 +1494,7 @@ if (!function_exists('PHPUnit\Framework\assertInstanceOf')) {
      * @throws Exception
      *
      * @psalm-template ExpectedType of object
-     *
      * @psalm-param class-string<ExpectedType> $expected
-     *
      * @psalm-assert =ExpectedType $actual
      *
      * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
@@ -1557,9 +1516,7 @@ if (!function_exists('PHPUnit\Framework\assertNotInstanceOf')) {
      * @throws Exception
      *
      * @psalm-template ExpectedType of object
-     *
      * @psalm-param class-string<ExpectedType> $expected
-     *
      * @psalm-assert !ExpectedType $actual
      *
      * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
@@ -2963,7 +2920,7 @@ if (!function_exists('PHPUnit\Framework\atLeast')) {
     function atLeast(int $requiredInvocations): InvokedAtLeastCountMatcher
     {
         return new InvokedAtLeastCountMatcher(
-            $requiredInvocations,
+            $requiredInvocations
         );
     }
 }

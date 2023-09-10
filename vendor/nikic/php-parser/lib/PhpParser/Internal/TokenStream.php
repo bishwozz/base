@@ -206,11 +206,6 @@ class TokenStream
             || $this->haveTokenInRange($startPos, $endPos, '}');
     }
 
-    public function haveTagInRange(int $startPos, int $endPos): bool {
-        return $this->haveTokenInRange($startPos, $endPos, \T_OPEN_TAG)
-            || $this->haveTokenInRange($startPos, $endPos, \T_CLOSE_TAG);
-    }
-
     /**
      * Get indentation before token position.
      *

@@ -23,8 +23,7 @@ use League\CommonMark\Util\RegexHelper;
  */
 final class AttributesHelper
 {
-    private const SINGLE_ATTRIBUTE = '\s*([.#][_a-z0-9-]+|' . RegexHelper::PARTIAL_ATTRIBUTENAME . RegexHelper::PARTIAL_ATTRIBUTEVALUESPEC . ')\s*';
-    private const ATTRIBUTE_LIST   = '/^{:?(' . self::SINGLE_ATTRIBUTE . ')+}/i';
+    private const REGEX = '/^\s*([.#][_a-z0-9-]+|' . RegexHelper::PARTIAL_ATTRIBUTENAME . RegexHelper::PARTIAL_ATTRIBUTEVALUESPEC . ')(?<!})\s*/i';
 
     /**
      * @return array<string, mixed>
@@ -33,33 +32,19 @@ final class AttributesHelper
     {
         $state = $cursor->saveState();
         $cursor->advanceToNextNonSpaceOrNewline();
-
-        // Quick check to see if we might have attributes
-        if ($cursor->getCharacter() !== '{') {
+        if ($cursor->getCurrentCharacter() !== '{') {
             $cursor->restoreState($state);
 
             return [];
         }
 
-        // Attempt to match the entire attribute list expression
-        // While this is less performant than checking for '{' now and '}' later, it simplifies
-        // matching individual attributes since they won't need to look ahead for the closing '}'
-        // while dealing with the fact that attributes can technically contain curly braces.
-        // So we'll just match the start and end braces up front.
-        $attributeExpression = $cursor->match(self::ATTRIBUTE_LIST);
-        if ($attributeExpression === null) {
-            $cursor->restoreState($state);
-
-            return [];
+        $cursor->advanceBy(1);
+        if ($cursor->getCurrentCharacter() === ':') {
+            $cursor->advanceBy(1);
         }
 
-        // Trim the leading '{' or '{:' and the trailing '}'
-        $attributeExpression = \ltrim(\substr($attributeExpression, 1, -1), ':');
-        $attributeCursor     = new Cursor($attributeExpression);
-
-        /** @var array<string, mixed> $attributes */
         $attributes = [];
-        while ($attribute = \trim((string) $attributeCursor->match('/^' . self::SINGLE_ATTRIBUTE . '/i'))) {
+        while ($attribute = \trim((string) $cursor->match(self::REGEX))) {
             if ($attribute[0] === '#') {
                 $attributes['id'] = \substr($attribute, 1);
 
@@ -72,7 +57,6 @@ final class AttributesHelper
                 continue;
             }
 
-            /** @psalm-suppress PossiblyUndefinedArrayOffset */
             [$name, $value] = \explode('=', $attribute, 2);
 
             $first = $value[0];
@@ -88,6 +72,18 @@ final class AttributesHelper
             } else {
                 $attributes[\trim($name)] = \trim($value);
             }
+        }
+
+        if ($cursor->match('/}/') === null) {
+            $cursor->restoreState($state);
+
+            return [];
+        }
+
+        if ($attributes === []) {
+            $cursor->restoreState($state);
+
+            return [];
         }
 
         if (isset($attributes['class'])) {

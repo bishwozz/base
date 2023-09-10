@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -67,7 +67,7 @@ HELP
      *
      * @return array
      */
-    protected function trace(): array
+    protected function trace()
     {
         foreach (\array_reverse($this->backtrace) as $stackFrame) {
             if ($this->isDebugCall($stackFrame)) {
@@ -78,7 +78,7 @@ HELP
         return \end($this->backtrace);
     }
 
-    private static function isDebugCall(array $stackFrame): bool
+    private static function isDebugCall(array $stackFrame)
     {
         $class = isset($stackFrame['class']) ? $stackFrame['class'] : null;
         $function = isset($stackFrame['function']) ? $stackFrame['function'] : null;
@@ -92,7 +92,7 @@ HELP
      *
      * @return array
      */
-    protected function fileInfo(): array
+    protected function fileInfo()
     {
         $stackFrame = $this->trace();
         if (\preg_match('/eval\(/', $stackFrame['file'])) {
@@ -109,8 +109,6 @@ HELP
 
     /**
      * {@inheritdoc}
-     *
-     * @return int 0 if everything went fine, or an exit code
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -144,8 +142,10 @@ HELP
      * Replace the given directory from the start of a filepath.
      *
      * @param string $file
+     *
+     * @return string
      */
-    private function replaceCwd(string $file): string
+    private function replaceCwd($file)
     {
         $cwd = \getcwd();
         if ($cwd === false) {

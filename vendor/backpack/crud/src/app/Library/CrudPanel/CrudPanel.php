@@ -14,11 +14,8 @@ use Backpack\CRUD\app\Library\CrudPanel\Traits\FakeColumns;
 use Backpack\CRUD\app\Library\CrudPanel\Traits\FakeFields;
 use Backpack\CRUD\app\Library\CrudPanel\Traits\Fields;
 use Backpack\CRUD\app\Library\CrudPanel\Traits\Filters;
-use Backpack\CRUD\app\Library\CrudPanel\Traits\HasViewNamespaces;
 use Backpack\CRUD\app\Library\CrudPanel\Traits\HeadingsAndTitles;
-use Backpack\CRUD\app\Library\CrudPanel\Traits\Input;
 use Backpack\CRUD\app\Library\CrudPanel\Traits\Macroable;
-use Backpack\CRUD\app\Library\CrudPanel\Traits\MorphRelationships;
 use Backpack\CRUD\app\Library\CrudPanel\Traits\Operations;
 use Backpack\CRUD\app\Library\CrudPanel\Traits\Query;
 use Backpack\CRUD\app\Library\CrudPanel\Traits\Read;
@@ -40,8 +37,7 @@ use Illuminate\Support\Arr;
 class CrudPanel
 {
     // load all the default CrudPanel features
-    use Create, Read, Search, Update, Delete, Input, Errors, Reorder, Access, Columns, Fields, Query, Buttons, AutoSet, FakeFields, FakeColumns, AutoFocus, Filters, Tabs, Views, Validation, HeadingsAndTitles, Operations, SaveActions, Settings, Relationships, HasViewNamespaces, MorphRelationships;
-
+    use Create, Read, Search, Update, Delete, Errors, Reorder, Access, Columns, Fields, Query, Buttons, AutoSet, FakeFields, FakeColumns, AutoFocus, Filters, Tabs, Views, Validation, HeadingsAndTitles, Operations, SaveActions, Settings, Relationships;
     // allow developers to add their own closures to this object
     use Macroable;
 
@@ -53,11 +49,8 @@ class CrudPanel
     // All functions and methods are also public, so they can be used in your EntityCrudController to modify these variables.
 
     public $model = "\App\Models\Entity"; // what's the namespace for your entity's model
-
     public $route; // what route have you defined for your entity? used for links.
-
     public $entity_name = 'entry'; // what name will show up on the buttons, in singural (ex: Add entity)
-
     public $entity_name_plural = 'entries'; // what name will show up on the buttons, in plural (ex: Delete 5 entities)
 
     public $entry;
@@ -86,9 +79,9 @@ class CrudPanel
     }
 
     /**
-     * Get the request instance for this CRUD.
+     * [getRequest description].
      *
-     * @return \Illuminate\Http\Request
+     * @return [type] [description]
      */
     public function getRequest()
     {
@@ -118,7 +111,7 @@ class CrudPanel
         }
 
         $this->model = new $model_namespace();
-        $this->query = clone $this->totalQuery = $this->model->select('*');
+        $this->query = $this->model->select('*');
         $this->entry = null;
     }
 
@@ -148,8 +141,6 @@ class CrudPanel
      * DEPRECATION NOTICE: This method is no longer used and will be removed in future versions of Backpack
      *
      * @deprecated
-     *
-     * @codeCoverageIgnore
      *
      * @return bool
      */
@@ -188,7 +179,7 @@ class CrudPanel
      */
     public function setRoute($route)
     {
-        $this->route = ltrim($route, '/');
+        $this->route = $route;
     }
 
     /**
@@ -202,8 +193,6 @@ class CrudPanel
      */
     public function setRouteName($route, $parameters = [])
     {
-        $route = ltrim($route, '.');
-
         $complete_route = $route.'.index';
 
         if (! \Route::has($complete_route)) {
@@ -309,19 +298,16 @@ class CrudPanel
         });
     }
 
-    /**
-     * TONE FUNCTIONS - UNDOCUMENTED, UNTESTED, SOME MAY BE USED IN THIS FILE.
-     *
-     * TODO:
-     * - figure out if they are really needed
-     * - comments inside the function to explain how they work
-     * - write docblock for them
-     * - place in the correct section above (CREATE, READ, UPDATE, DELETE, ACCESS, MANIPULATION)
-     *
-     * @deprecated
-     *
-     * @codeCoverageIgnore
-     */
+    // ------------
+    // TONE FUNCTIONS - UNDOCUMENTED, UNTESTED, SOME MAY BE USED IN THIS FILE
+    // ------------
+    //
+    // TODO:
+    // - figure out if they are really needed
+    // - comments inside the function to explain how they work
+    // - write docblock for them
+    // - place in the correct section above (CREATE, READ, UPDATE, DELETE, ACCESS, MANIPULATION)
+
     public function sync($type, $fields, $attributes)
     {
         if (! empty($this->{$type})) {
@@ -501,5 +487,23 @@ class CrudPanel
         }
 
         return $results;
+    }
+
+    /**
+     * Check if the method in the given model has any parameters.
+     *
+     * @param  object  $model
+     * @param  string  $method
+     * @return bool
+     */
+    private function modelMethodHasParameters($model, $method)
+    {
+        $reflectClassMethod = new \ReflectionMethod(get_class($model), $method);
+
+        if ($reflectClassMethod->getNumberOfParameters() > 0) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,17 +1,13 @@
 {{-- regular object attribute --}}
 @php
-    $column['value'] = $column['value'] ?? data_get($entry, $column['name']);
-    $column['escaped'] = $column['escaped'] ?? true;
+    $value = data_get($entry, $column['name']);
+    $column['text'] = is_string($value) ? $value : '';
+    $column['escaped'] = $column['escaped'] ?? false;
     $column['prefix'] = $column['prefix'] ?? '';
     $column['suffix'] = $column['suffix'] ?? '';
-    $column['text'] = $column['default'] ?? '-';
 
-    if($column['value'] instanceof \Closure) {
-        $column['value'] = $column['value']($entry);
-    }
-
-    if(!empty($column['value'])) {
-        $column['text'] = $column['prefix'].$column['value'].$column['suffix'];
+    if(!empty($column['text'])) {
+        $column['text'] = $column['prefix'].$column['text'].$column['suffix'];
     }
 @endphp
 

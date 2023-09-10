@@ -1,6 +1,7 @@
 <!-- radio -->
 @php
-    $optionValue = old_empty_or_null($field['name'], '') ??  $field['value'] ?? $field['default'] ?? '';
+    $optionValue = old(square_brackets_to_dots($field['name'])) ?? $field['value'] ?? $field['default'] ?? '';
+
 
     // check if attribute is casted, if it is, we get back un-casted values
     if(Arr::get($crud->model->getCasts(), $field['name']) === 'boolean') {
@@ -23,7 +24,7 @@
         @include('crud::fields.inc.translatable_icon')
     </div>
 
-    <input type="hidden" value="{{ $optionValue === false ?  0 : 1 }}"  name="{{$field['name']}}" />
+    <input type="hidden" value="{{ $optionValue }}" name="{{$field['name']}}" />
 
     @if( isset($field['options']) && $field['options'] = (array)$field['options'] )
 
@@ -49,9 +50,13 @@
 
 @include('crud::fields.inc.wrapper_end')
 
+@if ($crud->fieldTypeNotLoaded($field))
+    @php
+        $crud->markFieldTypeAsLoaded($field);
+    @endphp
+
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
-    @loadOnce('bpFieldInitRadioElement')
     <script>
         function bpFieldInitRadioElement(element) {
             var hiddenInput = element.find('input[type=hidden]');
@@ -76,5 +81,6 @@
             element.find('input[type=radio][value="'+value+'"]').prop('checked', true);
         }
     </script>
-    @endLoadOnce
     @endpush
+
+@endif

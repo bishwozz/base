@@ -12,10 +12,12 @@ trait AutoSet
      */
     public function setFromDb($setFields = true, $setColumns = true)
     {
-        $this->getDbColumnTypes();
+        if ($this->driverIsSql()) {
+            $this->getDbColumnTypes();
+        }
 
         array_map(function ($field) use ($setFields, $setColumns) {
-            if ($setFields && ! isset($this->getCleanStateFields()[$field])) {
+            if ($setFields && ! isset($this->fields()[$field])) {
                 $this->addField([
                     'name'       => $field,
                     'label'      => $this->makeLabel($field),
@@ -48,11 +50,9 @@ trait AutoSet
      */
     public function getDbColumnTypes()
     {
-        $dbColumnTypes = [];
+        $this->setDoctrineTypesMapping();
 
-        if (! $this->driverIsSql()) {
-            return $dbColumnTypes;
-        }
+        $dbColumnTypes = [];
 
         foreach ($this->getDbTableColumns() as $key => $column) {
             $column_type = $column->getType()->getName();
@@ -66,18 +66,6 @@ trait AutoSet
     }
 
     /**
-     * Set extra types mapping on model.
-     *
-     * DEPRECATION NOTICE: This method is no longer used and will be removed in future versions of Backpack
-     *
-     * @deprecated
-     */
-    public function setDoctrineTypesMapping()
-    {
-        $this->getModel()->getConnectionWithExtraTypeMappings();
-    }
-
-    /**
      * Get all columns in the database table.
      *
      * @return array
@@ -88,7 +76,11 @@ trait AutoSet
             return $this->autoset['table_columns'];
         }
 
-        $this->autoset['table_columns'] = $this->model::getDbTableSchema()->getColumns();
+        $conn = $this->model->getConnection();
+        $table = $conn->getTablePrefix().$this->model->getTable();
+        $columns = $conn->getDoctrineSchemaManager()->listTableColumns($table);
+
+        $this->autoset['table_columns'] = $columns;
 
         return $this->autoset['table_columns'];
     }
@@ -132,9 +124,9 @@ trait AutoSet
             case 'set':
                 return 'text';
 
-                // case 'enum':
+            // case 'enum':
             //     return 'enum';
-                // break;
+            // break;
 
             case 'boolean':
                 return 'boolean';
@@ -158,13 +150,25 @@ trait AutoSet
                 return 'time';
 
             case 'json':
-                return backpack_pro() ? 'table' : 'textarea';
+                return 'table';
 
             default:
                 return 'text';
         }
 
         return 'text';
+    }
+
+    // Fix for DBAL not supporting enum
+    public function setDoctrineTypesMapping()
+    {
+        $types = ['enum' => 'string'];
+        $platform = $this->getSchema()->getConnection()->getDoctrineSchemaManager()->getDatabasePlatform();
+        foreach ($types as $type_key => $type_value) {
+            if (! $platform->hasDoctrineTypeMappingFor($type_key)) {
+                $platform->registerDoctrineTypeMapping($type_key, $type_value);
+            }
+        }
     }
 
     /**
@@ -216,7 +220,8 @@ trait AutoSet
             $columns = $fillable;
         } else {
             // Automatically-set columns should be both in the database, and in the $fillable variable on the Eloquent Model
-            $columns = $this->model::getDbTableSchema()->getColumnsNames();
+            $columns = $this->model->getConnection()->getSchemaBuilder()->getColumnListing($this->model->getTable());
+
             if (! empty($fillable)) {
                 $columns = array_intersect($columns, $fillable);
             }

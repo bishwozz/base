@@ -248,19 +248,6 @@ $.extend( Responsive.prototype, {
 			that._resize();
 		});
 
-		// DT2 let's us tell it if we are hiding columns
-		dt.on( 'column-calc.dt', function (e, d) {
-			var curr = that.s.current;
-
-			for (var i=0 ; i<curr.length ; i++) {
-				var idx = d.visible.indexOf(i);
-
-				if (curr[i] === false && idx >= 0) {
-					d.visible.splice(idx, 1);
-				}
-			}
-		} );
-
 		// On Ajax reload we want to reopen any child rows which are displayed
 		// by responsive
 		dt.on( 'preXhr.dtr', function () {
@@ -476,7 +463,7 @@ $.extend( Responsive.prototype, {
 				includeIn: [],
 				auto:      false,
 				control:   false,
-				never:     className.match(/\b(dtr\-)?never\b/) ? true : false,
+				never:     className.match(/\bnever\b/) ? true : false,
 				priority:  priority
 			};
 		} );
@@ -537,7 +524,7 @@ $.extend( Responsive.prototype, {
 			for ( var k=0, ken=classNames.length ; k<ken ; k++ ) {
 				var className = classNames[k].trim();
 
-				if ( className === 'all' || className === 'dtr-all' ) {
+				if ( className === 'all' ) {
 					// Include in all
 					hasClass = true;
 					col.includeIn = $.map( breakpoints, function (a) {
@@ -545,7 +532,7 @@ $.extend( Responsive.prototype, {
 					} );
 					return;
 				}
-				else if ( className === 'none' || className === 'dtr-none' || col.never ) {
+				else if ( className === 'none' || col.never ) {
 					// Include in none (default) and no auto
 					hasClass = true;
 					return;
@@ -633,12 +620,8 @@ $.extend( Responsive.prototype, {
 		var details = this.c.details;
 
 		if ( details && details.type !== false ) {
-			var renderer = typeof details.renderer === 'string'
-				? Responsive.renderer[details.renderer]()
-				: details.renderer;
-
 			var res = details.display( row, update, function () {
-				return renderer(
+				return details.renderer(
 					dt, row[0], that._detailsObj(row[0])
 				);
 			} );
@@ -1029,17 +1012,9 @@ $.extend( Responsive.prototype, {
 		var dt = this.s.dt;
 		var display = showHide ? '' : 'none'; // empty string will remove the attr
 
-		$( dt.column( col ).header() )
-			.css( 'display', display )
-			.toggleClass('dtr-hidden', !showHide);
-
-		$( dt.column( col ).footer() )
-			.css( 'display', display )
-			.toggleClass('dtr-hidden', !showHide);
-
-		dt.column( col ).nodes().to$()
-			.css( 'display', display )
-			.toggleClass('dtr-hidden', !showHide);
+		$( dt.column( col ).header() ).css( 'display', display );
+		$( dt.column( col ).footer() ).css( 'display', display );
+		dt.column( col ).nodes().to$().css( 'display', display );
 
 		// If the are child nodes stored, we might need to reinsert them
 		if ( ! $.isEmptyObject( _childNodeStore ) ) {

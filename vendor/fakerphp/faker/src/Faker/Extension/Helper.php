@@ -57,9 +57,11 @@ final class Helper
             }
         }
 
-        return self::replaceWildcard($string, '%', static function () {
+        $string = self::replaceWildcard($string, '%', static function () {
             return mt_rand(1, 9);
         });
+
+        return $string;
     }
 
     /**

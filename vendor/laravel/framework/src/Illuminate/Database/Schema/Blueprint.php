@@ -208,7 +208,7 @@ class Blueprint
     protected function addFluentIndexes()
     {
         foreach ($this->columns as $column) {
-            foreach (['primary', 'unique', 'index', 'fulltext', 'fullText', 'spatialIndex'] as $index) {
+            foreach (['primary', 'unique', 'index', 'fulltext', 'spatialIndex'] as $index) {
                 // If the index has been specified on the given column, but is simply equal
                 // to "true" (boolean), no name has been specified for this index so the
                 // index method can be called without a name and it will generate one.
@@ -373,9 +373,9 @@ class Blueprint
      * @param  string|array  $index
      * @return \Illuminate\Support\Fluent
      */
-    public function dropFullText($index)
+    public function dropFulltext($index)
     {
-        return $this->dropIndexCommand('dropFullText', 'fulltext', $index);
+        return $this->dropIndexCommand('dropFulltext', 'fulltext', $index);
     }
 
     /**
@@ -549,7 +549,7 @@ class Blueprint
      * @param  string|null  $algorithm
      * @return \Illuminate\Support\Fluent
      */
-    public function fullText($columns, $name = null, $algorithm = null)
+    public function fulltext($columns, $name = null, $algorithm = null)
     {
         return $this->indexCommand('fulltext', $columns, $name, $algorithm);
     }

@@ -430,7 +430,7 @@ class Person extends \Faker\Provider\Person
      * @param int         $minAge minimal age of "generated person" in years
      * @param int         $maxAge maximal age of "generated person" in years
      *
-     * @return string czech birth number
+     * @return czech birth number
      */
     public function birthNumber($gender = null, $minAge = 0, $maxAge = 100, $slashProbability = 50)
     {
@@ -438,8 +438,8 @@ class Person extends \Faker\Provider\Person
             $gender = $this->generator->boolean() ? static::GENDER_MALE : static::GENDER_FEMALE;
         }
 
-        $startTimestamp = strtotime(sprintf('-%d year', $maxAge));
-        $endTimestamp = strtotime(sprintf('-%d year', $minAge));
+        $startTimestamp = strtotime("-${maxAge} year");
+        $endTimestamp = strtotime("-${minAge} year");
         $randTimestamp = self::numberBetween($startTimestamp, $endTimestamp);
 
         $year = (int) (date('Y', $randTimestamp));

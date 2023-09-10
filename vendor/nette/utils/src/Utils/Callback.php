@@ -24,7 +24,7 @@ final class Callback
 	 * @param  string|object|callable  $callable  class, object, callable
 	 * @deprecated use Closure::fromCallable()
 	 */
-	public static function closure($callable, ?string $method = null): \Closure
+	public static function closure($callable, string $method = null): \Closure
 	{
 		trigger_error(__METHOD__ . '() is deprecated, use Closure::fromCallable().', E_USER_DEPRECATED);
 		try {
@@ -77,7 +77,6 @@ final class Callback
 					return null;
 				}
 			}
-
 			return $prev ? $prev(...func_get_args()) : false;
 		});
 
@@ -105,7 +104,6 @@ final class Callback
 				: sprintf("Callback '%s' is not callable.", self::toString($callable))
 			);
 		}
-
 		return $callable;
 	}
 
@@ -157,7 +155,7 @@ final class Callback
 	 */
 	public static function isStatic(callable $callable): bool
 	{
-		return is_string(is_array($callable) ? $callable[0] : $callable);
+		return is_array($callable) ? is_string($callable[0]) : is_string($callable);
 	}
 
 
@@ -168,14 +166,13 @@ final class Callback
 	public static function unwrap(\Closure $closure)
 	{
 		$r = new \ReflectionFunction($closure);
-		$class = $r->getClosureScopeClass();
 		if (substr($r->name, -1) === '}') {
 			return $closure;
 
-		} elseif (($obj = $r->getClosureThis()) && $class && get_class($obj) === $class->name) {
+		} elseif ($obj = $r->getClosureThis()) {
 			return [$obj, $r->name];
 
-		} elseif ($class) {
+		} elseif ($class = $r->getClosureScopeClass()) {
 			return [$class->name, $r->name];
 
 		} else {

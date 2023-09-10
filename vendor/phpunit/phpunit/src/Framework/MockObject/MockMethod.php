@@ -10,26 +10,24 @@
 namespace PHPUnit\Framework\MockObject;
 
 use const DIRECTORY_SEPARATOR;
-use function explode;
 use function implode;
-use function is_object;
 use function is_string;
 use function preg_match;
 use function preg_replace;
 use function sprintf;
-use function strlen;
-use function strpos;
-use function substr;
 use function substr_count;
 use function trim;
 use function var_export;
 use ReflectionMethod;
+use ReflectionNamedType;
 use ReflectionParameter;
+use ReflectionUnionType;
 use SebastianBergmann\Template\Exception as TemplateException;
 use SebastianBergmann\Template\Template;
 use SebastianBergmann\Type\ReflectionMapper;
 use SebastianBergmann\Type\Type;
 use SebastianBergmann\Type\UnknownType;
+use SebastianBergmann\Type\VoidType;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
@@ -136,11 +134,11 @@ final class MockMethod
             $modifier,
             self::getMethodParametersForDeclaration($method),
             self::getMethodParametersForCall($method),
-            (new ReflectionMapper)->fromReturnType($method),
+            (new ReflectionMapper)->fromMethodReturnType($method),
             $reference,
             $callOriginalMethod,
             $method->isStatic(),
-            $deprecation,
+            $deprecation
         );
     }
 
@@ -157,7 +155,7 @@ final class MockMethod
             '',
             false,
             false,
-            null,
+            null
         );
     }
 
@@ -188,15 +186,15 @@ final class MockMethod
     {
         if ($this->static) {
             $templateFile = 'mocked_static_method.tpl';
-        } elseif ($this->returnType->isNever() || $this->returnType->isVoid()) {
+        } elseif ($this->returnType instanceof VoidType) {
             $templateFile = sprintf(
-                '%s_method_never_or_void.tpl',
-                $this->callOriginalMethod ? 'proxied' : 'mocked',
+                '%s_method_void.tpl',
+                $this->callOriginalMethod ? 'proxied' : 'mocked'
             );
         } else {
             $templateFile = sprintf(
                 '%s_method.tpl',
-                $this->callOriginalMethod ? 'proxied' : 'mocked',
+                $this->callOriginalMethod ? 'proxied' : 'mocked'
             );
         }
 
@@ -209,7 +207,7 @@ final class MockMethod
             $deprecationTemplate->setVar(
                 [
                     'deprecation' => var_export($deprecation, true),
-                ],
+                ]
             );
 
             $deprecation = $deprecationTemplate->render();
@@ -230,7 +228,7 @@ final class MockMethod
                 'reference'          => $this->reference,
                 'clone_arguments'    => $this->cloneArguments ? 'true' : 'false',
                 'deprecation'        => $deprecation,
-            ],
+            ]
         );
 
         return $template->render();
@@ -254,8 +252,8 @@ final class MockMethod
             } catch (TemplateException $e) {
                 throw new RuntimeException(
                     $e->getMessage(),
-                    $e->getCode(),
-                    $e,
+                    (int) $e->getCode(),
+                    $e
                 );
             }
         }
@@ -271,7 +269,6 @@ final class MockMethod
     private static function getMethodParametersForDeclaration(ReflectionMethod $method): string
     {
         $parameters = [];
-        $types      = (new ReflectionMapper)->fromParameterTypes($method);
 
         foreach ($method->getParameters() as $i => $parameter) {
             $name = '$' . $parameter->getName();
@@ -283,16 +280,19 @@ final class MockMethod
                 $name = '$arg' . $i;
             }
 
+            $nullable        = '';
             $default         = '';
             $reference       = '';
             $typeDeclaration = '';
+            $type            = null;
+            $typeName        = null;
 
-            if (!$types[$i]->type()->isUnknown()) {
-                $typeDeclaration = $types[$i]->type()->asString() . ' ';
-            }
+            if ($parameter->hasType()) {
+                $type = $parameter->getType();
 
-            if ($parameter->isPassedByReference()) {
-                $reference = '&';
+                if ($type instanceof ReflectionNamedType) {
+                    $typeName = $type->getName();
+                }
             }
 
             if ($parameter->isVariadic()) {
@@ -303,7 +303,28 @@ final class MockMethod
                 $default = ' = null';
             }
 
-            $parameters[] = $typeDeclaration . $reference . $name . $default;
+            if ($type !== null) {
+                if ($typeName !== 'mixed' && $parameter->allowsNull() && !$type instanceof ReflectionUnionType) {
+                    $nullable = '?';
+                }
+
+                if ($typeName === 'self') {
+                    $typeDeclaration = $method->getDeclaringClass()->getName() . ' ';
+                } elseif ($typeName !== null) {
+                    $typeDeclaration = $typeName . ' ';
+                } elseif ($type instanceof ReflectionUnionType) {
+                    $typeDeclaration = self::unionTypeAsString(
+                        $type,
+                        $method->getDeclaringClass()->getName()
+                    );
+                }
+            }
+
+            if ($parameter->isPassedByReference()) {
+                $reference = '&';
+            }
+
+            $parameters[] = $nullable . $typeDeclaration . $reference . $name . $default;
         }
 
         return implode(', ', $parameters);
@@ -348,33 +369,30 @@ final class MockMethod
     private static function exportDefaultValue(ReflectionParameter $parameter): string
     {
         try {
-            $defaultValue = $parameter->getDefaultValue();
-
-            if (!is_object($defaultValue)) {
-                return (string) var_export($defaultValue, true);
-            }
-
-            $parameterAsString = $parameter->__toString();
-
-            return (string) explode(
-                ' = ',
-                substr(
-                    substr(
-                        $parameterAsString,
-                        strpos($parameterAsString, '<optional> ') + strlen('<optional> '),
-                    ),
-                    0,
-                    -2,
-                ),
-            )[1];
+            return (string) var_export($parameter->getDefaultValue(), true);
             // @codeCoverageIgnoreStart
         } catch (\ReflectionException $e) {
             throw new ReflectionException(
                 $e->getMessage(),
-                $e->getCode(),
-                $e,
+                (int) $e->getCode(),
+                $e
             );
         }
         // @codeCoverageIgnoreEnd
+    }
+
+    private static function unionTypeAsString(ReflectionUnionType $union, string $self): string
+    {
+        $types = [];
+
+        foreach ($union->getTypes() as $type) {
+            if ((string) $type === 'self') {
+                $types[] = $self;
+            } else {
+                $types[] = $type;
+            }
+        }
+
+        return implode('|', $types) . ' ';
     }
 }

@@ -2,48 +2,28 @@
 
 namespace Backpack\CRUD\app\Library\CrudPanel;
 
-use Backpack\CRUD\app\Exceptions\BackpackProRequiredException;
-use Backpack\CRUD\ViewNamespaces;
 use Closure;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Conditionable;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class CrudFilter
 {
-    use Conditionable;
-
     public $name; // the name of the filtered variable (db column name)
-
     public $type = 'select2'; // the name of the filter view that will be loaded
-
     public $key; //camelCased version of filter name to use in internal ids, js functions and css classes.
-
     public $label;
-
     public $placeholder;
-
     public $values;
-
     public $options;
-
     public $logic;
-
     public $fallbackLogic;
-
     public $currentValue;
-
     public $view;
-
     public $viewNamespace = 'crud::filters';
-
     public $applied = false;
 
     public function __construct($options, $values, $logic, $fallbackLogic)
     {
-        if (! backpack_pro()) {
-            throw new BackpackProRequiredException('Filter');
-        }
         // if filter exists
         if ($this->crud()->hasFilterWhere('name', $options['name'])) {
             $properties = get_object_vars($this->crud()->firstFilterWhere('name', $options['name']));
@@ -56,7 +36,7 @@ class CrudFilter
             $this->key = Str::camel($options['name']);
             $this->type = $options['type'] ?? $this->type;
             $this->label = $options['label'] ?? $this->crud()->makeLabel($this->name);
-            $this->viewNamespace = $options['viewNamespace'] ?? $options['view_namespace'] ?? $this->viewNamespace;
+            $this->viewNamespace = $options['view_namespace'] ?? $this->viewNamespace;
             $this->view = $this->type;
             $this->placeholder = $options['placeholder'] ?? '';
 
@@ -66,8 +46,8 @@ class CrudFilter
             $this->fallbackLogic = $fallbackLogic;
         }
 
-        if ($this->crud()->getRequest()->has($this->name)) {
-            $this->currentValue = $this->crud()->getRequest()->input($this->name);
+        if (\Request::has($this->name)) {
+            $this->currentValue = \Request::input($this->name);
         }
     }
 
@@ -79,7 +59,7 @@ class CrudFilter
      */
     public function isActive()
     {
-        if ($this->crud()->getRequest()->has($this->name)) {
+        if (\Request::has($this->name)) {
             return true;
         }
 
@@ -152,26 +132,6 @@ class CrudFilter
         return $this->viewNamespace.'.'.$this->view;
     }
 
-    /**
-     * Get an array of full paths to the filter view, including fallbacks
-     * as configured in the backpack/config/crud.php file.
-     *
-     * @return array
-     */
-    public function getNamespacedViewWithFallbacks()
-    {
-        $type = $this->type;
-        $namespaces = ViewNamespaces::getFor('filters');
-
-        if ($this->viewNamespace != 'crud::filters') {
-            $namespaces = array_merge([$this->viewNamespace], $namespaces);
-        }
-
-        return array_map(function ($item) use ($type) {
-            return $item.'.'.$type;
-        }, $namespaces);
-    }
-
     // ---------------------
     // FLUENT SYNTAX METHODS
     // ---------------------
@@ -184,9 +144,7 @@ class CrudFilter
      */
     public static function name($name)
     {
-        $filter = new static(compact('name'), null, null, null);
-
-        return $filter->save();
+        return new static(compact('name'), null, null, null);
     }
 
     /**
@@ -222,14 +180,9 @@ class CrudFilter
 
     /**
      * Remove an attribute from one field's definition array.
-     * (ununsed function).
      *
      * @param  string  $field  The name of the field.
      * @param  string  $attribute  The name of the attribute being removed.
-     *
-     * @codeCoverageIgnore
-     *
-     * @deprecated
      */
     public function removeFilterAttribute($filter, $attribute)
     {
@@ -530,21 +483,21 @@ class CrudFilter
                 $this->crud()->addClause($operator);
                 break;
 
-                // TODO:
-                // whereBetween
-                // whereNotBetween
-                // whereIn
-                // whereNotIn
-                // whereNull
-                // whereNotNull
-                // whereDate
-                // whereMonth
-                // whereDay
-                // whereYear
-                // whereColumn
-                // like
+            // TODO:
+            // whereBetween
+            // whereNotBetween
+            // whereIn
+            // whereNotIn
+            // whereNull
+            // whereNotNull
+            // whereDate
+            // whereMonth
+            // whereDay
+            // whereYear
+            // whereColumn
+            // like
 
-                // sql comparison operators
+            // sql comparison operators
             case '=':
             case '<=>':
             case '<>':
@@ -570,8 +523,6 @@ class CrudFilter
      * Dump the current object to the screen,
      * so that the developer can see its contents.
      *
-     * @codeCoverageIgnore
-     *
      * @return CrudFilter
      */
     public function dump()
@@ -585,8 +536,6 @@ class CrudFilter
      * Dump and die. Duumps the current object to the screen,
      * so that the developer can see its contents, then stops
      * the execution.
-     *
-     * @codeCoverageIgnore
      *
      * @return CrudFilter
      */

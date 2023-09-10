@@ -1,7 +1,5 @@
 <?php
 
-use PackageVersions\Versions;
-
 return [
 
     /*
@@ -26,7 +24,7 @@ return [
     // ----
 
     // Project name. Shown in the window title.
-    'project_name' => 'प्रगति प्रतिवेदन प्रणाली',
+    'project_name' => 'LIBT',
 
     // When clicking on the admin panel's top-left logo/name,
     // where should the user be redirected?
@@ -44,8 +42,7 @@ return [
 
     // CSS files that are loaded in all pages, using Laravel's asset() helper
     'styles' => [
-        'css/vendor.css',
-
+        'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
         // 'packages/backpack/base/css/blue-bundle.css', // has primary color blue
 
         // Here's what's inside the bundle:
@@ -54,6 +51,9 @@ return [
         // 'packages/noty/noty.css',
 
         // Load the fonts separately (so that you can replace them at will):
+        'packages/source-sans-pro/source-sans-pro.css',
+        'packages/line-awesome/css/line-awesome.min.css',
+        'css/style.css'
 
         // Example (the fonts above, loaded from CDN instead)
         // 'https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css',
@@ -65,7 +65,7 @@ return [
 
     // CSS files that are loaded in all pages, using Laravel's mix() helper
     'mix_styles' => [ // file_path => manifest_directory_path
-        'css/app.css' => '',
+        // 'css/app.css' => '',
     ],
 
     // ------
@@ -73,13 +73,13 @@ return [
     // ------
 
     // Menu logo. You can replace this with an <img> tag if you have a logo.
-    'project_logo'   => '<b>प्रगति प्रतिवेदन प्रणाली</b>',
+    'project_logo'   => '<b>Lincon </b>College',
 
     // Show / hide breadcrumbs on admin panel pages.
     'breadcrumbs' => false,
 
     // Horizontal navbar classes. Helps make the admin panel look similar to your project's design.
-    'header_class' => 'app-header border-0 navbar',
+    'header_class' => 'app-header bg-light-blue border-0 navbar',
     // For background colors use: bg-dark, bg-primary, bg-secondary, bg-danger, bg-warning, bg-success, bg-info, bg-blue, bg-light-blue, bg-indigo, bg-purple, bg-pink, bg-red, bg-orange, bg-yellow, bg-green, bg-teal, bg-cyan, bg-white
     // For links to be visible on different background colors use: "navbar-dark", "navbar-light", "navbar-color"
 
@@ -88,11 +88,11 @@ return [
     // ----
 
     // Body element classes.
-    'body_class' => 'app aside-menu-fixed  sidebar-fixed header-fixed sidebar-lg-show',
+    'body_class' => 'app aside-menu-fixed sidebar-lg-show',
     // Try sidebar-hidden, sidebar-fixed, sidebar-compact, sidebar-lg-show
 
     // Sidebar element classes.
-    'sidebar_class' => 'sidebar sidebar-pills',
+    'sidebar_class' => 'sidebar sidebar-pills bg-light',
     // Remove "sidebar-transparent" for standard sidebar look
     // Try "sidebar-light" or "sidebar-dark" for dark/light links
     // You can also add a background class like bg-dark, bg-primary, bg-secondary, bg-danger, bg-warning, bg-success, bg-info, bg-blue, bg-light-blue, bg-indigo, bg-purple, bg-pink, bg-red, bg-orange, bg-yellow, bg-green, bg-teal, bg-cyan
@@ -122,7 +122,7 @@ return [
     // JS files that are loaded in all pages, using Laravel's asset() helper
     'scripts' => [
         // Backstrap includes jQuery, Bootstrap, CoreUI, PNotify, Popper
-        'js/vendor.js',
+        'packages/backpack/base/js/bundle.js',
 
         // examples (everything inside the bundle, loaded from CDN)
         // 'https://code.jquery.com/jquery-3.4.1.min.js',
@@ -141,7 +141,7 @@ return [
 
     // JS files that are loaded in all pages, using Laravel's mix() helper
     'mix_scripts' => [// file_path => manifest_directory_path
-        'js/app.js' => '',
+        // 'js/app.js' => '',
     ],
 
     // -------------
@@ -261,7 +261,6 @@ return [
     // The guard that protects the Backpack admin panel.
     // If null, the config.auth.defaults.guard value will be used.
     'guard' => 'backpack',
-    // 'guard' => 'null',
 
     // The password reset configuration for Backpack.
     // If null, the config.auth.defaults.passwords value will be used.
@@ -270,13 +269,9 @@ return [
     // What kind of avatar will you like to show to the user?
     // Default: gravatar (automatically use the gravatar for their email)
     // Other options:
-    // - null (generic image with their first letter)
+    // - placehold (generic image with their first letter)
     // - example_method_name (specify the method on the User model that returns the URL)
     'avatar_type' => 'gravatar',
-
-    // Gravatar fallback options are 'identicon', 'monsterid', 'wavatar', 'retro', 'robohash', 'blank'
-    // 'blank' will keep the generic image with the user first letter
-    'gravatar_fallback' => 'blank',
 
     /*
     |--------------------------------------------------------------------------
@@ -294,13 +289,6 @@ return [
     // your namespace would be the one below. IMPORTANT: in this case the namespace ends with a dot.
     // 'view_namespace' => 'vendor.myname.mypackage.',
 
-    // Tell Backpack to look in more places for component views (like widgets)
-    'component_view_namespaces' => [
-        'widgets' => [
-            'backpack::widgets', // falls back to 'resources/views/vendor/backpack/base/widgets'
-        ],
-    ],
-
     /*
     |--------------------------------------------------------------------------
     | File System
@@ -316,19 +304,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Backpack Token Username
+    | License Code
     |--------------------------------------------------------------------------
     |
-    | If you have access to closed-source Backpack add-ons, please provide
-    | your token username here, if you're getting yellow alerts on your
-    | admin panel's pages. Normally this is not needed, it is
-    | preferred to add this as an environment variable
-    | (most likely in your .env file).
+    | If you, your employer or your client make money by using Backpack, you need
+    | to purchase a license. A license code will be provided after purchase,
+    | which you can put here or in your ENV file in staging & production.
     |
     | More info and payment form on:
     | https://www.backpackforlaravel.com
     |
     */
 
-    'token_username' => env('BACKPACK_TOKEN_USERNAME', false),
+    'license_code' => env('BACKPACK_LICENSE', false),
 ];

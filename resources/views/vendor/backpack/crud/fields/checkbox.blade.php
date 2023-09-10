@@ -1,16 +1,13 @@
 <!-- checkbox field -->
 
-@php
-  $field['value'] = old_empty_or_null($field['name'], '') ??  $field['value'] ?? $field['default'] ?? '';
-@endphp
 @include('crud::fields.inc.wrapper_start')
     @include('crud::fields.inc.translatable_icon')
     <div class="checkbox">
-        <input type="hidden" name="{{ $field['name'] }}" value="{{ $field['value'] }}">
+        <input type="hidden" name="{{ $field['name'] }}" value="{{ old(square_brackets_to_dots($field['name'])) ?? $field['value'] ?? $field['default'] ?? 0 }}">
     	  <input type="checkbox"
           data-init-function="bpFieldInitCheckbox"
 
-          @if ((bool)$field['value'])
+          @if (old(square_brackets_to_dots($field['name'])) ?? $field['value'] ?? $field['default'] ?? false)
                  checked="checked"
           @endif
 
@@ -32,10 +29,12 @@
 {{-- ########################################## --}}
 {{-- Extra CSS and JS for this particular field --}}
 {{-- If a field type is shown multiple times on a form, the CSS and JS will only be loaded once --}}
-
+@if ($crud->fieldTypeNotLoaded($field))
+    @php
+        $crud->markFieldTypeAsLoaded($field);
+    @endphp
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
-        @loadOnce('bpFieldInitCheckbox')
         <script>
             function bpFieldInitCheckbox(element) {
                 var hidden_element = element.siblings('input[type=hidden]');
@@ -67,8 +66,8 @@
                 })
             }
         </script>
-        @endLoadOnce
     @endpush
 
+@endif
 {{-- End of Extra CSS and JS --}}
 {{-- ########################################## --}}

@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,7 +28,7 @@ class ReflectionClassConstant implements \Reflector
      * @param string|object $class
      * @param string        $name
      */
-    public function __construct($class, string $name)
+    public function __construct($class, $name)
     {
         if (!$class instanceof \ReflectionClass) {
             $class = new \ReflectionClass($class);
@@ -54,7 +54,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return string|null
      */
-    public static function export($class, string $name, bool $return = false)
+    public static function export($class, $name, $return = false)
     {
         $refl = new self($class, $name);
         $value = $refl->getValue();
@@ -70,8 +70,10 @@ class ReflectionClassConstant implements \Reflector
 
     /**
      * Gets the declaring class.
+     *
+     * @return \ReflectionClass
      */
-    public function getDeclaringClass(): \ReflectionClass
+    public function getDeclaringClass()
     {
         $parent = $this->class;
 
@@ -93,7 +95,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return false
      */
-    public function getDocComment(): bool
+    public function getDocComment()
     {
         return false;
     }
@@ -104,16 +106,20 @@ class ReflectionClassConstant implements \Reflector
      * Since this is only used for PHP < 7.1, we can just return "public". All
      * the fancier modifiers are only available on PHP versions which have their
      * own ReflectionClassConstant class :)
+     *
+     * @return int
      */
-    public function getModifiers(): int
+    public function getModifiers()
     {
         return \ReflectionMethod::IS_PUBLIC;
     }
 
     /**
      * Gets the constant name.
+     *
+     * @return string
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
@@ -133,7 +139,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return bool false
      */
-    public function isPrivate(): bool
+    public function isPrivate()
     {
         return false;
     }
@@ -143,7 +149,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return bool false
      */
-    public function isProtected(): bool
+    public function isProtected()
     {
         return false;
     }
@@ -153,15 +159,17 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return bool true
      */
-    public function isPublic(): bool
+    public function isPublic()
     {
         return true;
     }
 
     /**
      * To string.
+     *
+     * @return string
      */
-    public function __toString(): string
+    public function __toString()
     {
         return $this->getName();
     }
@@ -209,7 +217,7 @@ class ReflectionClassConstant implements \Reflector
      *
      * @return ReflectionClassConstant|\ReflectionClassConstant
      */
-    public static function create($class, string $name)
+    public static function create($class, $name)
     {
         if (\class_exists(\ReflectionClassConstant::class)) {
             return new \ReflectionClassConstant($class, $name);

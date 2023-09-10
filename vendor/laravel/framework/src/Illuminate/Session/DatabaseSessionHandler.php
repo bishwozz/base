@@ -153,7 +153,7 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
      * Perform an insert operation on the session ID.
      *
      * @param  string  $sessionId
-     * @param  array<string, mixed>  $payload
+     * @param  string  $payload
      * @return bool|null
      */
     protected function performInsert($sessionId, $payload)
@@ -169,7 +169,7 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
      * Perform an update operation on the session ID.
      *
      * @param  string  $sessionId
-     * @param  array<string, mixed>  $payload
+     * @param  string  $payload
      * @return int
      */
     protected function performUpdate($sessionId, $payload)

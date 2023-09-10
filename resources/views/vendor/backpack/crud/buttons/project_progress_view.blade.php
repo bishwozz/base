@@ -1,1 +1,0 @@
-<a data-fancybox data-type="ajax" data-src="/admin/get-timeline-chart/{{$entry->id}}" href="javascript:;" style="padding: 1px 4px;" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></a>

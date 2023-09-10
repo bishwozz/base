@@ -3,19 +3,18 @@
 namespace Spatie\Permission;
 
 use Illuminate\Support\Collection;
-use Spatie\Permission\Contracts\Wildcard;
 use Spatie\Permission\Exceptions\WildcardPermissionNotProperlyFormatted;
 
-class WildcardPermission implements Wildcard
+class WildcardPermission
 {
     /** @var string */
-    public const WILDCARD_TOKEN = '*';
+    const WILDCARD_TOKEN = '*';
 
     /** @var string */
-    public const PART_DELIMITER = '.';
+    const PART_DELIMITER = '.';
 
     /** @var string */
-    public const SUBPART_DELIMITER = ',';
+    const SUBPART_DELIMITER = ',';
 
     /** @var string */
     protected $permission;
@@ -23,6 +22,9 @@ class WildcardPermission implements Wildcard
     /** @var Collection */
     protected $parts;
 
+    /**
+     * @param string $permission
+     */
     public function __construct(string $permission)
     {
         $this->permission = $permission;
@@ -32,24 +34,25 @@ class WildcardPermission implements Wildcard
     }
 
     /**
-     * @param  string|WildcardPermission  $permission
+     * @param string|WildcardPermission $permission
+     *
+     * @return bool
      */
     public function implies($permission): bool
     {
         if (is_string($permission)) {
-            $permission = new static($permission);
+            $permission = new self($permission);
         }
 
         $otherParts = $permission->getParts();
 
         $i = 0;
-        $partsCount = $this->getParts()->count();
         foreach ($otherParts as $otherPart) {
-            if ($partsCount - 1 < $i) {
+            if ($this->getParts()->count() - 1 < $i) {
                 return true;
             }
 
-            if (! $this->parts->get($i)->contains(static::WILDCARD_TOKEN)
+            if (! $this->parts->get($i)->contains(self::WILDCARD_TOKEN)
                 && ! $this->containsAll($this->parts->get($i), $otherPart)) {
                 return false;
             }
@@ -57,8 +60,8 @@ class WildcardPermission implements Wildcard
             $i++;
         }
 
-        for ($i; $i < $partsCount; $i++) {
-            if (! $this->parts->get($i)->contains(static::WILDCARD_TOKEN)) {
+        for ($i; $i < $this->parts->count(); $i++) {
+            if (! $this->parts->get($i)->contains(self::WILDCARD_TOKEN)) {
                 return false;
             }
         }
@@ -66,6 +69,12 @@ class WildcardPermission implements Wildcard
         return true;
     }
 
+    /**
+     * @param Collection $part
+     * @param Collection $otherPart
+     *
+     * @return bool
+     */
     protected function containsAll(Collection $part, Collection $otherPart): bool
     {
         foreach ($otherPart->toArray() as $item) {
@@ -77,6 +86,9 @@ class WildcardPermission implements Wildcard
         return true;
     }
 
+    /**
+     * @return Collection
+     */
     public function getParts(): Collection
     {
         return $this->parts;
@@ -84,6 +96,8 @@ class WildcardPermission implements Wildcard
 
     /**
      * Sets the different parts and subparts from permission string.
+     *
+     * @return void
      */
     protected function setParts(): void
     {
@@ -91,10 +105,10 @@ class WildcardPermission implements Wildcard
             throw WildcardPermissionNotProperlyFormatted::create($this->permission);
         }
 
-        $parts = collect(explode(static::PART_DELIMITER, $this->permission));
+        $parts = collect(explode(self::PART_DELIMITER, $this->permission));
 
         $parts->each(function ($item, $key) {
-            $subParts = collect(explode(static::SUBPART_DELIMITER, $item));
+            $subParts = collect(explode(self::SUBPART_DELIMITER, $item));
 
             if ($subParts->isEmpty() || $subParts->contains('')) {
                 throw WildcardPermissionNotProperlyFormatted::create($this->permission);

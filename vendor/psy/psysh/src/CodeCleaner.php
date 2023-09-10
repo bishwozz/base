@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,7 +18,6 @@ use Psy\CodeCleaner\AbstractClassPass;
 use Psy\CodeCleaner\AssignThisVariablePass;
 use Psy\CodeCleaner\CalledClassPass;
 use Psy\CodeCleaner\CallTimePassByReferencePass;
-use Psy\CodeCleaner\CodeCleanerPass;
 use Psy\CodeCleaner\EmptyArrayDimFetchPass;
 use Psy\CodeCleaner\ExitPass;
 use Psy\CodeCleaner\FinalClassPass;
@@ -39,6 +38,7 @@ use Psy\CodeCleaner\ReturnTypePass;
 use Psy\CodeCleaner\StrictTypesPass;
 use Psy\CodeCleaner\UseStatementPass;
 use Psy\CodeCleaner\ValidClassNamePass;
+use Psy\CodeCleaner\ValidConstantPass;
 use Psy\CodeCleaner\ValidConstructorPass;
 use Psy\CodeCleaner\ValidFunctionNamePass;
 use Psy\Exception\ParseErrorException;
@@ -50,8 +50,6 @@ use Psy\Exception\ParseErrorException;
 class CodeCleaner
 {
     private $yolo = false;
-    private $strictTypes = false;
-
     private $parser;
     private $printer;
     private $traverser;
@@ -60,16 +58,14 @@ class CodeCleaner
     /**
      * CodeCleaner constructor.
      *
-     * @param Parser|null        $parser      A PhpParser Parser instance. One will be created if not explicitly supplied
-     * @param Printer|null       $printer     A PhpParser Printer instance. One will be created if not explicitly supplied
-     * @param NodeTraverser|null $traverser   A PhpParser NodeTraverser instance. One will be created if not explicitly supplied
-     * @param bool               $yolo        run without input validation
-     * @param bool               $strictTypes enforce strict types by default
+     * @param Parser|null        $parser    A PhpParser Parser instance. One will be created if not explicitly supplied
+     * @param Printer|null       $printer   A PhpParser Printer instance. One will be created if not explicitly supplied
+     * @param NodeTraverser|null $traverser A PhpParser NodeTraverser instance. One will be created if not explicitly supplied
+     * @param bool               $yolo      run without input validation
      */
-    public function __construct(Parser $parser = null, Printer $printer = null, NodeTraverser $traverser = null, bool $yolo = false, bool $strictTypes = false)
+    public function __construct(Parser $parser = null, Printer $printer = null, NodeTraverser $traverser = null, $yolo = false)
     {
         $this->yolo = $yolo;
-        $this->strictTypes = $strictTypes;
 
         if ($parser === null) {
             $parserFactory = new ParserFactory();
@@ -87,8 +83,10 @@ class CodeCleaner
 
     /**
      * Check whether this CodeCleaner is in YOLO mode.
+     *
+     * @return bool
      */
-    public function yolo(): bool
+    public function yolo()
     {
         return $this->yolo;
     }
@@ -96,9 +94,9 @@ class CodeCleaner
     /**
      * Get default CodeCleaner passes.
      *
-     * @return CodeCleanerPass[]
+     * @return array
      */
-    private function getDefaultPasses(): array
+    private function getDefaultPasses()
     {
         if ($this->yolo) {
             return $this->getYoloPasses();
@@ -138,10 +136,11 @@ class CodeCleaner
             new MagicConstantsPass(),
             $namespacePass,           // must run after the implicit return pass
             new RequirePass(),
-            new StrictTypesPass($this->strictTypes),
+            new StrictTypesPass(),
 
             // Namespace-aware validation (which depends on aforementioned shenanigans)
             new ValidClassNamePass(),
+            new ValidConstantPass(),
             new ValidFunctionNamePass(),
         ];
     }
@@ -153,9 +152,9 @@ class CodeCleaner
      * This list should stay in sync with the "rewriting shenanigans" in
      * getDefaultPasses above.
      *
-     * @return CodeCleanerPass[]
+     * @return array
      */
-    private function getYoloPasses(): array
+    private function getYoloPasses()
     {
         $useStatementPass = new UseStatementPass();
         $namespacePass = new NamespacePass($this);
@@ -172,7 +171,7 @@ class CodeCleaner
             new MagicConstantsPass(),
             $namespacePass,           // must run after the implicit return pass
             new RequirePass(),
-            new StrictTypesPass($this->strictTypes),
+            new StrictTypesPass(),
         ];
     }
 
@@ -212,6 +211,8 @@ class CodeCleaner
             $traverser->traverse($stmts);
         } catch (\Throwable $e) {
             // Don't care.
+        } catch (\Exception $e) {
+            // Still don't care.
         }
     }
 
@@ -243,8 +244,10 @@ class CodeCleaner
      * Check whether a given backtrace frame is a call to Psy\debug.
      *
      * @param array $stackFrame
+     *
+     * @return bool
      */
-    private static function isDebugCall(array $stackFrame): bool
+    private static function isDebugCall(array $stackFrame)
     {
         $class = isset($stackFrame['class']) ? $stackFrame['class'] : null;
         $function = isset($stackFrame['function']) ? $stackFrame['function'] : null;
@@ -263,7 +266,7 @@ class CodeCleaner
      *
      * @return string|false Cleaned PHP code, False if the input is incomplete
      */
-    public function clean(array $codeLines, bool $requireSemicolons = false)
+    public function clean(array $codeLines, $requireSemicolons = false)
     {
         $stmts = $this->parse('<?php '.\implode(\PHP_EOL, $codeLines).\PHP_EOL, $requireSemicolons);
         if ($stmts === false) {
@@ -289,6 +292,8 @@ class CodeCleaner
      * Set the current local namespace.
      *
      * @param array|null $namespace (default: null)
+     *
+     * @return array|null
      */
     public function setNamespace(array $namespace = null)
     {
@@ -318,7 +323,7 @@ class CodeCleaner
      *
      * @return array|false A set of statements, or false if incomplete
      */
-    protected function parse(string $code, bool $requireSemicolons = false)
+    protected function parse($code, $requireSemicolons = false)
     {
         try {
             return $this->parser->parse($code);
@@ -352,7 +357,7 @@ class CodeCleaner
         }
     }
 
-    private function parseErrorIsEOF(\PhpParser\Error $e): bool
+    private function parseErrorIsEOF(\PhpParser\Error $e)
     {
         $msg = $e->getRawMessage();
 
@@ -368,8 +373,10 @@ class CodeCleaner
      *
      * @param \PhpParser\Error $e
      * @param string           $code
+     *
+     * @return bool
      */
-    private function parseErrorIsUnclosedString(\PhpParser\Error $e, string $code): bool
+    private function parseErrorIsUnclosedString(\PhpParser\Error $e, $code)
     {
         if ($e->getRawMessage() !== 'Syntax error, unexpected T_ENCAPSED_AND_WHITESPACE') {
             return false;
@@ -377,19 +384,19 @@ class CodeCleaner
 
         try {
             $this->parser->parse($code."';");
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
         return true;
     }
 
-    private function parseErrorIsUnterminatedComment(\PhpParser\Error $e, $code): bool
+    private function parseErrorIsUnterminatedComment(\PhpParser\Error $e, $code)
     {
         return $e->getRawMessage() === 'Unterminated comment';
     }
 
-    private function parseErrorIsTrailingComma(\PhpParser\Error $e, $code): bool
+    private function parseErrorIsTrailingComma(\PhpParser\Error $e, $code)
     {
         return ($e->getRawMessage() === 'A trailing comma is not allowed here') && (\substr(\rtrim($code), -1) === ',');
     }

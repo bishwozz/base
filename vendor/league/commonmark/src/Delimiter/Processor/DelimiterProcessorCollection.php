@@ -19,8 +19,6 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Delimiter\Processor;
 
-use League\CommonMark\Exception\InvalidArgumentException;
-
 final class DelimiterProcessorCollection implements DelimiterProcessorCollectionInterface
 {
     /**
@@ -64,7 +62,7 @@ final class DelimiterProcessorCollection implements DelimiterProcessorCollection
     private function addDelimiterProcessorForChar(string $delimiterChar, DelimiterProcessorInterface $processor): void
     {
         if (isset($this->processorsByChar[$delimiterChar])) {
-            throw new InvalidArgumentException(\sprintf('Delim processor for character "%s" already exists', $processor->getOpeningCharacter()));
+            throw new \InvalidArgumentException(\sprintf('Delim processor for character "%s" already exists', $processor->getOpeningCharacter()));
         }
 
         $this->processorsByChar[$delimiterChar] = $processor;

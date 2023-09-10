@@ -87,9 +87,7 @@ class PruneCommand extends Command
     protected function models()
     {
         if (! empty($models = $this->option('model'))) {
-            return collect($models)->filter(function ($model) {
-                return class_exists($model);
-            })->values();
+            return collect($models);
         }
 
         $except = $this->option('except');
@@ -98,7 +96,7 @@ class PruneCommand extends Command
             throw new InvalidArgumentException('The --models and --except options cannot be combined.');
         }
 
-        return collect((new Finder)->in($this->getDefaultPath())->files()->name('*.php'))
+        return collect((new Finder)->in(app_path('Models'))->files()->name('*.php'))
             ->map(function ($model) {
                 $namespace = $this->laravel->getNamespace();
 
@@ -113,19 +111,7 @@ class PruneCommand extends Command
                 });
             })->filter(function ($model) {
                 return $this->isPrunable($model);
-            })->filter(function ($model) {
-                return class_exists($model);
             })->values();
-    }
-
-    /**
-     * Get the default path where models are located.
-     *
-     * @return string
-     */
-    protected function getDefaultPath()
-    {
-        return app_path('Models');
     }
 
     /**

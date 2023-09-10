@@ -12,44 +12,21 @@
 
 @include('backpack::inc.alerts')
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
 {{-- Send in $this->data['load_scripts'] as array to load in view --}}
-@if(!empty($load_scripts))
-    @foreach ($load_scripts as $script)
-        <script type="text/javascript" src={{ $script }}></script>
-    @endforeach
-@endif
+    @if(!empty($load_scripts))
+        @foreach ($load_scripts as $script)
+            <script type="text/javascript" src={{ $script }}></script>
+        @endforeach
+    @endif
 
-{{-- Specific style in $this->data['script_js'] --}}
-@if(!empty($script_js))
-    <script type="text/javascript">
-        {{!! html_entity_decode($script_js) !!}}
-    </script>
-@endif
-
-
-
-<!-- JavaScript Libraries -->
-    {{-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> --}}
-    {{-- <script src="{{asset('homepage/js/jquery.js')}}"></script> --}}
-
-    {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script> --}}
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>
-
-    <script src="{{asset('js/easing.min.js')}}"></script>
-    <script src="{{asset('js/owl.carousel.min.js')}}"></script>
-
-    <!-- Contact Javascript File -->
-    <script src="{{asset('js/jqBootstrapValidation.min.js')}}"></script>
-    <script src="{{asset('js/contact.js')}}"></script>
-    <!-- Template Javascript -->
-    <script src="{{asset('js/main.js')}}"></script>
-    <script src="{{asset('js/fancybox.v3.5.7.min.js')}}"></script>
-    <script src="{{asset('homepage/js/chart.min.js')}}"></script>
-
-    <script src="{{asset('homepage/js/jquery.parallax.js')}}"></script>
-    <script src="{{asset('homepage/js/moment.min.js')}}"></script>
-    
-    <script src="{{asset('homepage/js/currencyFormatter.min.js')}}"></script>
+    {{-- Specific style in $this->data['script_js'] --}}
+    @if(!empty($script_js))
+        <script type="text/javascript">
+            {{!! html_entity_decode($script_js) !!}}
+        </script>
+    @endif
 
 
 <!-- page script -->
@@ -103,7 +80,3 @@
         location.hash = e.target.hash.replace("#tab_", "#");
     });
 </script>
-
-@if(config('app.debug'))
-    @include('crud::inc.ajax_error_frame')
-@endif

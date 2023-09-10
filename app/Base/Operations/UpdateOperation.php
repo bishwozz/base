@@ -2,7 +2,6 @@
 
 namespace App\Base\Operations;
 
-
 use Illuminate\Support\Facades\Route;
 
 trait UpdateOperation
@@ -16,15 +15,15 @@ trait UpdateOperation
      */
     protected function setupUpdateRoutes($segment, $routeName, $controller)
     {
-        Route::get($segment . '/{id}/edit', [
-            'as'        => $routeName . '.edit',
-            'uses'      => $controller . '@edit',
+        Route::get($segment.'/{id}/edit', [
+            'as'        => $routeName.'.edit',
+            'uses'      => $controller.'@edit',
             'operation' => 'update',
         ]);
 
-        Route::put($segment . '/{id}', [
-            'as'        => $routeName . '.update',
-            'uses'      => $controller . '@update',
+        Route::put($segment.'/{id}', [
+            'as'        => $routeName.'.update',
+            'uses'      => $controller.'@update',
             'operation' => 'update',
         ]);
     }
@@ -41,9 +40,9 @@ trait UpdateOperation
 
             if ($this->crud->getModel()->translationEnabled()) {
                 $this->crud->addField([
-                    'name' => '_locale',
+                    'name' => 'locale',
                     'type' => 'hidden',
-                    'value' => request()->input('_locale') ?? app()->getLocale(),
+                    'value' => request()->input('locale') ?? app()->getLocale(),
                 ]);
             }
 
@@ -71,27 +70,11 @@ trait UpdateOperation
         $this->data['entry'] = $this->crud->getEntry($id);
         $this->data['crud'] = $this->crud;
         $this->data['saveAction'] = $this->crud->getSaveAction();
-        $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.edit') . ' ' . $this->crud->entity_name;
+        $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.edit').' '.$this->crud->entity_name;
 
         $this->data['id'] = $id;
 
         // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
-        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
-        $enableDialog =  property_exists($this, 'enableDialog') ? $this->enableDialog : false;
-        if ($enableDialog) {
-            $views =  view($this->crud->getEditView(), $this->data)->renderSections();
-            $view = "";
-            foreach ($views as $key => $v) {
-                if ($key === 'header') {
-                    continue;
-                }
-                $view .= $v;
-            }
-            return $view;
-        } else {
-            return view($this->crud->getEditView(), $this->data);
-        }
-
         return view($this->crud->getEditView(), $this->data);
     }
 
@@ -104,18 +87,13 @@ trait UpdateOperation
     {
         $this->crud->hasAccessOrFail('update');
 
-        // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
-
-
-        // register any Model Events defined on fields
-        $this->crud->registerFieldEvents();
+        $user_id = backpack_user()->id;
+        $request->request->set('updated_by', $user_id);
 
         // update the row in the db
-        $item = $this->crud->update(
-            $request->get($this->crud->model->getKeyName()),
-            $this->crud->getStrippedSaveRequest($request)
-        );
+        $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
+        $request->except(['save_action', '_token', '_method', 'http_referrer']));
         $this->data['entry'] = $this->crud->entry = $item;
 
         // show a success message

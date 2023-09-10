@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,7 +22,7 @@ class ClassConstantEnumerator extends Enumerator
     /**
      * {@inheritdoc}
      */
-    protected function listItems(InputInterface $input, \Reflector $reflector = null, $target = null): array
+    protected function listItems(InputInterface $input, \Reflector $reflector = null, $target = null)
     {
         // only list constants when a Reflector is present.
         if ($reflector === null) {
@@ -56,12 +56,12 @@ class ClassConstantEnumerator extends Enumerator
     /**
      * Get defined constants for the given class or object Reflector.
      *
-     * @param \ReflectionClass $reflector
-     * @param bool             $noInherit Exclude inherited constants
+     * @param \Reflector $reflector
+     * @param bool       $noInherit Exclude inherited constants
      *
      * @return array
      */
-    protected function getConstants(\ReflectionClass $reflector, bool $noInherit = false): array
+    protected function getConstants(\Reflector $reflector, $noInherit = false)
     {
         $className = $reflector->getName();
 
@@ -88,7 +88,7 @@ class ClassConstantEnumerator extends Enumerator
      *
      * @return array
      */
-    protected function prepareConstants(array $constants): array
+    protected function prepareConstants(array $constants)
     {
         // My kingdom for a generator.
         $ret = [];
@@ -110,8 +110,10 @@ class ClassConstantEnumerator extends Enumerator
      * Get a label for the particular kind of "class" represented.
      *
      * @param \ReflectionClass $reflector
+     *
+     * @return string
      */
-    protected function getKindLabel(\ReflectionClass $reflector): string
+    protected function getKindLabel(\ReflectionClass $reflector)
     {
         if ($reflector->isInterface()) {
             return 'Interface Constants';

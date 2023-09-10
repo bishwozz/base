@@ -24,7 +24,7 @@ final class HtmlElement implements \Stringable
     /** @var array<string, string|bool> */
     private array $attributes = [];
 
-    /** @var \Stringable|\Stringable[]|string */
+    /** @var HtmlElement|HtmlElement[]|string */
     private $contents;
 
     /** @psalm-readonly */
@@ -33,7 +33,7 @@ final class HtmlElement implements \Stringable
     /**
      * @param string                                $tagName     Name of the HTML tag
      * @param array<string, string|string[]|bool>   $attributes  Array of attributes (values should be unescaped)
-     * @param \Stringable|\Stringable[]|string|null $contents    Inner contents, pre-escaped if needed
+     * @param HtmlElement|HtmlElement[]|string|null $contents    Inner contents, pre-escaped if needed
      * @param bool                                  $selfClosing Whether the tag is self-closing
      */
     public function __construct(string $tagName, array $attributes = [], $contents = '', bool $selfClosing = false)
@@ -77,7 +77,7 @@ final class HtmlElement implements \Stringable
     /**
      * @param string|string[]|bool $value
      */
-    public function setAttribute(string $key, $value = true): self
+    public function setAttribute(string $key, $value): self
     {
         if (\is_array($value)) {
             $this->attributes[$key] = \implode(' ', \array_unique($value));
@@ -89,7 +89,7 @@ final class HtmlElement implements \Stringable
     }
 
     /**
-     * @return \Stringable|\Stringable[]|string
+     * @return HtmlElement|HtmlElement[]|string
      *
      * @psalm-immutable
      */
@@ -105,7 +105,7 @@ final class HtmlElement implements \Stringable
     /**
      * Sets the inner contents of the tag (must be pre-escaped if needed)
      *
-     * @param \Stringable|\Stringable[]|string $contents
+     * @param HtmlElement|HtmlElement[]|string $contents
      *
      * @return $this
      */

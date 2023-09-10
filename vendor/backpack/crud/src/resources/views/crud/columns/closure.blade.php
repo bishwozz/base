@@ -1,17 +1,12 @@
 {{-- closure function column type --}}
 @php
-    $column['value'] = $column['value'] ?? $column['function'];
-    $column['escaped'] = $column['escaped'] ?? true;
+    $column['escaped'] = $column['escaped'] ?? false;
+    $column['text'] = $column['function']($entry);
     $column['prefix'] = $column['prefix'] ?? '';
     $column['suffix'] = $column['suffix'] ?? '';
-    $column['text'] = $column['default'] ?? '-';
 
-    if($column['value'] instanceof \Closure) {
-        $column['value'] = $column['value']($entry);
-    }
-
-    if(!empty($column['value'])) {
-        $column['text'] = $column['prefix'].$column['value'].$column['suffix'];
+    if(!empty($column['text'])) {
+        $column['text'] = $column['prefix'].$column['text'].$column['suffix'];
     }
 @endphp
 

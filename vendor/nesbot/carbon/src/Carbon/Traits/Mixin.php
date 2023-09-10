@@ -11,9 +11,6 @@
 
 namespace Carbon\Traits;
 
-use Carbon\CarbonInterface;
-use Carbon\CarbonInterval;
-use Carbon\CarbonPeriod;
 use Closure;
 use Generator;
 use ReflectionClass;
@@ -69,8 +66,8 @@ trait Mixin
     public static function mixin($mixin)
     {
         \is_string($mixin) && trait_exists($mixin)
-            ? self::loadMixinTrait($mixin)
-            : self::loadMixinClass($mixin);
+            ? static::loadMixinTrait($mixin)
+            : static::loadMixinClass($mixin);
     }
 
     /**
@@ -102,13 +99,12 @@ trait Mixin
     {
         $context = eval(self::getAnonymousClassCodeForTrait($trait));
         $className = \get_class($context);
-        $baseClass = static::class;
 
         foreach (self::getMixableMethods($context) as $name) {
             $closureBase = Closure::fromCallable([$context, $name]);
 
-            static::macro($name, function (...$parameters) use ($closureBase, $className, $baseClass) {
-                $downContext = isset($this) ? ($this) : new $baseClass();
+            static::macro($name, function () use ($closureBase, $className) {
+                /** @phpstan-ignore-next-line */
                 $context = isset($this) ? $this->cast($className) : new $className();
 
                 try {
@@ -119,50 +115,9 @@ trait Mixin
                 }
 
                 // in case of errors not converted into exceptions
-                $closure = $closure ?: $closureBase;
+                $closure = $closure ?? $closureBase;
 
-                $result = $closure(...$parameters);
-
-                if (!($result instanceof $className)) {
-                    return $result;
-                }
-
-                if ($downContext instanceof CarbonInterface && $result instanceof CarbonInterface) {
-                    if ($context !== $result) {
-                        $downContext = $downContext->copy();
-                    }
-
-                    return $downContext
-                        ->setTimezone($result->getTimezone())
-                        ->modify($result->format('Y-m-d H:i:s.u'))
-                        ->settings($result->getSettings());
-                }
-
-                if ($downContext instanceof CarbonInterval && $result instanceof CarbonInterval) {
-                    if ($context !== $result) {
-                        $downContext = $downContext->copy();
-                    }
-
-                    $downContext->copyProperties($result);
-                    self::copyStep($downContext, $result);
-                    self::copyNegativeUnits($downContext, $result);
-
-                    return $downContext->settings($result->getSettings());
-                }
-
-                if ($downContext instanceof CarbonPeriod && $result instanceof CarbonPeriod) {
-                    if ($context !== $result) {
-                        $downContext = $downContext->copy();
-                    }
-
-                    return $downContext
-                        ->setDates($result->getStartDate(), $result->getEndDate())
-                        ->setRecurrences($result->getRecurrences())
-                        ->setOptions($result->getOptions())
-                        ->settings($result->getSettings());
-                }
-
-                return $result;
+                return $closure(...\func_get_args());
             });
         }
     }
@@ -196,12 +151,22 @@ trait Mixin
     protected static function bindMacroContext($context, callable $callable)
     {
         static::$macroContextStack[] = $context;
+        $exception = null;
+        $result = null;
 
         try {
-            return $callable();
-        } finally {
-            array_pop(static::$macroContextStack);
+            $result = $callable();
+        } catch (Throwable $throwable) {
+            $exception = $throwable;
         }
+
+        array_pop(static::$macroContextStack);
+
+        if ($exception) {
+            throw $exception;
+        }
+
+        return $result;
     }
 
     /**

@@ -5,8 +5,6 @@ namespace Faker\ORM\Doctrine;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 
-require_once 'backward-compatibility.php';
-
 /**
  * Service class for populating a table through a Doctrine Entity class.
  */
@@ -193,7 +191,7 @@ class EntityPopulator
         return $obj;
     }
 
-    private function fillColumns($obj, $insertedEntities): void
+    private function fillColumns($obj, $insertedEntities)
     {
         foreach ($this->columnFormatters as $field => $format) {
             if (null !== $format) {
@@ -205,7 +203,7 @@ class EntityPopulator
                         'Failed to generate a value for %s::%s: %s',
                         get_class($obj),
                         $field,
-                        $ex->getMessage(),
+                        $ex->getMessage()
                     ));
                 }
                 // Try a standard setter if it's available, otherwise fall back on reflection
@@ -220,7 +218,7 @@ class EntityPopulator
         }
     }
 
-    private function callMethods($obj, $insertedEntities): void
+    private function callMethods($obj, $insertedEntities)
     {
         foreach ($this->getModifiers() as $modifier) {
             $modifier($obj, $insertedEntities);
@@ -228,16 +226,19 @@ class EntityPopulator
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     private function generateId($obj, $column, ObjectManager $manager)
     {
+        /** @var \Doctrine\Common\Persistence\ObjectRepository $repository */
         $repository = $manager->getRepository(get_class($obj));
         $result = $repository->createQueryBuilder('e')
                 ->select(sprintf('e.%s', $column))
                 ->getQuery()
                 ->execute();
         $ids = array_map('current', $result->toArray());
+
+        $id = null;
 
         do {
             $id = mt_rand();

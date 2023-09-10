@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Portability;
 
-use Doctrine\DBAL\Driver\Middleware\AbstractResultMiddleware;
 use Doctrine\DBAL\Driver\Result as ResultInterface;
 
-final class Result extends AbstractResultMiddleware
+final class Result implements ResultInterface
 {
-    private Converter $converter;
+    /** @var ResultInterface */
+    private $result;
 
-    /** @internal The result can be only instantiated by the portability connection or statement. */
+    /** @var Converter */
+    private $converter;
+
+    /**
+     * @internal The result can be only instantiated by the portability connection or statement.
+     */
     public function __construct(ResultInterface $result, Converter $converter)
     {
-        parent::__construct($result);
-
+        $this->result    = $result;
         $this->converter = $converter;
     }
 
@@ -25,7 +29,7 @@ final class Result extends AbstractResultMiddleware
     public function fetchNumeric()
     {
         return $this->converter->convertNumeric(
-            parent::fetchNumeric(),
+            $this->result->fetchNumeric()
         );
     }
 
@@ -35,7 +39,7 @@ final class Result extends AbstractResultMiddleware
     public function fetchAssociative()
     {
         return $this->converter->convertAssociative(
-            parent::fetchAssociative(),
+            $this->result->fetchAssociative()
         );
     }
 
@@ -45,7 +49,7 @@ final class Result extends AbstractResultMiddleware
     public function fetchOne()
     {
         return $this->converter->convertOne(
-            parent::fetchOne(),
+            $this->result->fetchOne()
         );
     }
 
@@ -55,7 +59,7 @@ final class Result extends AbstractResultMiddleware
     public function fetchAllNumeric(): array
     {
         return $this->converter->convertAllNumeric(
-            parent::fetchAllNumeric(),
+            $this->result->fetchAllNumeric()
         );
     }
 
@@ -65,7 +69,7 @@ final class Result extends AbstractResultMiddleware
     public function fetchAllAssociative(): array
     {
         return $this->converter->convertAllAssociative(
-            parent::fetchAllAssociative(),
+            $this->result->fetchAllAssociative()
         );
     }
 
@@ -75,7 +79,22 @@ final class Result extends AbstractResultMiddleware
     public function fetchFirstColumn(): array
     {
         return $this->converter->convertFirstColumn(
-            parent::fetchFirstColumn(),
+            $this->result->fetchFirstColumn()
         );
+    }
+
+    public function rowCount(): int
+    {
+        return $this->result->rowCount();
+    }
+
+    public function columnCount(): int
+    {
+        return $this->result->columnCount();
+    }
+
+    public function free(): void
+    {
+        $this->result->free();
     }
 }

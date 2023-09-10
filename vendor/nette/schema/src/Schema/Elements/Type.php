@@ -42,7 +42,7 @@ final class Type implements Schema
 
 	public function __construct(string $type)
 	{
-		$defaults = ['list' => [], 'array' => []];
+		static $defaults = ['list' => [], 'array' => []];
 		$this->type = $type;
 		$this->default = strpos($type, '[]') ? [] : $defaults[$type] ?? null;
 	}
@@ -112,8 +112,8 @@ final class Type implements Schema
 
 	public function normalize($value, Context $context)
 	{
-		if ($prevent = (is_array($value) && isset($value[Helpers::PreventMerging]))) {
-			unset($value[Helpers::PreventMerging]);
+		if ($prevent = (is_array($value) && isset($value[Helpers::PREVENT_MERGING]))) {
+			unset($value[Helpers::PREVENT_MERGING]);
 		}
 
 		$value = $this->doNormalize($value, $context);
@@ -129,25 +129,21 @@ final class Type implements Schema
 				$res[$key] = $this->itemsValue->normalize($val, $context);
 				array_pop($context->path);
 			}
-
 			$value = $res;
 		}
-
 		if ($prevent && is_array($value)) {
-			$value[Helpers::PreventMerging] = true;
+			$value[Helpers::PREVENT_MERGING] = true;
 		}
-
 		return $value;
 	}
 
 
 	public function merge($value, $base)
 	{
-		if (is_array($value) && isset($value[Helpers::PreventMerging])) {
-			unset($value[Helpers::PreventMerging]);
+		if (is_array($value) && isset($value[Helpers::PREVENT_MERGING])) {
+			unset($value[Helpers::PREVENT_MERGING]);
 			return $value;
 		}
-
 		if (is_array($value) && is_array($base) && $this->itemsValue) {
 			$index = 0;
 			foreach ($value as $key => $val) {
@@ -160,7 +156,6 @@ final class Type implements Schema
 						: $val;
 				}
 			}
-
 			return $base;
 		}
 
@@ -171,8 +166,8 @@ final class Type implements Schema
 	public function complete($value, Context $context)
 	{
 		$merge = $this->merge;
-		if (is_array($value) && isset($value[Helpers::PreventMerging])) {
-			unset($value[Helpers::PreventMerging]);
+		if (is_array($value) && isset($value[Helpers::PREVENT_MERGING])) {
+			unset($value[Helpers::PREVENT_MERGING]);
 			$merge = false;
 		}
 
@@ -191,7 +186,7 @@ final class Type implements Schema
 		if ($value !== null && $this->pattern !== null && !preg_match("\x01^(?:$this->pattern)$\x01Du", $value)) {
 			$context->addError(
 				"The %label% %path% expects to match pattern '%pattern%', %value% given.",
-				Nette\Schema\Message::PatternMismatch,
+				Nette\Schema\Message::PATTERN_MISMATCH,
 				['value' => $value, 'pattern' => $this->pattern]
 			);
 			return;
@@ -213,18 +208,15 @@ final class Type implements Schema
 				$res[$key] = $this->itemsValue->complete($val, $context);
 				array_pop($context->path);
 			}
-
 			if (count($context->errors) > $errCount) {
 				return null;
 			}
-
 			$value = $res;
 		}
 
 		if ($merge) {
 			$value = Helpers::merge($value, $this->default);
 		}
-
 		return $this->doFinalize($value, $context);
 	}
 }

@@ -492,17 +492,6 @@ abstract class Factory
     }
 
     /**
-     * Add a new cross joined sequenced state transformation to the model definition.
-     *
-     * @param  array  $sequence
-     * @return static
-     */
-    public function crossJoinSequence(...$sequence)
-    {
-        return $this->state(new CrossJoinSequence(...$sequence));
-    }
-
-    /**
      * Define a child relationship for the model.
      *
      * @param  \Illuminate\Database\Eloquent\Factories\Factory  $factory
@@ -686,16 +675,12 @@ abstract class Factory
     public function modelName()
     {
         $resolver = static::$modelNameResolver ?: function (self $factory) {
-            $namespacedFactoryBasename = Str::replaceLast(
-                'Factory', '', Str::replaceFirst(static::$namespace, '', get_class($factory))
-            );
-
             $factoryBasename = Str::replaceLast('Factory', '', class_basename($factory));
 
             $appNamespace = static::appNamespace();
 
-            return class_exists($appNamespace.'Models\\'.$namespacedFactoryBasename)
-                        ? $appNamespace.'Models\\'.$namespacedFactoryBasename
+            return class_exists($appNamespace.'Models\\'.$factoryBasename)
+                        ? $appNamespace.'Models\\'.$factoryBasename
                         : $appNamespace.$factoryBasename;
         };
 

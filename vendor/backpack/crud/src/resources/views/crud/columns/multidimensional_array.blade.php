@@ -1,19 +1,16 @@
-{{-- enumerate the values in an array --}}
+{{-- enumerate the values in an array  --}}
 @php
-    $column['value'] = $column['value'] ?? data_get($entry, $column['name']);
-    $list = [];
-
-    if($column['value'] instanceof \Closure) {
-        $column['value'] = $column['value']($entry);
-    }
+    $array = data_get($entry, $column['name']);
+    $list[$column['visible_key']] = [];
 
     // if the isn't using attribute casting, decode it
-    if (is_string($column['value'])) {
-        $column['value'] = json_decode($column['value']);
+    if (is_string($array)) {
+        $array = json_decode($array);
     }
 
-    if (is_array($column['value']) && count($column['value'])) {
-        foreach ($column['value'] as $item) {
+    if (is_array($array) && count($array)) {
+        $list = [];
+        foreach ($array as $item) {
             if (isset($item->{$column['visible_key']})) {
                 $list[$column['visible_key']][] = $item->{$column['visible_key']};
             } elseif (is_array($item) && isset($item[$column['visible_key']])) {
@@ -50,6 +47,6 @@
         @endforeach
         {{ $column['suffix'] }}
     @else
-        {{ $column['default'] ?? '-' }}
+        -
     @endif
 </span>

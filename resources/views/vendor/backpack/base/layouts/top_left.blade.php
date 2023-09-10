@@ -30,7 +30,7 @@
           @yield('before_content_widgets')
 
           @yield('content')
-
+          
           @yield('after_content_widgets')
 
         </div>
@@ -50,6 +50,5 @@
 
   @yield('after_scripts')
   @stack('after_scripts')
-  <script src="{{ asset('js/report.js') }}"></script>
 </body>
 </html>

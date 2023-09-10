@@ -2,13 +2,11 @@
 
 namespace Backpack\Generators\Console\Commands;
 
-use Backpack\Generators\Services\BackpackCommand;
+use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 
-class CrudModelBackpackCommand extends BackpackCommand
+class CrudModelBackpackCommand extends GeneratorCommand
 {
-    use \Backpack\CRUD\app\Console\Commands\Traits\PrettyCommandOutput;
-
     /**
      * The console command name.
      *
@@ -54,12 +52,8 @@ class CrudModelBackpackCommand extends BackpackCommand
     public function handle()
     {
         $name = $this->getNameInput();
-        $nameTitle = $this->buildCamelName($name);
-        $namespaceApp = $this->qualifyClass($nameTitle);
-        $namespaceModels = $this->qualifyClass('/Models/'.$nameTitle);
-        $relativePath = $this->buildRelativePath($namespaceModels);
-
-        $this->progressBlock("Creating Model <fg=blue>$relativePath</>");
+        $namespaceApp = $this->qualifyClass($this->getNameInput());
+        $namespaceModels = $this->qualifyClass('/Models/'.$this->getNameInput());
 
         // Check if exists on app or models
         $existsOnApp = $this->alreadyExists($namespaceApp);
@@ -69,17 +63,14 @@ class CrudModelBackpackCommand extends BackpackCommand
         // should be written. Then, we will build the class and make the proper replacements on
         // the stub files so that it gets the correctly formatted namespace and class name.
         if (! $existsOnApp && ! $existsOnModels) {
-            $this->makeDirectory($this->getPath($namespaceModels));
+            $this->makeDirectory($namespaceModels);
 
-            $this->files->put($this->getPath($namespaceModels), $this->sortImports($this->buildClass($nameTitle)));
+            $this->files->put($this->getPath($namespaceModels), $this->sortImports($this->buildClass($namespaceModels)));
 
-            $this->closeProgressBlock();
+            $this->info($this->type.' created successfully.');
 
-            return false;
+            return;
         }
-
-        // Model exists
-        $this->closeProgressBlock('Already existed', 'yellow');
 
         // If it was found on both namespaces, we'll ask user to pick one of them
         if ($existsOnApp && $existsOnModels) {
@@ -99,42 +90,47 @@ class CrudModelBackpackCommand extends BackpackCommand
         // As the class already exists, we don't want to create the class and overwrite the
         // user's code. We just make sure it uses CrudTrait. We add that one line.
         if (! $this->hasOption('force') || ! $this->option('force')) {
-            $this->progressBlock('Adding CrudTrait to the Model');
-
-            $content = Str::of($this->files->get($path));
+            $file = $this->files->get($path);
+            $lines = preg_split('/(\r\n)|\r|\n/', $file);
 
             // check if it already uses CrudTrait
             // if it does, do nothing
-            if ($content->contains($this->crudTrait)) {
-                $this->closeProgressBlock('Already existed', 'yellow');
+            if (Str::contains($file, $this->crudTrait)) {
+                $this->comment('Model already used CrudTrait.');
 
-                return false;
-            } else {
-                $modifiedContent = Str::of($content->before('namespace'))
-                                    ->append('namespace'.$content->after('namespace')->before(';'))
-                                    ->append(';'.PHP_EOL.PHP_EOL.'use Backpack\CRUD\app\Models\Traits\CrudTrait;');
-
-                $content = $content->after('namespace')->after(';');
-
-                while (str_starts_with($content, PHP_EOL) || str_starts_with($content, "\n")) {
-                    $content = substr($content, 1);
-                }
-
-                $modifiedContent = $modifiedContent->append(PHP_EOL.$content);
-
-                // use the CrudTrait on the class
-                $modifiedContent = $modifiedContent->replaceFirst('{', '{'.PHP_EOL.'    use CrudTrait;');
-
-                // save the file
-                $this->files->put($path, $modifiedContent);
-                // let the user know what we've done
-                $this->closeProgressBlock();
-
-                return true;
+                return;
             }
+
+            // if it does not have CrudTrait, add the trait on the Model
+            foreach ($lines as $key => $line) {
+                if (Str::contains($line, "class {$this->getNameInput()} extends")) {
+                    if (Str::endsWith($line, '{')) {
+                        // add the trait on the next
+                        $position = $key + 1;
+                    } elseif ($lines[$key + 1] == '{') {
+                        // add the trait on the next next line
+                        $position = $key + 2;
+                    }
+
+                    // keep in mind that the line number shown in IDEs is not
+                    // the same as the array index - arrays start counting from 0,
+                    // IDEs start counting from 1
+
+                    // add CrudTrait
+                    array_splice($lines, $position, 0, "    use \\{$this->crudTrait};");
+
+                    // save the file
+                    $this->files->put($path, implode(PHP_EOL, $lines));
+
+                    // let the user know what we've done
+                    $this->info('Model already existed. Added CrudTrait to it.');
+
+                    return;
+                }
+            }
+
             // In case we couldn't add the CrudTrait
-            $this->errorProgressBlock();
-            $this->note("Model already existed on '$name' and we couldn't add CrudTrait. Please add it manually.", 'red');
+            $this->error("Model already existed on '$name' and we couldn't add CrudTrait. Please add it manually.");
         }
     }
 
@@ -157,8 +153,7 @@ class CrudModelBackpackCommand extends BackpackCommand
      */
     protected function replaceTable(&$stub, $name)
     {
-        $name = str_replace('/', '', $this->buildCamelName($name));
-        $name = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $name)), '_');
+        $name = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', str_replace($this->getNamespace($name).'\\', '', $name))), '_');
 
         $table = Str::snake(Str::plural($name));
 
@@ -177,6 +172,18 @@ class CrudModelBackpackCommand extends BackpackCommand
     {
         $stub = $this->files->get($this->getStub());
 
-        return $this->replaceNamespace($stub, $this->qualifyClass('/Models/'.$name))->replaceTable($stub, $name)->replaceClass($stub, $this->buildClassName($name));
+        return $this->replaceNamespace($stub, $name)->replaceTable($stub, $name)->replaceClass($stub, $name);
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+
+        ];
     }
 }

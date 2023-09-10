@@ -106,94 +106,56 @@ trait Tabs
     }
 
     /**
-     * @deprecated Do not use this method as it will be removed in future versions!
-     * Instead, use $this->getElementsWithoutATab($this->getCurrentFields())
-     *
      * @return \Illuminate\Support\Collection
      */
     public function getFieldsWithoutATab()
     {
-        return $this->getElementsWithoutATab($this->getCurrentFields());
-    }
+        $all_fields = $this->getCurrentFields();
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function getElementsWithoutATab(array $elements)
-    {
-        return collect($elements)->filter(function ($value) {
+        $fields_without_a_tab = collect($all_fields)->filter(function ($value, $key) {
             return ! isset($value['tab']);
         });
+
+        return $fields_without_a_tab;
     }
 
     /**
-     * @deprecated Do not use this method as it will be removed in future versions!
-     * Instead, use $this->getTabItems($tabLabel, 'fields')
-     *
+     * @param $label
      * @return array|\Illuminate\Support\Collection
      */
-    public function getTabFields(string $tabLabel)
+    public function getTabFields($label)
     {
-        return $this->getTabItems($tabLabel, 'fields');
-    }
+        if ($this->tabExists($label)) {
+            $all_fields = $this->getCurrentFields();
 
-    /**
-     * @return array|\Illuminate\Support\Collection
-     */
-    public function getTabItems(string $tabLabel, string $source)
-    {
-        if (in_array($tabLabel, $this->getUniqueTabNames($source))) {
-            $items = $this->getCurrentItems($source);
-
-            return collect($items)->filter(function ($value) use ($tabLabel) {
-                return isset($value['tab']) && $value['tab'] == $tabLabel;
+            $fields_for_current_tab = collect($all_fields)->filter(function ($value, $key) use ($label) {
+                return isset($value['tab']) && $value['tab'] == $label;
             });
+
+            return $fields_for_current_tab;
         }
 
         return [];
     }
 
-    public function getTabs(): array
-    {
-        return $this->getUniqueTabNames('fields');
-    }
-
     /**
-     * $source could be `fields` or `columns` for now.
+     * @return array
      */
-    public function getUniqueTabNames(string $source): array
+    public function getTabs()
     {
         $tabs = [];
-        $items = $this->getCurrentItems($source);
+        $fields = $this->getCurrentFields();
 
-        collect($items)
-            ->filter(function ($value) {
+        $fields_with_tabs = collect($fields)
+            ->filter(function ($value, $key) {
                 return isset($value['tab']);
             })
-            ->each(function ($value) use (&$tabs) {
+            ->each(function ($value, $key) use (&$tabs) {
                 if (! in_array($value['tab'], $tabs)) {
                     $tabs[] = $value['tab'];
                 }
             });
 
         return $tabs;
-    }
-
-    private function getCurrentItems(string $source): array
-    {
-        $items = [];
-
-        switch ($source) {
-            case 'fields':
-                $items = $this->getCurrentFields();
-                break;
-            case 'columns':
-                $items = $this->columns();
-                break;
-            default:
-                break;
-        }
-
-        return $items;
     }
 }

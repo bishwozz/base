@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Database\Seeders\StatusSeeder;
+use Database\Seeders\MasterSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,14 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $now = Carbon::now()->toDateTimeString();
-        $this->time = $now;
-
-        $this->call(CoreTableSeeder::class);
-        $this->call(RoleTableSeeder::class);
-        // $this->call(MinistrySeeder::class);
-        $this->call(UserTableSeeder::class);
-        $this->call(DateSettingSeeder::class);
-        // $this->call(StatusSeeder::class);
+        $this->call(MasterSeeder::class);
     }
 }

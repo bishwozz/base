@@ -83,9 +83,6 @@ class Signed implements Serializable
             throw new InvalidSignatureException();
         }
 
-        /** @var \Laravel\SerializableClosure\Contracts\Serializable $serializable */
-        $serializable = unserialize($signature['serializable']);
-
-        $this->closure = $serializable->getClosure();
+        $this->closure = unserialize($signature['serializable'])->getClosure();
     }
 }

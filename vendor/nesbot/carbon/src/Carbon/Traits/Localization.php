@@ -23,16 +23,12 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface as ContractsTranslatorInterface;
 
-// @codeCoverageIgnoreStart
-if (interface_exists('Symfony\\Contracts\\Translation\\TranslatorInterface') &&
-    !interface_exists('Symfony\\Component\\Translation\\TranslatorInterface')
-) {
+if (!interface_exists('Symfony\\Component\\Translation\\TranslatorInterface')) {
     class_alias(
         'Symfony\\Contracts\\Translation\\TranslatorInterface',
         'Symfony\\Component\\Translation\\TranslatorInterface'
     );
 }
-// @codeCoverageIgnoreEnd
 
 /**
  * Trait Localization.
@@ -359,13 +355,6 @@ trait Localization
             $weekdays = $messages['weekdays'] ?? [];
             $meridiem = $messages['meridiem'] ?? ['AM', 'PM'];
 
-            if (isset($messages['ordinal_words'])) {
-                $timeString = self::replaceOrdinalWords(
-                    $timeString,
-                    $key === 'from' ? array_flip($messages['ordinal_words']) : $messages['ordinal_words']
-                );
-            }
-
             if ($key === 'from') {
                 foreach (['months', 'weekdays'] as $variable) {
                     $list = $messages[$variable.'_standalone'] ?? null;
@@ -465,7 +454,7 @@ trait Localization
                 }
             }
 
-            $this->localTranslator = $translator;
+            $this->setLocalTranslator($translator);
         }
 
         return $this;
@@ -566,13 +555,17 @@ trait Localization
     public static function localeHasShortUnits($locale)
     {
         return static::executeWithLocale($locale, function ($newLocale, TranslatorInterface $translator) {
-            return ($newLocale && (($y = static::translateWith($translator, 'y')) !== 'y' && $y !== static::translateWith($translator, 'year'))) || (
-                ($y = static::translateWith($translator, 'd')) !== 'd' &&
+            return $newLocale &&
+                (
+                    ($y = static::translateWith($translator, 'y')) !== 'y' &&
+                    $y !== static::translateWith($translator, 'year')
+                ) || (
+                    ($y = static::translateWith($translator, 'd')) !== 'd' &&
                     $y !== static::translateWith($translator, 'day')
-            ) || (
-                ($y = static::translateWith($translator, 'h')) !== 'h' &&
+                ) || (
+                    ($y = static::translateWith($translator, 'h')) !== 'h' &&
                     $y !== static::translateWith($translator, 'hour')
-            );
+                );
         });
     }
 
@@ -741,7 +734,7 @@ trait Localization
         }
 
         if ($translator && !($translator instanceof LocaleAwareInterface || method_exists($translator, 'getLocale'))) {
-            throw new NotLocaleAwareException($translator); // @codeCoverageIgnore
+            throw new NotLocaleAwareException($translator);
         }
 
         return $translator;
@@ -799,7 +792,7 @@ trait Localization
             $parts = explode('|', $message);
 
             return $key === 'to'
-                ? self::cleanWordFromTranslationString(end($parts))
+                ? static::cleanWordFromTranslationString(end($parts))
                 : '(?:'.implode('|', array_map([static::class, 'cleanWordFromTranslationString'], $parts)).')';
         }, $keys);
     }
@@ -829,12 +822,5 @@ trait Localization
         }
 
         return $list;
-    }
-
-    private static function replaceOrdinalWords(string $timeString, array $ordinalWords): string
-    {
-        return preg_replace_callback('/(?<![a-z])[a-z]+(?![a-z])/i', function (array $match) use ($ordinalWords) {
-            return $ordinalWords[mb_strtolower($match[0])] ?? $match[0];
-        }, $timeString);
     }
 }

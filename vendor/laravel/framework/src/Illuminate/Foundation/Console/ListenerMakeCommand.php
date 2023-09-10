@@ -47,7 +47,7 @@ class ListenerMakeCommand extends GeneratorCommand
             'Illuminate',
             '\\',
         ])) {
-            $event = $this->laravel->getNamespace().'Events\\'.str_replace('/', '\\', $event);
+            $event = $this->laravel->getNamespace().'Events\\'.$event;
         }
 
         $stub = str_replace(

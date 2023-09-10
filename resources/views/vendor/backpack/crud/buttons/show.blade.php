@@ -2,8 +2,7 @@
 	@if (!$crud->model->translationEnabled())
 
 	<!-- Single edit button -->
-	<a href="{{ url($crud->route.'/'.$entry->getKey().'/show') }}" class="btn btn-sm btn-link"><i class="la la-eye"></i> {{ trans('backpack::crud.preview') }}</a>
-
+	<a href="{{ url($crud->route.'/'.$entry->getKey().'/show') }}" class="btn btn-sm btn-link show-btn" data-toggle="tooltip" title="Preview"><i class="la la-eye"></i></a>
 	@else
 
 	<!-- Edit button group -->
@@ -15,7 +14,7 @@
 	  <ul class="dropdown-menu dropdown-menu-right">
   	    <li class="dropdown-header">{{ trans('backpack::crud.preview') }}:</li>
 	  	@foreach ($crud->model->getAvailableLocales() as $key => $locale)
-		  	<a class="dropdown-item" href="{{ url($crud->route.'/'.$entry->getKey().'/show') }}?_locale={{ $key }}">{{ $locale }}</a>
+		  	<a class="dropdown-item" href="{{ url($crud->route.'/'.$entry->getKey().'/show') }}?locale={{ $key }}">{{ $locale }}</a>
 	  	@endforeach
 	  </ul>
 	</div>

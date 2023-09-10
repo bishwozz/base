@@ -1,7 +1,12 @@
 @php
-    $field['wrapper'] = $field['wrapper'] ?? $field['wrapperAttributes'] ?? [];
-    $field['wrapper']['data-init-function'] = $field['wrapper']['data-init-function'] ?? 'bpFieldInitUploadMultipleElement';
-    $field['wrapper']['data-field-name'] = $field['wrapper']['data-field-name'] ?? $field['name'];
+    if (!isset($field['wrapperAttributes']) || !isset($field['wrapperAttributes']['data-init-function'])){
+        $field['wrapperAttributes']['data-init-function'] = 'bpFieldInitUploadMultipleElement';
+    }
+
+    if (!isset($field['wrapperAttributes']) || !isset($field['wrapperAttributes']['data-field-name'])) {
+        $field['wrapperAttributes']['data-field-name'] = $field['name'];
+    }
+
 @endphp
 
 <!-- upload multiple input -->
@@ -20,16 +25,28 @@
 	@endphp
 	@if (count($values))
     <div class="well well-sm existing-file">
-    	@foreach($values as $key => $file_path)
-    		<div class="file-preview">
-    			@if (isset($field['temporary']))
-		            <a target="_blank" href="{{ isset($field['disk'])?asset(\Storage::disk($field['disk'])->temporaryUrl($file_path, Carbon\Carbon::now()->addMinutes($field['temporary']))):asset($file_path) }}">{{ $file_path }}</a>
-		        @else
-		            <a target="_blank" href="{{ isset($field['disk'])?asset(\Storage::disk($field['disk'])->url($file_path)):asset($file_path) }}">{{ $file_path }}</a>
-		        @endif
-		    	<a href="#" class="btn btn-light btn-sm float-right file-clear-button" title="Clear file" data-filename="{{ $file_path }}"><i class="la la-remove"></i></a>
-		    	<div class="clearfix"></div>
-	    	</div>
+		@foreach($values as $key => $file_path)
+		<?php
+		$data = explode('.', $file_path);
+		$extension = $data[1];
+		?>
+		@if($extension == 'pdf')
+		<div class="file-preview" style="display:inline-flex;">
+			<a target="_blank" href="{{ isset($field['disk'])?asset(\Storage::disk($field['disk'])->url($file_path)):asset($file_path) }}"> <i class="la la-file-pdf-o fa-3x" style="color:red; position:relative; top:-10px"></i></a>
+			<a id="{{ $field['name'] }}_{{ $key }}_clear_button" href="#" class="btn btn-default btn-xs pull-right file-clear-button" title="Clear file" data-filename="{{ $file_path }}"><i class="fa fa-remove"></i></a>
+
+		</div>
+		@else
+		<div class="file-preview" style="display:inline-flex;">
+			<img class="image_thumbnail" style="max-height:40px; max-width:40x; border-radius:10px; margin-top:10px;" src="{{ isset($field['disk'])?asset(\Storage::disk($field['disk'])->url($file_path)):asset($file_path) }}" />
+			<a id="{{ $field['name'] }}_{{ $key }}_clear_button" href="#" class="btn btn-default btn-xs pull-right file-clear-button" title="Clear file" data-filename="{{ $file_path }}"><i class="fa fa-remove"></i></a>
+		</div>
+
+		<div class="modal" id="modal">
+			<span class="close">&times;</span>
+			<img class="modal-content" id="modal-content">
+		</div>
+		@endif
     	@endforeach
     </div>
     @endif
@@ -40,6 +57,7 @@
 		<input
 	        type="file"
 	        name="{{ $field['name'] }}[]"
+	        value="@if (old(square_brackets_to_dots($field['name']))) old(square_brackets_to_dots($field['name'])) @elseif (isset($field['default'])) $field['default'] @endif"
 	        @include('crud::fields.inc.attributes', ['default_class' =>  isset($field['value']) && $field['value']!=null?'file_input backstrap-file-input':'file_input backstrap-file-input'])
 	        multiple
 	    >
@@ -50,97 +68,18 @@
     @if (isset($field['hint']))
         <p class="help-block">{!! $field['hint'] !!}</p>
     @endif
-
-	@include('crud::fields.inc.wrapper_end')
+@include('crud::fields.inc.wrapper_end')
 
 {{-- ########################################## --}}
 {{-- Extra CSS and JS for this particular field --}}
-	@push('crud_fields_styles')
-	@loadOnce('upload_field_styles')
-	<style type="text/css">
-		.existing-file {
-			border: 1px solid rgba(0,40,100,.12);
-			border-radius: 5px;
-			padding-left: 10px;
-			vertical-align: middle;
-		}
-		.existing-file a {
-			padding-top: 5px;
-			display: inline-block;
-			font-size: 0.9em;
-		}
-		.backstrap-file {
-			position: relative;
-			display: inline-block;
-			width: 100%;
-			height: calc(1.5em + 0.75rem + 2px);
-			margin-bottom: 0;
-		}
+{{-- If a field type is shown multiple times on a form, the CSS and JS will only be loaded once --}}
+@if ($crud->fieldTypeNotLoaded($field))
+    @php
+        $crud->markFieldTypeAsLoaded($field);
+    @endphp
 
-		.backstrap-file-input {
-			position: relative;
-			z-index: 2;
-			width: 100%;
-			height: calc(1.5em + 0.75rem + 2px);
-			margin: 0;
-			opacity: 0;
-		}
-
-		.backstrap-file-input:focus ~ .backstrap-file-label {
-			border-color: #acc5ea;
-			box-shadow: 0 0 0 0rem rgba(70, 127, 208, 0.25);
-		}
-
-		.backstrap-file-input:disabled ~ .backstrap-file-label {
-			background-color: #e4e7ea;
-		}
-
-		.backstrap-file-input:lang(en) ~ .backstrap-file-label::after {
-			content: "Browse";
-		}
-
-		.backstrap-file-input ~ .backstrap-file-label[data-browse]::after {
-			content: attr(data-browse);
-		}
-
-		.backstrap-file-label {
-			position: absolute;
-			top: 0;
-			right: 0;
-			left: 0;
-			z-index: 1;
-			height: calc(1.5em + 0.75rem + 2px);
-			padding: 0.375rem 0.75rem;
-			font-weight: 400;
-			line-height: 1.5;
-			color: #5c6873;
-			background-color: #fff;
-			border: 1px solid #e4e7ea;
-			border-radius: 0.25rem;
-			font-weight: 400!important;
-		}
-
-		.backstrap-file-label::after {
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			z-index: 3;
-			display: block;
-			height: calc(1.5em + 0.75rem);
-			padding: 0.375rem 0.75rem;
-			line-height: 1.5;
-			color: #5c6873;
-			content: "Browse";
-			background-color: #f0f3f9;
-			border-left: inherit;
-			border-radius: 0 0.25rem 0.25rem 0;
-		}
-	</style>
-	@endLoadOnce
-	@endpush
     @push('crud_fields_scripts')
-    	@loadOnce('bpFieldInitUploadMultipleElement')
+        <!-- no scripts -->
         <script>
         	function bpFieldInitUploadMultipleElement(element) {
         		var fieldName = element.attr('data-field-name');
@@ -164,9 +103,9 @@
 		        fileInput.change(function() {
 	                inputLabel.html("Files selected. After save, they will show up above.");
 		        	// remove the hidden input, so that the setXAttribute method is no longer triggered
-					$(this).next("input[type=hidden]:not([name='clear_"+fieldName+"[]'])").remove();
+		        	$(this).next("input[type=hidden]").remove();
 		        });
         	}
         </script>
-        @endLoadOnce
     @endpush
+@endif

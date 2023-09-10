@@ -12,8 +12,6 @@
   <script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
   <script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
   <script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
-  <script type="text/javascript" src="{{asset('fixedColumns.min.js')}}"></script>  
-
 
   <script>
     // here we will check if the cached dataTables paginator length is conformable with current paginator settings.
@@ -206,10 +204,6 @@
         },
         @endif
         @endif
-        fixedColumns:   {
-            leftColumns: 0,
-            rightColumns: 1,
-        },
         autoWidth: false,
         pageLength: $dtDefaultPageLength,
         lengthMenu: @json($crud->getPageLengthMenu()),
@@ -224,7 +218,7 @@
               "thousands":      "{{ trans('backpack::crud.thousands') }}",
               "lengthMenu":     "{{ trans('backpack::crud.lengthMenu') }}",
               "loadingRecords": "{{ trans('backpack::crud.loadingRecords') }}",
-              "processing":     "<img src='{{ asset('packages/backpack/base/img/spinner.svg') }}' alt='{{ trans('backpack::crud.processing') }}'>",
+              "processing":     "<img src='{{ asset('packages/backpack/crud/img/ajax-loader.gif') }}' alt='{{ trans('backpack::crud.processing') }}'>",
               "search": "_INPUT_",
               "searchPlaceholder": "{{ trans('backpack::crud.search') }}...",
               "zeroRecords":    "{{ trans('backpack::crud.zeroRecords') }}",
@@ -258,15 +252,8 @@
             "<'row hidden'<'col-sm-6'i><'col-sm-6 d-print-none'f>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row mt-2 d-print-none '<'col-sm-12 col-md-4'l><'col-sm-0 col-md-4 text-center'B><'col-sm-12 col-md-4 'p>>",
-            drawCallback: function( settings ) {
-              if($('.DTFC_RightWrapper').css('width') !== undefined){
-                setTimeout(function(){ 
-                  $('.DTFC_RightWrapper').css('width', (parseFloat($('.DTFC_RightWrapper').css('width').replace('px','')) + 30) + "px");
-                }, 0);
-              }
-            }
-        }
-    }
+      }
+  }
   </script>
 
   @include('crud::inc.export_buttons')
@@ -277,10 +264,8 @@
       window.crud.table = $("#crudTable").DataTable(window.crud.dataTableConfiguration);
 
       // move search bar
-
-    $("#crudTable_wrapper .dt-buttons .btn-group").appendTo('#datatable_search_stack');
-    $("#crudTable_filter").appendTo($('#datatable_search_stack' ));
-    $("#crudTable_filter input").removeClass('form-control-sm');
+      $("#crudTable_filter").appendTo($('#datatable_search_stack' ));
+      $("#crudTable_filter input").removeClass('form-control-sm');
 
       // move "showing x out of y" info to header
       @if($crud->getSubheading())

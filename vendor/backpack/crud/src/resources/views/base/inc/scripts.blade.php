@@ -1,18 +1,18 @@
-@foreach(config('backpack.base.scripts', []) as $path)
+@if (config('backpack.base.scripts') && count(config('backpack.base.scripts')))
+    @foreach (config('backpack.base.scripts') as $path)
     <script type="text/javascript" src="{{ asset($path).'?v='.config('backpack.base.cachebusting_string') }}"></script>
-@endforeach
+    @endforeach
+@endif
 
-@foreach(config('backpack.base.mix_scripts', []) as $path => $manifest)
+@if (config('backpack.base.mix_scripts') && count(config('backpack.base.mix_scripts')))
+    @foreach (config('backpack.base.mix_scripts') as $path => $manifest)
     <script type="text/javascript" src="{{ mix($path, $manifest) }}"></script>
-@endforeach
-
-@if(!empty(config('backpack.base.vite_scripts', [])))
-    @vite(config('backpack.base.vite_scripts', []))
+    @endforeach
 @endif
 
 @include('backpack::inc.alerts')
 
-{{-- page script --}}
+<!-- page script -->
 <script type="text/javascript">
     // To make Pace works on Ajax calls
     $(document).ajaxStart(function() { Pace.restart(); });
@@ -63,7 +63,3 @@
         location.hash = e.target.hash.replace("#tab_", "#");
     });
 </script>
-
-@if(config('app.debug'))
-    @include('crud::inc.ajax_error_frame')
-@endif

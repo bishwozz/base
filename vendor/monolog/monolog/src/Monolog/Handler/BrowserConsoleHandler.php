@@ -11,17 +11,9 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\FormatterInterface;
 use Monolog\Utils;
-use Monolog\Logger;
-
-use function count;
-use function headers_list;
-use function stripos;
-use function trigger_error;
-
-use const E_USER_DEPRECATED;
 
 /**
  * Handler sending logs to browser's javascript console with no browser extension required
@@ -36,10 +28,6 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     protected static $initialized = false;
     /** @var FormattedRecord[] */
     protected static $records = [];
-
-    protected const FORMAT_HTML = 'html';
-    protected const FORMAT_JS = 'js';
-    protected const FORMAT_UNKNOWN = 'unknown';
 
     /**
      * {@inheritDoc}
@@ -77,14 +65,14 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     public static function send(): void
     {
         $format = static::getResponseFormat();
-        if ($format === self::FORMAT_UNKNOWN) {
+        if ($format === 'unknown') {
             return;
         }
 
         if (count(static::$records)) {
-            if ($format === self::FORMAT_HTML) {
+            if ($format === 'html') {
                 static::writeOutput('<script>' . static::generateScript() . '</script>');
-            } elseif ($format === self::FORMAT_JS) {
+            } elseif ($format === 'js') {
                 static::writeOutput(static::generateScript());
             }
             static::resetStatic();
@@ -137,37 +125,25 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
      * If Content-Type is anything else -> unknown
      *
      * @return string One of 'js', 'html' or 'unknown'
-     * @phpstan-return self::FORMAT_*
      */
     protected static function getResponseFormat(): string
     {
         // Check content type
         foreach (headers_list() as $header) {
             if (stripos($header, 'content-type:') === 0) {
-                return static::getResponseFormatFromContentType($header);
+                // This handler only works with HTML and javascript outputs
+                // text/javascript is obsolete in favour of application/javascript, but still used
+                if (stripos($header, 'application/javascript') !== false || stripos($header, 'text/javascript') !== false) {
+                    return 'js';
+                }
+                if (stripos($header, 'text/html') === false) {
+                    return 'unknown';
+                }
+                break;
             }
         }
 
-        return self::FORMAT_HTML;
-    }
-
-    /**
-     * @return string One of 'js', 'html' or 'unknown'
-     * @phpstan-return self::FORMAT_*
-     */
-    protected static function getResponseFormatFromContentType(string $contentType): string
-    {
-        // This handler only works with HTML and javascript outputs
-        // text/javascript is obsolete in favour of application/javascript, but still used
-        if (stripos($contentType, 'application/javascript') !== false || stripos($contentType, 'text/javascript') !== false) {
-            return self::FORMAT_JS;
-        }
-
-        if (stripos($contentType, 'text/html') !== false) {
-            return self::FORMAT_HTML;
-        }
-
-        return self::FORMAT_UNKNOWN;
+        return 'html';
     }
 
     private static function generateScript(): string
@@ -178,7 +154,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
             $extra = static::dump('Extra', $record['extra']);
 
             if (empty($context) && empty($extra)) {
-                $script[] = static::call_array(static::getConsoleMethodForLevel($record['level']), static::handleStyles($record['formatted']));
+                $script[] = static::call_array('log', static::handleStyles($record['formatted']));
             } else {
                 $script = array_merge(
                     $script,
@@ -191,20 +167,6 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
 
         return "(function (c) {if (c && c.groupCollapsed) {\n" . implode("\n", $script) . "\n}})(console);";
-    }
-
-    private static function getConsoleMethodForLevel(int $level): string
-    {
-        return [
-            Logger::DEBUG => 'debug',
-            Logger::INFO => 'info',
-            Logger::NOTICE => 'info',
-            Logger::WARNING => 'warn',
-            Logger::ERROR => 'error',
-            Logger::CRITICAL => 'error',
-            Logger::ALERT => 'error',
-            Logger::EMERGENCY => 'error',
-        ][$level] ?? 'log';
     }
 
     /**

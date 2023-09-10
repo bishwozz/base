@@ -35,10 +35,4 @@ class CrudPanelDeleteTest extends BaseDBCrudPanelTest
 
         $this->crudPanel->delete($unknownId);
     }
-
-    public function testItAddsTheBulkDeleteButton()
-    {
-        $this->crudPanel->addBulkDeleteButton();
-        $this->assertCount(1, $this->crudPanel->buttons());
-    }
 }

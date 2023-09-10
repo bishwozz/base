@@ -1,22 +1,18 @@
 {{-- email link --}}
 @php
-    $column['value'] = $column['value'] ?? data_get($entry, $column['name']);
+    $value = data_get($entry, $column['name']);
+
     $column['escaped'] = $column['escaped'] ?? true;
     $column['prefix'] = $column['prefix'] ?? '';
     $column['suffix'] = $column['suffix'] ?? '';
-    $column['limit'] = $column['limit'] ?? 32;
-    $column['text'] = $column['default'] ?? '-';
-
-    if($column['value'] instanceof \Closure) {
-        $column['value'] = $column['value']($entry);
-    }
-
-    if(!empty($column['value'])) {
-        $column['text'] = $column['prefix'].Str::limit(strip_tags($column['value']), $column['limit'], "…").$column['suffix'];
-    }
-
+    $column['limit'] = $column['limit'] ?? 40;
     $column['wrapper']['element'] = $column['wrapper']['element'] ?? 'a';
-    $column['wrapper']['href'] = $column['wrapper']['href'] ?? 'mailto:'.$column['value'];
+    $column['wrapper']['href'] = $column['wrapper']['href'] ?? 'mailto:'.$value;
+    $column['text'] = '-';
+
+    if(!empty($value)) {
+        $column['text'] = $column['prefix'].Str::limit(strip_tags($value), $column['limit'], "[...]").$column['suffix'];
+    }
 @endphp
 
 <span>

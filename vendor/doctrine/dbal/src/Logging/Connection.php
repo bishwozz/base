@@ -5,21 +5,29 @@ declare(strict_types=1);
 namespace Doctrine\DBAL\Logging;
 
 use Doctrine\DBAL\Driver\Connection as ConnectionInterface;
-use Doctrine\DBAL\Driver\Middleware\AbstractConnectionMiddleware;
 use Doctrine\DBAL\Driver\Result;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Driver\Statement as DriverStatement;
+use Doctrine\DBAL\ParameterType;
+use Doctrine\Deprecations\Deprecation;
+use LogicException;
 use Psr\Log\LoggerInterface;
 
-final class Connection extends AbstractConnectionMiddleware
+final class Connection implements ServerInfoAwareConnection
 {
-    private LoggerInterface $logger;
+    /** @var ConnectionInterface */
+    private $connection;
 
-    /** @internal This connection can be only instantiated by its driver. */
+    /** @var LoggerInterface */
+    private $logger;
+
+    /**
+     * @internal This connection can be only instantiated by its driver.
+     */
     public function __construct(ConnectionInterface $connection, LoggerInterface $logger)
     {
-        parent::__construct($connection);
-
-        $this->logger = $logger;
+        $this->connection = $connection;
+        $this->logger     = $logger;
     }
 
     public function __destruct()
@@ -30,9 +38,9 @@ final class Connection extends AbstractConnectionMiddleware
     public function prepare(string $sql): DriverStatement
     {
         return new Statement(
-            parent::prepare($sql),
+            $this->connection->prepare($sql),
             $this->logger,
-            $sql,
+            $sql
         );
     }
 
@@ -40,14 +48,38 @@ final class Connection extends AbstractConnectionMiddleware
     {
         $this->logger->debug('Executing query: {sql}', ['sql' => $sql]);
 
-        return parent::query($sql);
+        return $this->connection->query($sql);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function quote($value, $type = ParameterType::STRING)
+    {
+        return $this->connection->quote($value, $type);
     }
 
     public function exec(string $sql): int
     {
         $this->logger->debug('Executing statement: {sql}', ['sql' => $sql]);
 
-        return parent::exec($sql);
+        return $this->connection->exec($sql);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function lastInsertId($name = null)
+    {
+        if ($name !== null) {
+            Deprecation::triggerIfCalledFromOutside(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/issues/4687',
+                'The usage of Connection::lastInsertId() with a sequence name is deprecated.'
+            );
+        }
+
+        return $this->connection->lastInsertId($name);
     }
 
     /**
@@ -57,7 +89,7 @@ final class Connection extends AbstractConnectionMiddleware
     {
         $this->logger->debug('Beginning transaction');
 
-        return parent::beginTransaction();
+        return $this->connection->beginTransaction();
     }
 
     /**
@@ -67,7 +99,7 @@ final class Connection extends AbstractConnectionMiddleware
     {
         $this->logger->debug('Committing transaction');
 
-        return parent::commit();
+        return $this->connection->commit();
     }
 
     /**
@@ -77,6 +109,18 @@ final class Connection extends AbstractConnectionMiddleware
     {
         $this->logger->debug('Rolling back transaction');
 
-        return parent::rollBack();
+        return $this->connection->rollBack();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getServerVersion()
+    {
+        if (! $this->connection instanceof ServerInfoAwareConnection) {
+            throw new LogicException('The underlying connection is not a ServerInfoAwareConnection');
+        }
+
+        return $this->connection->getServerVersion();
     }
 }

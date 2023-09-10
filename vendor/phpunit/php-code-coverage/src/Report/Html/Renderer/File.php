@@ -80,8 +80,6 @@ use const T_WHILE;
 use const T_YIELD;
 use const T_YIELD_FROM;
 use function array_key_exists;
-use function array_keys;
-use function array_merge;
 use function array_pop;
 use function array_unique;
 use function constant;
@@ -91,9 +89,6 @@ use function explode;
 use function file_get_contents;
 use function htmlspecialchars;
 use function is_string;
-use function ksort;
-use function range;
-use function sort;
 use function sprintf;
 use function str_replace;
 use function substr;
@@ -101,7 +96,7 @@ use function token_get_all;
 use function trim;
 use PHPUnit\Runner\BaseTestRunner;
 use SebastianBergmann\CodeCoverage\Node\File as FileNode;
-use SebastianBergmann\CodeCoverage\Util\Percentage;
+use SebastianBergmann\CodeCoverage\Percentage;
 use SebastianBergmann\Template\Template;
 
 /**
@@ -134,7 +129,7 @@ final class File extends Renderer
             [
                 'items'     => $this->renderItems($node),
                 'lines'     => $this->renderSourceWithLineCoverage($node),
-                'legend'    => '<p><span class="legend covered-by-small-tests">Covered by small (and larger) tests</span><span class="legend covered-by-medium-tests">Covered by medium (and large) tests</span><span class="legend covered-by-large-tests">Covered by large tests (and tests of unknown size)</span><span class="legend not-covered">Not covered</span><span class="legend not-coverable">Not coverable</span></p>',
+                'legend'    => '<p><span class="success"><strong>Executed</strong></span><span class="danger"><strong>Not Executed</strong></span><span class="warning"><strong>Dead Code</strong></span></p>',
                 'structure' => '',
             ]
         );
@@ -802,15 +797,8 @@ final class File extends Renderer
         $singleLineTemplate = new Template($this->templatePath . 'line.html.dist', '{{', '}}');
 
         $lines = '';
-        $first = true;
 
         foreach ($path['path'] as $branchId) {
-            if ($first) {
-                $first = false;
-            } else {
-                $lines .= '    <tr><td colspan="2">&nbsp;</td></tr>' . "\n";
-            }
-
             $branchLines = range($branches[$branchId]['line_start'], $branches[$branchId]['line_end']);
             sort($branchLines); // sometimes end_line < start_line
 
@@ -846,7 +834,6 @@ final class File extends Renderer
 
                         $popoverContent .= $this->createPopoverContentForTest($test, $testData[$test]);
                     }
-
                     $trClass = $lineCss . ' popin';
                 }
 

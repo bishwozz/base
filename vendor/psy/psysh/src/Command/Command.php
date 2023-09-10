@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -43,7 +43,7 @@ abstract class Command extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    public function asText(): string
+    public function asText()
     {
         $messages = [
             '<comment>Usage:</comment>',
@@ -74,7 +74,7 @@ abstract class Command extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    private function getArguments(): array
+    private function getArguments()
     {
         $hidden = $this->getHiddenArguments();
 
@@ -86,9 +86,9 @@ abstract class Command extends BaseCommand
     /**
      * These arguments will be excluded from help output.
      *
-     * @return string[]
+     * @return array
      */
-    protected function getHiddenArguments(): array
+    protected function getHiddenArguments()
     {
         return ['command'];
     }
@@ -96,7 +96,7 @@ abstract class Command extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    private function getOptions(): array
+    private function getOptions()
     {
         $hidden = $this->getHiddenOptions();
 
@@ -108,25 +108,29 @@ abstract class Command extends BaseCommand
     /**
      * These options will be excluded from help output.
      *
-     * @return string[]
+     * @return array
      */
-    protected function getHiddenOptions(): array
+    protected function getHiddenOptions()
     {
         return ['verbose'];
     }
 
     /**
      * Format command aliases as text..
+     *
+     * @return string
      */
-    private function aliasesAsText(): string
+    private function aliasesAsText()
     {
         return '<comment>Aliases:</comment> <info>'.\implode(', ', $this->getAliases()).'</info>'.\PHP_EOL;
     }
 
     /**
      * Format command arguments as text.
+     *
+     * @return string
      */
-    private function argumentsAsText(): string
+    private function argumentsAsText()
     {
         $max = $this->getMaxWidth();
         $messages = [];
@@ -143,7 +147,7 @@ abstract class Command extends BaseCommand
 
                 $description = \str_replace("\n", "\n".\str_pad('', $max + 2, ' '), $argument->getDescription());
 
-                $messages[] = \sprintf(" <info>%-{$max}s</info> %s%s", $argument->getName(), $description, $default);
+                $messages[] = \sprintf(" <info>%-${max}s</info> %s%s", $argument->getName(), $description, $default);
             }
 
             $messages[] = '';
@@ -154,8 +158,10 @@ abstract class Command extends BaseCommand
 
     /**
      * Format options as text.
+     *
+     * @return string
      */
-    private function optionsAsText(): string
+    private function optionsAsText()
     {
         $max = $this->getMaxWidth();
         $messages = [];
@@ -176,7 +182,7 @@ abstract class Command extends BaseCommand
 
                 $optionMax = $max - \strlen($option->getName()) - 2;
                 $messages[] = \sprintf(
-                    " <info>%s</info> %-{$optionMax}s%s%s%s",
+                    " <info>%s</info> %-${optionMax}s%s%s%s",
                     '--'.$option->getName(),
                     $option->getShortcut() ? \sprintf('(-%s) ', $option->getShortcut()) : '',
                     $description,
@@ -193,8 +199,10 @@ abstract class Command extends BaseCommand
 
     /**
      * Calculate the maximum padding width for a set of lines.
+     *
+     * @return int
      */
-    private function getMaxWidth(): int
+    private function getMaxWidth()
     {
         $max = 0;
 
@@ -218,8 +226,10 @@ abstract class Command extends BaseCommand
      * Format an option default as text.
      *
      * @param mixed $default
+     *
+     * @return string
      */
-    private function formatDefaultValue($default): string
+    private function formatDefaultValue($default)
     {
         if (\is_array($default) && $default === \array_values($default)) {
             return \sprintf("['%s']", \implode("', '", $default));
@@ -263,8 +273,10 @@ abstract class Command extends BaseCommand
 
     /**
      * Legacy fallback for getTable.
+     *
+     * @return TableHelper
      */
-    protected function getTableHelper(): TableHelper
+    protected function getTableHelper()
     {
         $table = $this->getApplication()->getHelperSet()->get('table');
 

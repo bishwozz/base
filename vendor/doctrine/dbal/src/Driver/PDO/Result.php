@@ -9,11 +9,17 @@ use PDO;
 use PDOException;
 use PDOStatement;
 
+use function assert;
+use function is_array;
+
 final class Result implements ResultInterface
 {
-    private PDOStatement $statement;
+    /** @var PDOStatement */
+    private $statement;
 
-    /** @internal The result can be only instantiated by its driver connection or statement. */
+    /**
+     * @internal The result can be only instantiated by its driver connection or statement.
+     */
     public function __construct(PDOStatement $statement)
     {
         $this->statement = $statement;
@@ -91,9 +97,7 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @psalm-param PDO::FETCH_* $mode
-     *
-     * @return mixed
+     * @return mixed|false
      *
      * @throws Exception
      */
@@ -107,8 +111,6 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @psalm-param PDO::FETCH_* $mode
-     *
      * @return list<mixed>
      *
      * @throws Exception
@@ -116,9 +118,13 @@ final class Result implements ResultInterface
     private function fetchAll(int $mode): array
     {
         try {
-            return $this->statement->fetchAll($mode);
+            $data = $this->statement->fetchAll($mode);
         } catch (PDOException $exception) {
             throw Exception::new($exception);
         }
+
+        assert(is_array($data));
+
+        return $data;
     }
 }

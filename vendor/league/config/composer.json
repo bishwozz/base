@@ -25,7 +25,7 @@
         "nette/schema": "^1.2"
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.8.2",
+        "phpstan/phpstan": "^0.12.90",
         "phpunit/phpunit": "^9.5.5",
         "scrutinizer/ocular": "^1.8.1",
         "unleashedtech/php-coding-standard": "^3.1",
@@ -61,9 +61,6 @@
         }
     },
     "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
+        "sort-packages": true
     }
 }

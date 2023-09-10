@@ -47,7 +47,7 @@ trait SaveActions
      */
     public function getSaveActionByOrder($order)
     {
-        return array_filter($this->getOperationSetting('save_actions') ?? [], function ($arr) use ($order) {
+        return array_filter($this->getOperationSetting('save_actions'), function ($arr) use ($order) {
             return $arr['order'] == $order;
         });
     }
@@ -82,7 +82,7 @@ trait SaveActions
         //check for some mandatory fields
         $saveAction['name'] ?? abort(500, 'Please define save action name.');
         $saveAction['redirect'] = $saveAction['redirect'] ?? function ($crud, $request, $itemId) {
-            return $request->has('_http_referrer') ? $request->get('_http_referrer') : $crud->route;
+            return $request->has('http_referrer') ? $request->get('http_referrer') : $crud->route;
         };
         $saveAction['visible'] = $saveAction['visible'] ?? true;
         $saveAction['button_text'] = $saveAction['button_text'] ?? $saveAction['name'];
@@ -212,7 +212,7 @@ trait SaveActions
     /**
      * Return the ordered save actions to use in the crud panel.
      *
-     * @return array
+     * @return void
      */
     public function getOrderedSaveActions()
     {
@@ -228,7 +228,7 @@ trait SaveActions
     /**
      * Returns the save actions that passed the visible callback.
      *
-     * @return array
+     * @return void
      */
     public function getVisibleSaveActions()
     {
@@ -253,6 +253,7 @@ trait SaveActions
      */
     public function getCurrentSaveAction($saveOptions)
     {
+
         //get save action from session if exists, or get the developer defined order
         $saveAction = session($this->getCurrentOperation().'.saveAction', $this->getFallBackSaveAction());
         if (isset($saveOptions[$saveAction])) {
@@ -303,7 +304,7 @@ trait SaveActions
     public function setSaveAction($forceSaveAction = null)
     {
         $saveAction = $forceSaveAction ?:
-            \Request::input('_save_action', $this->getFallBackSaveAction());
+            \Request::input('save_action', $this->getFallBackSaveAction());
 
         $showBubble = $this->getOperationSetting('showSaveActionChange') ?? config('backpack.crud.operations.'.$this->getCurrentOperation().'.showSaveActionChange') ?? true;
 
@@ -321,12 +322,12 @@ trait SaveActions
      * Redirect to the correct URL, depending on which save action has been selected.
      *
      * @param  string  $itemId
-     * @return array|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
     public function performSaveAction($itemId = null)
     {
         $request = \Request::instance();
-        $saveAction = $request->input('_save_action', $this->getFallBackSaveAction());
+        $saveAction = $request->input('save_action', $this->getFallBackSaveAction());
         $itemId = $itemId ?: $request->input('id');
         $actions = $this->getOperationSetting('save_actions');
 
@@ -374,7 +375,7 @@ trait SaveActions
                     return $crud->hasAccess('list');
                 },
                 'redirect' => function ($crud, $request, $itemId = null) {
-                    return $request->request->has('_http_referrer') ? $request->request->get('_http_referrer') : $crud->route;
+                    return $request->has('http_referrer') ? $request->get('http_referrer') : $crud->route;
                 },
                 'button_text' => trans('backpack::crud.save_action_save_and_back'),
             ],
@@ -384,13 +385,13 @@ trait SaveActions
                     return $crud->hasAccess('update');
                 },
                 'redirect' => function ($crud, $request, $itemId = null) {
-                    $itemId = $itemId ?: $request->request->get('id');
+                    $itemId = $itemId ?: $request->input('id');
                     $redirectUrl = $crud->route.'/'.$itemId.'/edit';
-                    if ($request->request->has('_locale')) {
-                        $redirectUrl .= '?_locale='.$request->request->get('_locale');
+                    if ($request->has('locale')) {
+                        $redirectUrl .= '?locale='.$request->input('locale');
                     }
-                    if ($request->request->has('_current_tab')) {
-                        $redirectUrl = $redirectUrl.'#'.$request->request->get('_current_tab');
+                    if ($request->has('current_tab')) {
+                        $redirectUrl = $redirectUrl.'#'.$request->get('current_tab');
                     }
 
                     return $redirectUrl;

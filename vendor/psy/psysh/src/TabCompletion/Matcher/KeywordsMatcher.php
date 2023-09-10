@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,9 +32,9 @@ class KeywordsMatcher extends AbstractMatcher
     /**
      * Get all (completable) PHP keywords.
      *
-     * @return string[]
+     * @return array
      */
-    public function getKeywords(): array
+    public function getKeywords()
     {
         return $this->keywords;
     }
@@ -43,8 +43,10 @@ class KeywordsMatcher extends AbstractMatcher
      * Check whether $keyword is a (completable) PHP keyword.
      *
      * @param string $keyword
+     *
+     * @return bool
      */
-    public function isKeyword(string $keyword): bool
+    public function isKeyword($keyword)
     {
         return \in_array($keyword, $this->keywords);
     }
@@ -52,7 +54,7 @@ class KeywordsMatcher extends AbstractMatcher
     /**
      * {@inheritdoc}
      */
-    public function getMatches(array $tokens, array $info = []): array
+    public function getMatches(array $tokens, array $info = [])
     {
         $input = $this->getInput($tokens);
 
@@ -64,7 +66,7 @@ class KeywordsMatcher extends AbstractMatcher
     /**
      * {@inheritdoc}
      */
-    public function hasMatched(array $tokens): bool
+    public function hasMatched(array $tokens)
     {
         $token = \array_pop($tokens);
         $prevToken = \array_pop($tokens);
@@ -73,7 +75,7 @@ class KeywordsMatcher extends AbstractMatcher
             case self::hasToken([self::T_OPEN_TAG, self::T_VARIABLE], $token):
 //            case is_string($token) && $token === '$':
             case self::hasToken([self::T_OPEN_TAG, self::T_VARIABLE], $prevToken) &&
-            self::tokenIs($token, self::T_STRING):
+                self::tokenIs($token, self::T_STRING):
             case self::isOperator($token):
                 return true;
         }

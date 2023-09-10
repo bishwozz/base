@@ -115,31 +115,17 @@
         { fn = fn[ arr[i] ]; }
         fn.apply(window, args);
       },
-      updateUrl : function (url) {
-        let urlStart = "{{ url($crud->route) }}";
-        let urlEnd = url.replace(urlStart, '');
-        urlEnd = urlEnd.replace('/search', '');
-        let newUrl = urlStart + urlEnd;
-        let tmpUrl = newUrl.split("?")[0],
-        params_arr = [],
-        queryString = (newUrl.indexOf("?") !== -1) ? newUrl.split("?")[1] : false;
+      updateUrl : function (new_url) {
+        url_start = "{{ url($crud->route) }}";
+        url_end = new_url.replace(url_start, '');
+        url_end = url_end.replace('/search', '');
+        new_url = url_start + url_end;
 
-        // exclude the persistent-table parameter from url
-        if (queryString !== false) {
-            params_arr = queryString.split("&");
-            for (let i = params_arr.length - 1; i >= 0; i--) {
-                let param = params_arr[i].split("=")[0];
-                if (param === 'persistent-table') {
-                    params_arr.splice(i, 1);
-                }
-            }
-            newUrl = params_arr.length ? tmpUrl + "?" + params_arr.join("&") : tmpUrl;
-        }
-        window.history.pushState({}, '', newUrl);
-        localStorage.setItem('{{ Str::slug($crud->getRoute()) }}_list_url', newUrl);
+        window.history.pushState({}, '', new_url);
+        localStorage.setItem('{{ Str::slug($crud->getRoute()) }}_list_url', new_url);
       },
       dataTableConfiguration: {
-        bInfo: {{ var_export($crud->getOperationSetting('showEntryCount') ?? true) }},
+
         @if ($crud->getResponsiveTable())
         responsive: {
             details: {
@@ -232,7 +218,7 @@
               "thousands":      "{{ trans('backpack::crud.thousands') }}",
               "lengthMenu":     "{{ trans('backpack::crud.lengthMenu') }}",
               "loadingRecords": "{{ trans('backpack::crud.loadingRecords') }}",
-              "processing":     "<img src='{{ asset('packages/backpack/base/img/spinner.svg') }}' alt='{{ trans('backpack::crud.processing') }}'>",
+              "processing":     "<img src='{{ asset('packages/backpack/crud/img/ajax-loader.gif') }}' alt='{{ trans('backpack::crud.processing') }}'>",
               "search": "_INPUT_",
               "searchPlaceholder": "{{ trans('backpack::crud.search') }}...",
               "zeroRecords":    "{{ trans('backpack::crud.zeroRecords') }}",
@@ -257,16 +243,10 @@
           },
           processing: true,
           serverSide: true,
-          @if($crud->getOperationSetting('showEntryCount') === false)
-            pagingType: "simple",
-          @endif
           searching: @json($crud->getOperationSetting('searchableTable') ?? true),
           ajax: {
               "url": "{!! url($crud->route.'/search').'?'.Request::getQueryString() !!}",
-              "type": "POST",
-              "data": {
-                "totalEntryCount": "{{$crud->getOperationSetting('totalEntryCount') ?? false}}"
-            },
+              "type": "POST"
           },
           dom:
             "<'row hidden'<'col-sm-6'i><'col-sm-6 d-print-none'f>>" +
@@ -275,14 +255,13 @@
       }
   }
   </script>
+
   @include('crud::inc.export_buttons')
 
   <script type="text/javascript">
     jQuery(document).ready(function($) {
 
       window.crud.table = $("#crudTable").DataTable(window.crud.dataTableConfiguration);
-
-      window.crud.updateUrl(location.href);
 
       // move search bar
       $("#crudTable_filter").appendTo($('#datatable_search_stack' ));
@@ -338,19 +317,14 @@
             localStorage.setItem('DataTables_crudTable_/{{$crud->getRoute()}}_pageLength', len);
         });
 
-        // make sure AJAX requests include XSRF token
-        $.ajaxPrefilter(function(options, originalOptions, xhr) {
-            var token = $('meta[name="csrf_token"]').attr('content');
+      // make sure AJAX requests include XSRF token
+      $.ajaxPrefilter(function(options, originalOptions, xhr) {
+          var token = $('meta[name="csrf_token"]').attr('content');
 
-            if (token) {
+          if (token) {
                 return xhr.setRequestHeader('X-XSRF-TOKEN', token);
-            }
-        });
-
-
-        $('#crudTable').on( 'page.dt', function () {
-            localStorage.setItem('page_changed', true);
-        });
+          }
+      });
 
       // on DataTable draw event run all functions in the queue
       // (eg. delete and details_row buttons add functions to this queue)
@@ -358,10 +332,7 @@
          crud.functionsToRunOnDataTablesDrawEvent.forEach(function(functionName) {
             crud.executeFunctionByName(functionName);
          });
-         if ($('#crudTable').data('has-line-buttons-as-dropdown')) {
-          formatActionColumnAsDropdown();
-         }
-      }).dataTable();
+      } ).dataTable();
 
       // when datatables-colvis (column visibility) is toggled
       // rebuild the datatable using the datatable-responsive plugin
@@ -399,26 +370,6 @@
       @endif
 
     });
-
-    function formatActionColumnAsDropdown() {
-        // Get action column
-        const actionColumnIndex = $('#crudTable').find('th[data-action-column=true]').index();
-        if (actionColumnIndex !== -1) {
-            $('#crudTable tr').each(function (i, tr) {
-                const actionCell = $(tr).find('td').eq(actionColumnIndex);
-                const actionButtons = $(actionCell).find('a.btn.btn-link');
-                // Wrap the cell with the component needed for the dropdown
-                actionCell.wrapInner('<div class="nav-item dropdown"></div>');
-                actionCell.wrapInner('<div class="dropdown-menu dropdown-menu-left"></div>');
-                // Prepare buttons as dropdown items
-                actionButtons.map((index, action) => {
-                    $(action).addClass('dropdown-item').removeClass('btn btn-sm btn-link');
-                    $(action).find('i').addClass('me-2 text-primary');
-                });
-                actionCell.prepend('<a class="btn btn-sm px-2 py-1 btn-outline-primary dropdown-toggle actions-buttons-column" href="#" data-toggle="dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">{{ trans('backpack::crud.actions') }}</a>');
-            });
-        }
-    }
   </script>
 
   @include('crud::inc.details_row_logic')

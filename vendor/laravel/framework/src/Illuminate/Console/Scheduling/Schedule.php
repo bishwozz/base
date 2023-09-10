@@ -120,11 +120,7 @@ class Schedule
     public function command($command, array $parameters = [])
     {
         if (class_exists($command)) {
-            $command = Container::getInstance()->make($command);
-
-            return $this->exec(
-                Application::formatCommandString($command->getName()), $parameters,
-            )->description($command->getDescription());
+            $command = Container::getInstance()->make($command)->getName();
         }
 
         return $this->exec(

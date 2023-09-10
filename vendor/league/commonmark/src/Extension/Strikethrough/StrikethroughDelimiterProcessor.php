@@ -31,20 +31,14 @@ final class StrikethroughDelimiterProcessor implements DelimiterProcessorInterfa
 
     public function getMinLength(): int
     {
-        return 1;
+        return 2;
     }
 
     public function getDelimiterUse(DelimiterInterface $opener, DelimiterInterface $closer): int
     {
-        if ($opener->getLength() > 2 && $closer->getLength() > 2) {
-            return 0;
-        }
+        $min = \min($opener->getLength(), $closer->getLength());
 
-        if ($opener->getLength() !== $closer->getLength()) {
-            return 0;
-        }
-
-        return \min($opener->getLength(), $closer->getLength());
+        return $min >= 2 ? $min : 0;
     }
 
     public function process(AbstractStringContainer $opener, AbstractStringContainer $closer, int $delimiterUse): void

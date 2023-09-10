@@ -29,8 +29,6 @@ use Symfony\Component\HttpKernel\TerminableInterface;
  */
 class HttpCache implements HttpKernelInterface, TerminableInterface
 {
-    public const BODY_EVAL_BOUNDARY_LENGTH = 24;
-
     private $kernel;
     private $store;
     private $request;
@@ -633,22 +631,12 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
     private function restoreResponseBody(Request $request, Response $response)
     {
         if ($response->headers->has('X-Body-Eval')) {
-            \assert(self::BODY_EVAL_BOUNDARY_LENGTH === 24);
-
             ob_start();
 
-            $content = $response->getContent();
-            $boundary = substr($content, 0, 24);
-            $j = strpos($content, $boundary, 24);
-            echo substr($content, 24, $j - 24);
-            $i = $j + 24;
-
-            while (false !== $j = strpos($content, $boundary, $i)) {
-                [$uri, $alt, $ignoreErrors, $part] = explode("\n", substr($content, $i, $j - $i), 4);
-                $i = $j + 24;
-
-                echo $this->surrogate->handle($this, $uri, $alt, $ignoreErrors);
-                echo $part;
+            if ($response->headers->has('X-Body-File')) {
+                include $response->headers->get('X-Body-File');
+            } else {
+                eval('; ?>'.$response->getContent().'<?php ;');
             }
 
             $response->setContent(ob_get_clean());
@@ -730,11 +718,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             $timeout = $this->options['stale_while_revalidate'];
         }
 
-        $age = $entry->getAge();
-        $maxAge = $entry->getMaxAge() ?? 0;
-        $ttl = $maxAge - $age;
-
-        return abs($ttl) < $timeout;
+        return abs($entry->getTtl()) < $timeout;
     }
 
     /**

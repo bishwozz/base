@@ -44,15 +44,11 @@ class CrudPanelTest extends BaseCrudPanelTest
         $this->crudPanel->setRouteName('unknown.route.name');
     }
 
-    public function testItThrowsExceptionIfModelIsNotUsingCrudTrait()
+    public function testSync()
     {
-        try {
-            $this->crudPanel->setModel('\Backpack\CRUD\Tests\Unit\Models\ModelWithoutCrudTrait');
-        } catch (\Throwable $e) {
-        }
-        $this->assertEquals(
-            new \Exception('Please use CrudTrait on the model.', 500),
-            $e
-        );
+        $this->markTestIncomplete();
+
+        // TODO: the sync method should not be in the CrudPanel class and should not be exposed in the public API.
+        //       it is a utility method and should be refactored.
     }
 }

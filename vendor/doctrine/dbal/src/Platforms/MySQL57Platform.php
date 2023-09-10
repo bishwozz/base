@@ -10,31 +10,19 @@ use Doctrine\Deprecations\Deprecation;
 
 /**
  * Provides the behavior, features and SQL dialect of the MySQL 5.7 (5.7.9 GA) database platform.
- *
- * @deprecated This class will be merged with {@see MySQLPlatform} in 4.0 because support for MySQL
- *             releases prior to 5.7 will be dropped.
  */
 class MySQL57Platform extends MySQLPlatform
 {
     /**
-     * {@inheritDoc}
-     *
-     * @deprecated
+     * {@inheritdoc}
      */
     public function hasNativeJsonType()
     {
-        Deprecation::triggerIfCalledFromOutside(
-            'doctrine/dbal',
-            'https://github.com/doctrine/dbal/pull/5509',
-            '%s is deprecated.',
-            __METHOD__,
-        );
-
         return true;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getJsonTypeDeclarationSQL(array $column)
     {
@@ -47,7 +35,7 @@ class MySQL57Platform extends MySQLPlatform
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getPreAlterTableRenameIndexForeignKeySQL(TableDiff $diff)
     {
@@ -55,7 +43,7 @@ class MySQL57Platform extends MySQLPlatform
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getPostAlterTableRenameIndexForeignKeySQL(TableDiff $diff)
     {
@@ -63,7 +51,7 @@ class MySQL57Platform extends MySQLPlatform
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function getRenameIndexSQL($oldIndexName, Index $index, $tableName)
     {
@@ -71,7 +59,7 @@ class MySQL57Platform extends MySQLPlatform
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @deprecated Implement {@see createReservedKeywordsList()} instead.
      */
@@ -81,14 +69,14 @@ class MySQL57Platform extends MySQLPlatform
             'doctrine/dbal',
             'https://github.com/doctrine/dbal/issues/4510',
             'MySQL57Platform::getReservedKeywordsClass() is deprecated,'
-                . ' use MySQL57Platform::createReservedKeywordsList() instead.',
+                . ' use MySQL57Platform::createReservedKeywordsList() instead.'
         );
 
         return Keywords\MySQL57Keywords::class;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function initializeDoctrineTypeMappings()
     {

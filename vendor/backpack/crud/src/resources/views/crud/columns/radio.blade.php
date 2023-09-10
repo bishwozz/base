@@ -1,19 +1,12 @@
-{{-- radio --}}
 @php
-    $column['key'] = $column['key'] ?? $column['name'];
-    $column['value'] = $column['value'] ?? data_get($entry, $column['key']);
+	$column['key'] = $column['key'] ?? $column['name'];
+    $column['text'] = $column['options'][data_get($entry, $column['key'])] ?? '';
     $column['escaped'] = $column['escaped'] ?? true;
     $column['prefix'] = $column['prefix'] ?? '';
     $column['suffix'] = $column['suffix'] ?? '';
-    $column['text'] = $column['default'] ?? '-';
 
-    if($column['value'] instanceof \Closure) {
-        $column['value'] = $column['value']($entry);
-    }
-
-    if(!empty($column['value'])) {
-        $column['value'] = $column['options'][$column['value']] ?? '';
-        $column['text'] = $column['prefix'].$column['value'].$column['suffix'];
+    if(!empty($column['text'])) {
+        $column['text'] = $column['prefix'].$column['text'].$column['suffix'];
     }
 @endphp
 

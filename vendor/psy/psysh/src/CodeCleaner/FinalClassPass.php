@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,8 +24,6 @@ class FinalClassPass extends CodeCleanerPass
 
     /**
      * @param array $nodes
-     *
-     * @return Node[]|null Array of nodes
      */
     public function beforeTraverse(array $nodes)
     {
@@ -36,8 +34,6 @@ class FinalClassPass extends CodeCleanerPass
      * @throws FatalErrorException if the node is a class that extends a final class
      *
      * @param Node $node
-     *
-     * @return int|Node|null Replacement node (or special return value)
      */
     public function enterNode(Node $node)
     {
@@ -58,8 +54,10 @@ class FinalClassPass extends CodeCleanerPass
 
     /**
      * @param string $name Class name
+     *
+     * @return bool
      */
-    private function isFinalClass(string $name): bool
+    private function isFinalClass($name)
     {
         if (!\class_exists($name)) {
             return isset($this->finalClasses[\strtolower($name)]);

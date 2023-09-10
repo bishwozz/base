@@ -30,7 +30,7 @@ class CarbonTimeZone extends DateTimeZone
             throw new InvalidTimeZoneException('Absolute timezone offset cannot be greater than 100.');
         }
 
-        return ($timezone >= 0 ? '+' : '').ltrim($timezone, '+').':00';
+        return ($timezone >= 0 ? '+' : '').$timezone.':00';
     }
 
     protected static function getDateTimeZoneNameFromMixed($timezone)
@@ -101,15 +101,15 @@ class CarbonTimeZone extends DateTimeZone
             $tz = static::getDateTimeZoneFromName($object);
         }
 
-        if ($tz !== false) {
-            return new static($tz->getName());
+        if ($tz === false) {
+            if (Carbon::isStrictModeEnabled()) {
+                throw new InvalidTimeZoneException('Unknown or bad timezone ('.($objectDump ?: $object).')');
+            }
+
+            return false;
         }
 
-        if (Carbon::isStrictModeEnabled()) {
-            throw new InvalidTimeZoneException('Unknown or bad timezone ('.($objectDump ?: $object).')');
-        }
-
-        return false;
+        return new static($tz->getName());
     }
 
     /**
@@ -231,15 +231,15 @@ class CarbonTimeZone extends DateTimeZone
     {
         $tz = $this->toRegionName($date);
 
-        if ($tz !== false) {
-            return new static($tz);
+        if ($tz === false) {
+            if (Carbon::isStrictModeEnabled()) {
+                throw new InvalidTimeZoneException('Unknown timezone for offset '.$this->getOffset($date ?: Carbon::now($this)).' seconds.');
+            }
+
+            return false;
         }
 
-        if (Carbon::isStrictModeEnabled()) {
-            throw new InvalidTimeZoneException('Unknown timezone for offset '.$this->getOffset($date ?: Carbon::now($this)).' seconds.');
-        }
-
-        return false;
+        return new static($tz);
     }
 
     /**
@@ -250,18 +250,6 @@ class CarbonTimeZone extends DateTimeZone
     public function __toString()
     {
         return $this->getName();
-    }
-
-    /**
-     * Return the type number:
-     *
-     * Type 1; A UTC offset, such as -0300
-     * Type 2; A timezone abbreviation, such as GMT
-     * Type 3: A timezone identifier, such as Europe/London
-     */
-    public function getType(): int
-    {
-        return preg_match('/"timezone_type";i:(\d)/', serialize($this), $match) ? (int) $match[1] : 3;
     }
 
     /**

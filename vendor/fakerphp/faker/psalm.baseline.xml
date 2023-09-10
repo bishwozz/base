@@ -1,65 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.11.0@c9b192ab8400fdaf04b2b13d110575adc879aa90">
+<files psalm-version="4.7.1@cd53e047a58f71f646dd6bf45476076ab07b5d44">
   <file src="src/Faker/Calculator/Luhn.php">
-    <InvalidReturnStatement>
+    <InvalidReturnStatement occurrences="1">
       <code>0</code>
     </InvalidReturnStatement>
-    <InvalidReturnType>
+    <InvalidReturnType occurrences="1">
       <code>string</code>
     </InvalidReturnType>
   </file>
   <file src="src/Faker/Generator.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->uniqueGenerator]]></code>
-      <code>new ChanceGenerator($this, $weight, $default)</code>
-      <code>new ValidGenerator($this, $validator, $maxRetries)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code>self</code>
-      <code>self</code>
-      <code>self</code>
-    </InvalidReturnType>
+    <InvalidThrow occurrences="1">
+      <code>ContainerExceptionInterface</code>
+    </InvalidThrow>
   </file>
   <file src="src/Faker/ORM/CakePHP/EntityPopulator.php">
-    <UndefinedClass>
+    <UndefinedClass occurrences="1">
       <code>TableRegistry</code>
     </UndefinedClass>
   </file>
+  <file src="src/Faker/ORM/Doctrine/ColumnTypeGuesser.php">
+    <UndefinedClass occurrences="1">
+      <code>ClassMetadata</code>
+    </UndefinedClass>
+  </file>
   <file src="src/Faker/ORM/Doctrine/EntityPopulator.php">
-    <UndefinedClass>
-      <code><![CDATA[$this->class]]></code>
-      <code><![CDATA[$this->class->associationMappings]]></code>
+    <UndefinedClass occurrences="13">
+      <code>$this-&gt;class</code>
+      <code>$this-&gt;class</code>
+      <code>$this-&gt;class</code>
+      <code>$this-&gt;class-&gt;associationMappings</code>
+      <code>$this-&gt;class-&gt;fieldMappings</code>
+      <code>ClassMetadata</code>
+      <code>ObjectManager</code>
+      <code>ObjectManager</code>
       <code>\Doctrine\ODM\MongoDB\Mapping\ClassMetadata</code>
       <code>\Doctrine\ODM\MongoDB\Mapping\ClassMetadata</code>
       <code>\Doctrine\ODM\MongoDB\Mapping\ClassMetadata</code>
       <code>\Doctrine\ORM\Mapping\ClassMetadata</code>
       <code>\Doctrine\ORM\Mapping\ClassMetadata</code>
     </UndefinedClass>
-    <UndefinedInterfaceMethod>
-      <code>createQueryBuilder</code>
-      <code>getAssociationMappings</code>
-      <code>newInstance</code>
-    </UndefinedInterfaceMethod>
+    <UndefinedDocblockClass occurrences="7">
+      <code>$this-&gt;class</code>
+      <code>$this-&gt;class</code>
+      <code>$this-&gt;class</code>
+      <code>$this-&gt;class</code>
+      <code>$this-&gt;class</code>
+      <code>$this-&gt;class-&gt;reflFields</code>
+      <code>ClassMetadata</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/Faker/ORM/Doctrine/Populator.php">
+    <UndefinedClass occurrences="1"/>
+    <UndefinedDocblockClass occurrences="3">
+      <code>$this-&gt;manager</code>
+      <code>ObjectManager|null</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/Faker/ORM/Mandango/EntityPopulator.php">
-    <UndefinedClass>
+    <UndefinedClass occurrences="2">
       <code>Mandango</code>
       <code>Mandango</code>
     </UndefinedClass>
   </file>
   <file src="src/Faker/ORM/Mandango/Populator.php">
-    <UndefinedClass>
-      <code><![CDATA[$this->mandango]]></code>
+    <UndefinedClass occurrences="2">
+      <code>$this-&gt;mandango</code>
       <code>Mandango</code>
     </UndefinedClass>
   </file>
   <file src="src/Faker/ORM/Propel/ColumnTypeGuesser.php">
-    <UndefinedClass>
-      <code>\ColumnMap</code>
-    </UndefinedClass>
+    <UndefinedClass occurrences="1"/>
   </file>
   <file src="src/Faker/ORM/Propel/EntityPopulator.php">
-    <UndefinedClass>
+    <UndefinedClass occurrences="9">
       <code>$columnMap</code>
       <code>$columnMap</code>
       <code>$columnMap</code>
@@ -68,24 +81,23 @@
       <code>$columnMap</code>
       <code>$columnMap</code>
       <code>$columnMap</code>
-      <code>\ColumnMap</code>
     </UndefinedClass>
   </file>
   <file src="src/Faker/ORM/Propel/Populator.php">
-    <UndefinedClass>
+    <UndefinedClass occurrences="1">
       <code>\Propel</code>
     </UndefinedClass>
-    <UndefinedDocblockClass>
+    <UndefinedDocblockClass occurrences="1">
       <code>PropelPDO</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/Faker/ORM/Propel2/ColumnTypeGuesser.php">
-    <UndefinedClass>
+    <UndefinedClass occurrences="1">
       <code>ColumnMap</code>
     </UndefinedClass>
   </file>
   <file src="src/Faker/ORM/Propel2/EntityPopulator.php">
-    <UndefinedClass>
+    <UndefinedClass occurrences="9">
       <code>$columnMap</code>
       <code>$columnMap</code>
       <code>$columnMap</code>
@@ -98,128 +110,124 @@
     </UndefinedClass>
   </file>
   <file src="src/Faker/ORM/Propel2/Populator.php">
-    <UndefinedClass>
+    <UndefinedClass occurrences="1">
       <code>Propel</code>
     </UndefinedClass>
-    <UndefinedDocblockClass>
+    <UndefinedDocblockClass occurrences="1">
       <code>PropelPDO</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/Faker/ORM/Spot/EntityPopulator.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->mapper]]></code>
+    <InvalidReturnStatement occurrences="1">
+      <code>$this-&gt;mapper</code>
     </InvalidReturnStatement>
-    <InvalidReturnType>
+    <InvalidReturnType occurrences="1">
       <code>string</code>
     </InvalidReturnType>
-    <UndefinedClass>
+    <UndefinedClass occurrences="5">
       <code>$relation</code>
       <code>$relation</code>
       <code>BelongsTo</code>
       <code>Locator</code>
       <code>Mapper</code>
     </UndefinedClass>
-    <UndefinedDocblockClass>
+    <UndefinedDocblockClass occurrences="8">
       <code>$locator</code>
-      <code><![CDATA[$this->mapper]]></code>
-      <code><![CDATA[$this->mapper]]></code>
-      <code><![CDATA[$this->mapper]]></code>
-      <code><![CDATA[$this->mapper]]></code>
-      <code><![CDATA[$this->mapper]]></code>
+      <code>$this-&gt;mapper</code>
+      <code>$this-&gt;mapper</code>
+      <code>$this-&gt;mapper</code>
+      <code>$this-&gt;mapper</code>
+      <code>$this-&gt;mapper</code>
       <code>Locator</code>
       <code>Mapper</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/Faker/ORM/Spot/Populator.php">
-    <UndefinedClass>
-      <code><![CDATA[$this->locator]]></code>
-      <code>Locator</code>
+    <UndefinedClass occurrences="2">
+      <code>$this-&gt;locator</code>
     </UndefinedClass>
-    <UndefinedDocblockClass>
+    <UndefinedDocblockClass occurrences="1">
       <code>Locator</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/Faker/Provider/Base.php">
-    <InvalidArgument>
-      <code>[static::class, 'randomDigit']</code>
-    </InvalidArgument>
-    <UndefinedClass>
-      <code>\UnitEnum</code>
-      <code>\UnitEnum</code>
-    </UndefinedClass>
-    <UndefinedDocblockClass>
+    <UndefinedDocblockClass occurrences="1">
       <code>Closure</code>
     </UndefinedDocblockClass>
-    <UndefinedFunction>
-      <code>enum_exists($array)</code>
-      <code>enum_exists($array)</code>
-    </UndefinedFunction>
-  </file>
-  <file src="src/Faker/Provider/Biased.php">
-    <InvalidParamDefault>
-      <code>callable</code>
-    </InvalidParamDefault>
   </file>
   <file src="src/Faker/Provider/File.php">
-    <FalsableReturnStatement>
+    <FalsableReturnStatement occurrences="1">
       <code>false</code>
     </FalsableReturnStatement>
   </file>
   <file src="src/Faker/Provider/PhoneNumber.php">
-    <InvalidReturnStatement>
+    <InvalidReturnStatement occurrences="1">
       <code>$imei</code>
     </InvalidReturnStatement>
-    <InvalidReturnType>
+    <InvalidReturnType occurrences="1">
       <code>int</code>
     </InvalidReturnType>
   </file>
   <file src="src/Faker/Provider/ar_SA/Address.php">
-    <UndefinedPropertyFetch>
+    <UndefinedPropertyFetch occurrences="1">
       <code>static::$cityPrefix</code>
     </UndefinedPropertyFetch>
   </file>
   <file src="src/Faker/Provider/cs_CZ/Person.php">
-    <NonStaticSelfCall>
+    <InvalidReturnStatement occurrences="1">
+      <code>$birthNumber</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>czech</code>
+    </InvalidReturnType>
+    <NonStaticSelfCall occurrences="2">
       <code>static::birthNumber(static::GENDER_FEMALE)</code>
       <code>static::birthNumber(static::GENDER_MALE)</code>
     </NonStaticSelfCall>
+    <UndefinedDocblockClass occurrences="1">
+      <code>czech</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/Faker/Provider/en_SG/Person.php">
-    <InvalidArrayOffset>
-      <code>$weights[$i]</code>
+    <InvalidArrayOffset occurrences="1">
+      <code>$checksumArr[$checksum % 11]</code>
     </InvalidArrayOffset>
+  </file>
+  <file src="src/Faker/Provider/is_IS/Address.php">
+    <InvalidPropertyAssignmentValue occurrences="1"/>
+    <UndefinedDocblockClass occurrences="2">
+      <code>Icelandic</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/Faker/Provider/is_IS/Person.php">
-    <InvalidArrayOffset>
+    <InvalidArgument occurrences="1">
+      <code>static::$middleName</code>
+    </InvalidArgument>
+    <InvalidArrayOffset occurrences="1">
       <code>$ref[$i]</code>
     </InvalidArrayOffset>
+    <InvalidPropertyAssignmentValue occurrences="3"/>
   </file>
   <file src="src/Faker/Provider/ja_JP/Text.php">
-    <UndefinedMethod>
+    <UndefinedMethod occurrences="1">
       <code>static::split($text)</code>
     </UndefinedMethod>
   </file>
   <file src="src/Faker/Provider/pl_PL/Company.php">
-    <InvalidArrayOffset>
-      <code>$weights[$i]</code>
-      <code>$weights[$i]</code>
-    </InvalidArrayOffset>
+    <InvalidReturnStatement occurrences="1">
+      <code>implode('', $result)</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>14</code>
+    </InvalidReturnType>
   </file>
   <file src="src/Faker/Provider/pl_PL/Person.php">
-    <InvalidArrayOffset>
-      <code>$high[$i]</code>
-      <code>$low[$i]</code>
-      <code>$result[$i]</code>
-      <code>$weights[$i + 3]</code>
-      <code>$weights[$i]</code>
-      <code>$weights[$i]</code>
-    </InvalidArrayOffset>
-    <UndefinedDocblockClass>
+    <UndefinedDocblockClass occurrences="1">
       <code>DateTime</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/Faker/Provider/sl_SI/Person.php">
-    <NonStaticSelfCall>
+    <NonStaticSelfCall occurrences="2">
       <code>static::lastName()</code>
       <code>static::lastName()</code>
     </NonStaticSelfCall>

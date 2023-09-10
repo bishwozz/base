@@ -15,12 +15,11 @@ use function file_put_contents;
 use function htmlspecialchars;
 use function is_string;
 use function round;
-use function strpos;
 use DOMDocument;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Directory;
 use SebastianBergmann\CodeCoverage\Driver\WriteOperationFailedException;
 use SebastianBergmann\CodeCoverage\Node\File;
-use SebastianBergmann\CodeCoverage\Util\Filesystem;
 
 final class Crap4j
 {
@@ -125,9 +124,7 @@ final class Crap4j
         $buffer = $document->saveXML();
 
         if ($target !== null) {
-            if (!strpos($target, '://') !== false) {
-                Filesystem::createDirectory(dirname($target));
-            }
+            Directory::create(dirname($target));
 
             if (@file_put_contents($target, $buffer) === false) {
                 throw new WriteOperationFailedException($target);

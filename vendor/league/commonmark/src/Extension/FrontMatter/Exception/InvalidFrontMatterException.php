@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Extension\FrontMatter\Exception;
 
-use League\CommonMark\Exception\CommonMarkException;
-
-class InvalidFrontMatterException extends \RuntimeException implements CommonMarkException
+class InvalidFrontMatterException extends \RuntimeException
 {
     public static function wrap(\Throwable $t): self
     {

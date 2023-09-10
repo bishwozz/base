@@ -16,9 +16,6 @@ class CreateArticlesTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->length(10)->unsigned();
             $table->string('content');
-            $table->string('status')->default('DRAFT');
-            $table->string('state')->default('HOT');
-            $table->string('style')->default('PUBLISHED');
             $table->string('metas')->nullable();
             $table->string('tags')->nullable();
             $table->string('extras')->nullable();

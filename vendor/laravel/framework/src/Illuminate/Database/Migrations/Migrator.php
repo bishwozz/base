@@ -158,7 +158,7 @@ class Migrator
 
         $step = $options['step'] ?? false;
 
-        $this->fireMigrationEvent(new MigrationsStarted('up'));
+        $this->fireMigrationEvent(new MigrationsStarted);
 
         // Once we have the array of migrations, we will spin through them and run the
         // migrations "up" so the changes are made to the databases. We'll then log
@@ -171,7 +171,7 @@ class Migrator
             }
         }
 
-        $this->fireMigrationEvent(new MigrationsEnded('up'));
+        $this->fireMigrationEvent(new MigrationsEnded);
     }
 
     /**
@@ -265,7 +265,7 @@ class Migrator
 
         $this->requireFiles($files = $this->getMigrationFiles($paths));
 
-        $this->fireMigrationEvent(new MigrationsStarted('down'));
+        $this->fireMigrationEvent(new MigrationsStarted);
 
         // Next we will run through all of the migrations and call the "down" method
         // which will reverse each migration in order. This getLast method on the
@@ -287,7 +287,7 @@ class Migrator
             );
         }
 
-        $this->fireMigrationEvent(new MigrationsEnded('down'));
+        $this->fireMigrationEvent(new MigrationsEnded);
 
         return $rolledBack;
     }
@@ -387,11 +387,11 @@ class Migrator
             $migration->getConnection()
         );
 
-        $callback = function () use ($connection, $migration, $method) {
+        $callback = function () use ($migration, $method) {
             if (method_exists($migration, $method)) {
                 $this->fireMigrationEvent(new MigrationStarted($migration, $method));
 
-                $this->runMethod($connection, $migration, $method);
+                $migration->{$method}();
 
                 $this->fireMigrationEvent(new MigrationEnded($migration, $method));
             }
@@ -447,32 +447,11 @@ class Migrator
             $migration->getConnection()
         );
 
-        return $db->pretend(function () use ($db, $migration, $method) {
+        return $db->pretend(function () use ($migration, $method) {
             if (method_exists($migration, $method)) {
-                $this->runMethod($db, $migration, $method);
+                $migration->{$method}();
             }
         });
-    }
-
-    /**
-     * Run a migration method on the given connection.
-     *
-     * @param  \Illuminate\Database\Connection  $connection
-     * @param  object  $migration
-     * @param  string  $method
-     * @return void
-     */
-    protected function runMethod($connection, $migration, $method)
-    {
-        $previousConnection = $this->resolver->getDefaultConnection();
-
-        try {
-            $this->resolver->setDefaultConnection($connection->getName());
-
-            $migration->{$method}();
-        } finally {
-            $this->resolver->setDefaultConnection($previousConnection);
-        }
     }
 
     /**

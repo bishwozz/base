@@ -9,12 +9,6 @@
           <!-- ================================================ -->
           <!-- ==== Recommended place for admin menu items ==== -->
           <!-- ================================================ -->
-          @php
-          $ministry_name = isset(backpack_user()->ministry) ? backpack_user()->ministry->name_lc : NULL ;
-          @endphp
-
-          <center><h4 style="color:white; font-weight:bold; font-size:20px;" title="{{ $ministry_name }}"> </h4> {{$ministry_name}} </center>
-          <center><h4 style="color:white; font-weight:bold; font-size:17px;" title="{{ backpack_user()->name}}">{{backpack_user()->name}}</h4></center>
 
           @include(backpack_view('inc.sidebar_content'))
 

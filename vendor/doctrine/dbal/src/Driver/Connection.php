@@ -7,8 +7,6 @@ use Doctrine\DBAL\ParameterType;
 /**
  * Connection interface.
  * Driver connections must implement this interface.
- *
- * @method resource|object getNativeConnection()
  */
 interface Connection
 {

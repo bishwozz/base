@@ -17,9 +17,6 @@ final class MultipartStream implements StreamInterface
     /** @var string */
     private $boundary;
 
-    /** @var StreamInterface */
-    private $stream;
-
     /**
      * @param array  $elements Array of associative arrays, each containing a
      *                         required "name" key mapping to the form field,
@@ -34,7 +31,7 @@ final class MultipartStream implements StreamInterface
      */
     public function __construct(array $elements = [], string $boundary = null)
     {
-        $this->boundary = $boundary ?: bin2hex(random_bytes(20));
+        $this->boundary = $boundary ?: sha1(uniqid('', true));
         $this->stream = $this->createStream($elements);
     }
 
@@ -60,7 +57,7 @@ final class MultipartStream implements StreamInterface
             $str .= "{$key}: {$value}\r\n";
         }
 
-        return "--{$this->boundary}\r\n".trim($str)."\r\n\r\n";
+        return "--{$this->boundary}\r\n" . trim($str) . "\r\n\r\n";
     }
 
     /**
@@ -71,9 +68,6 @@ final class MultipartStream implements StreamInterface
         $stream = new AppendStream();
 
         foreach ($elements as $element) {
-            if (!is_array($element)) {
-                throw new \UnexpectedValueException('An array is expected');
-            }
             $this->addElement($stream, $element);
         }
 
@@ -95,7 +89,7 @@ final class MultipartStream implements StreamInterface
 
         if (empty($element['filename'])) {
             $uri = $element['contents']->getMetadata('uri');
-            if ($uri && \is_string($uri) && \substr($uri, 0, 6) !== 'php://' && \substr($uri, 0, 7) !== 'data://') {
+            if (substr($uri, 0, 6) !== 'php://') {
                 $element['filename'] = $uri;
             }
         }
@@ -137,7 +131,9 @@ final class MultipartStream implements StreamInterface
         // Set a default Content-Type if one was not supplied
         $type = $this->getHeader($headers, 'content-type');
         if (!$type && ($filename === '0' || $filename)) {
-            $headers['Content-Type'] = MimeType::fromFilename($filename) ?? 'application/octet-stream';
+            if ($type = MimeType::fromFilename($filename)) {
+                $headers['Content-Type'] = $type;
+            }
         }
 
         return [$stream, $headers];

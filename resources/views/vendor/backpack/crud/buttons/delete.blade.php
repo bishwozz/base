@@ -1,22 +1,5 @@
-{{-- @if ($crud->hasAccess('delete'))
-<a href="javascript:void(0)" onclick="deleteEntry(this)" data-route="{{ url($crud->route.'/'.$entry->getKey()) }}"
-	class="btn btn-sm btn-danger delete-btn" data-button-type="delete" tooltip><i class="la la-trash"
-		data-toggle="tooltip" title="Delete"></i></a>
-@endif --}}
-
 @if ($crud->hasAccess('delete'))
-	@if(isset($crud->reporting_module))
-		@if($entry->is_approved == false)
-		<a href="javascript:void(0)" onclick="deleteEntry(this)" data-route="{{ url($crud->route.'/'.$entry->getKey()) }}"
-			class="btn btn-sm btn-danger delete-btn" data-button-type="delete" tooltip><i class="la la-trash"
-				data-toggle="tooltip" title="Delete"></i></a>
-		@endif
-	<!-- Single Delete button -->
-	@else
-	<a href="javascript:void(0)" onclick="deleteEntry(this)" data-route="{{ url($crud->route.'/'.$entry->getKey()) }}"
-		class="btn btn-sm btn-danger delete-btn" data-button-type="delete" tooltip><i class="la la-trash"
-			data-toggle="tooltip" title="Delete"></i></a>
-	@endif
+<a href="javascript:void(0)" onclick="deleteEntry(this)" data-route="{{ url($crud->route.'/'.$entry->getKey()) }}" class="btn btn-sm btn-danger delete-btn" data-button-type="delete" tooltip><i class="la la-trash" data-toggle="tooltip"  title="Delete"></i></a>
 @endif
 
 {{-- Button Javascript --}}
@@ -24,6 +7,7 @@
 {{-- - pushed to the end of the page, after jQuery is loaded, for non-AJAX operations (ex: Show) --}}
 @push('after_scripts') @if (request()->ajax()) @endpush @endif
 <script>
+
 	if (typeof deleteEntry != 'function') {
 	  $("[data-button-type=delete]").unbind('click');
 

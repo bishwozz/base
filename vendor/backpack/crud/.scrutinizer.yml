@@ -13,15 +13,12 @@ filter:
 build:
 build:
     environment:
-        php: 8.0.2
+        php: 7.4.0
     nodes:
         analysis:
             tests:
                 override:
                     - php-scrutinizer-run
-    dependencies:
-        override:
-            - composer install --dev
 tools:
     php_analyzer: true
     php_mess_detector: true

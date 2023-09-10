@@ -13,15 +13,14 @@ use function strtolower;
 
 /**
  * Create a Graphviz output of a Schema.
- *
- * @deprecated
  */
 class Graphviz extends AbstractVisitor
 {
-    private string $output = '';
+    /** @var string */
+    private $output = '';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acceptForeignKey(Table $localTable, ForeignKeyConstraint $fkConstraint)
     {
@@ -32,12 +31,12 @@ class Graphviz extends AbstractVisitor
                 'dir'       => 'back',
                 'arrowtail' => 'dot',
                 'arrowhead' => 'normal',
-            ],
+            ]
         );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acceptSchema(Schema $schema)
     {
@@ -50,7 +49,7 @@ class Graphviz extends AbstractVisitor
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function acceptTable(Table $table)
     {
@@ -59,7 +58,7 @@ class Graphviz extends AbstractVisitor
             [
                 'label' => $this->createTableLabel($table),
                 'shape' => 'plaintext',
-            ],
+            ]
         );
     }
 

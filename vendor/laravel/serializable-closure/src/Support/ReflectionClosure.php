@@ -96,7 +96,7 @@ class ReflectionClosure extends ReflectionFunction
         $builtin_types = self::getBuiltinTypes();
         $class_keywords = ['self', 'static', 'parent'];
 
-        $ns = $this->getClosureNamespaceName();
+        $ns = $this->getNamespaceName();
         $nsf = $ns == '' ? '' : ($ns[0] == '\\' ? $ns : '\\'.$ns);
 
         $_file = var_export($fileName, true);
@@ -112,9 +112,7 @@ class ReflectionClosure extends ReflectionFunction
         $tokens = $this->getTokens();
         $state = $lastState = 'start';
         $inside_structure = false;
-        $isFirstClassCallable = false;
         $isShortClosure = false;
-
         $inside_structure_mark = 0;
         $open = 0;
         $code = '';
@@ -132,15 +130,11 @@ class ReflectionClosure extends ReflectionFunction
                 case 'start':
                     if ($token[0] === T_FUNCTION || $token[0] === T_STATIC) {
                         $code .= $token[1];
-
                         $state = $token[0] === T_FUNCTION ? 'function' : 'static';
                     } elseif ($token[0] === T_FN) {
                         $isShortClosure = true;
                         $code .= $token[1];
                         $state = 'closure_args';
-                    } elseif ($token[0] === T_PUBLIC || $token[0] === T_PROTECTED || $token[0] === T_PRIVATE) {
-                        $code = '';
-                        $isFirstClassCallable = true;
                     }
                     break;
                 case 'static':
@@ -161,11 +155,6 @@ class ReflectionClosure extends ReflectionFunction
                 case 'function':
                     switch ($token[0]) {
                         case T_STRING:
-                            if ($isFirstClassCallable) {
-                                $state = 'closure_args';
-                                break;
-                            }
-
                             $code = '';
                             $state = 'named_function';
                             break;
@@ -511,7 +500,8 @@ class ReflectionClosure extends ReflectionFunction
                         // named arguments...
                         case ':':
                             if ($lastState === 'closure' && $context === 'root') {
-                                $state = 'closure';
+                                $state = 'ignore_next';
+                                $lastState = 'closure';
                                 $code .= $id_start.$token;
                             }
 
@@ -650,7 +640,7 @@ class ReflectionClosure extends ReflectionFunction
                             $state = 'id_name';
                             $context = 'extends';
                             $lastState = 'anonymous';
-                            break;
+                        break;
                         case '{':
                             $state = 'closure';
                             if (! $inside_structure) {
@@ -675,30 +665,6 @@ class ReflectionClosure extends ReflectionFunction
         $this->isShortClosure = $isShortClosure;
         $this->isBindingRequired = $isUsingThisObject;
         $this->isScopeRequired = $isUsingScope;
-
-        if (PHP_VERSION_ID >= 80100) {
-            $attributesCode = array_map(function ($attribute) {
-                $arguments = $attribute->getArguments();
-
-                $name = $attribute->getName();
-                $arguments = implode(', ', array_map(function ($argument, $key) {
-                    $argument = sprintf("'%s'", str_replace("'", "\\'", $argument));
-
-                    if (is_string($key)) {
-                        $argument = sprintf('%s: %s', $key, $argument);
-                    }
-
-                    return $argument;
-                }, $arguments, array_keys($arguments)));
-
-                return "#[$name($arguments)]";
-            }, $this->getAttributes());
-
-            if (! empty($attributesCode)) {
-                $code = implode("\n", array_merge($attributesCode, [$code]));
-            }
-        }
-
         $this->code = $code;
 
         return $this->code;
@@ -1154,23 +1120,6 @@ class ReflectionClosure extends ReflectionFunction
         static::$functions[$key] = $functions;
         static::$constants[$key] = $constants;
         static::$structures[$key] = $structures;
-    }
-
-    /**
-     * Returns the namespace associated to the closure.
-     *
-     * @return string
-     */
-    protected function getClosureNamespaceName()
-    {
-        $ns = $this->getNamespaceName();
-
-        // First class callables...
-        if ($this->getName() !== '{closure}' && empty($ns) && ! is_null($this->getClosureScopeClass())) {
-            $ns = $this->getClosureScopeClass()->getNamespaceName();
-        }
-
-        return $ns;
     }
 
     /**

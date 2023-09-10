@@ -43,12 +43,8 @@ class Cursor
 
     private bool $partiallyConsumedTab = false;
 
-    /**
-     * @var int|false
-     *
-     * @psalm-readonly
-     */
-    private $lastTabPosition;
+    /** @psalm-readonly */
+    private bool $lineContainsTabs;
 
     /** @psalm-readonly */
     private bool $isMultibyte;
@@ -65,10 +61,10 @@ class Cursor
             throw new UnexpectedEncodingException('Unexpected encoding - UTF-8 or ASCII was expected');
         }
 
-        $this->line            = $line;
-        $this->length          = \mb_strlen($line, 'UTF-8') ?: 0;
-        $this->isMultibyte     = $this->length !== \strlen($line);
-        $this->lastTabPosition = $this->isMultibyte ? \mb_strrpos($line, "\t", 0, 'UTF-8') : \strrpos($line, "\t");
+        $this->line             = $line;
+        $this->length           = \mb_strlen($line, 'UTF-8') ?: 0;
+        $this->isMultibyte      = $this->length !== \strlen($line);
+        $this->lineContainsTabs = \strpos($line, "\t") !== false;
     }
 
     /**
@@ -80,32 +76,26 @@ class Cursor
             return $this->nextNonSpaceCache;
         }
 
-        if ($this->currentPosition >= $this->length) {
-            return $this->length;
-        }
-
+        $c    = null;
+        $i    = $this->currentPosition;
         $cols = $this->column;
 
-        for ($i = $this->currentPosition; $i < $this->length; $i++) {
-            // This if-else was copied out of getCharacter() for performance reasons
-            if ($this->isMultibyte) {
-                $c = $this->charCache[$i] ??= \mb_substr($this->line, $i, 1, 'UTF-8');
-            } else {
-                $c = $this->line[$i];
-            }
-
+        while (($c = $this->getCharacter($i)) !== null) {
             if ($c === ' ') {
+                $i++;
                 $cols++;
             } elseif ($c === "\t") {
+                $i++;
                 $cols += 4 - ($cols % 4);
             } else {
                 break;
             }
         }
 
+        $nextNonSpace = $c === null ? $this->length : $i;
         $this->indent = $cols - $this->column;
 
-        return $this->nextNonSpaceCache = $i;
+        return $this->nextNonSpaceCache = $nextNonSpace;
     }
 
     /**
@@ -113,16 +103,7 @@ class Cursor
      */
     public function getNextNonSpaceCharacter(): ?string
     {
-        $index = $this->getNextNonSpacePosition();
-        if ($index >= $this->length) {
-            return null;
-        }
-
-        if ($this->isMultibyte) {
-            return $this->charCache[$index] ??= \mb_substr($this->line, $index, 1, 'UTF-8');
-        }
-
-        return $this->line[$index];
+        return $this->getCharacter($this->getNextNonSpacePosition());
     }
 
     /**
@@ -215,19 +196,13 @@ class Cursor
      */
     public function advanceBy(int $characters, bool $advanceByColumns = false): void
     {
-        $this->previousPosition  = $this->currentPosition;
+        $this->previousPosition = $this->currentPosition;
+
         $this->nextNonSpaceCache = null;
 
-        if ($this->currentPosition >= $this->length || $characters === 0) {
-            return;
-        }
-
         // Optimization to avoid tab handling logic if we have no tabs
-        if ($this->lastTabPosition === false || $this->currentPosition > $this->lastTabPosition) {
-            $length                     = \min($characters, $this->length - $this->currentPosition);
-            $this->partiallyConsumedTab = false;
-            $this->currentPosition     += $length;
-            $this->column              += $length;
+        if (! $this->lineContainsTabs) {
+            $this->advanceWithoutTabCharacters($characters);
 
             return;
         }
@@ -235,6 +210,17 @@ class Cursor
         $nextFewChars = $this->isMultibyte ?
             \mb_substr($this->line, $this->currentPosition, $characters, 'UTF-8') :
             \substr($this->line, $this->currentPosition, $characters);
+
+        if ($nextFewChars === '') {
+            return;
+        }
+
+        // Optimization to avoid tab handling logic if we have no tabs
+        if (\strpos($nextFewChars, "\t") === false) {
+            $this->advanceWithoutTabCharacters($characters);
+
+            return;
+        }
 
         if ($characters === 1) {
             $asArray = [$nextFewChars];
@@ -271,6 +257,14 @@ class Cursor
                 break;
             }
         }
+    }
+
+    private function advanceWithoutTabCharacters(int $characters): void
+    {
+        $length                     = \min($characters, $this->length - $this->currentPosition);
+        $this->partiallyConsumedTab = false;
+        $this->currentPosition     += $length;
+        $this->column              += $length;
     }
 
     /**
@@ -393,8 +387,6 @@ class Cursor
      * Try to match a regular expression
      *
      * Returns the matching text and advances to the end of that match
-     *
-     * @psalm-param non-empty-string $regex
      */
     public function match(string $regex): ?string
     {
@@ -466,11 +458,7 @@ class Cursor
 
     public function getPreviousText(): string
     {
-        if ($this->isMultibyte) {
-            return \mb_substr($this->line, $this->previousPosition, $this->currentPosition - $this->previousPosition, 'UTF-8');
-        }
-
-        return \substr($this->line, $this->previousPosition, $this->currentPosition - $this->previousPosition);
+        return \mb_substr($this->line, $this->previousPosition, $this->currentPosition - $this->previousPosition, 'UTF-8');
     }
 
     public function getSubstring(int $start, ?int $length = null): string

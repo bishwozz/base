@@ -11,7 +11,7 @@ namespace Doctrine\DBAL\Driver;
 interface ServerInfoAwareConnection extends Connection
 {
     /**
-     * Returns information about the version of the database server connected to.
+     * Returns the version number of the database server connected to.
      *
      * @return string
      *

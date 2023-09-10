@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * @covers Backpack\CRUD\app\Library\CrudPanel\Traits\Read
- * @covers Backpack\CRUD\app\Library\CrudPanel\CrudPanel
  */
 class CrudPanelReadTest extends BaseDBCrudPanelTest
 {
@@ -27,7 +26,7 @@ class CrudPanelReadTest extends BaseDBCrudPanelTest
         'type'      => 'select',
         'entity'    => 'roles',
         'attribute' => 'name',
-        'model'     => Role::class,
+        'model' => Role::class,
     ];
 
     private $nonRelationshipColumn = [
@@ -55,59 +54,51 @@ class CrudPanelReadTest extends BaseDBCrudPanelTest
 
     private $expectedCreateFormArticleFieldsArray = [
         'content' => [
-            'name'   => 'content',
-            'label'  => 'The Content',
-            'type'   => 'text',
-            'entity' => false,
+            'name'  => 'content',
+            'label' => 'The Content',
+            'type'  => 'text',
         ],
         'metas' => [
-            'name'   => 'metas',
-            'label'  => 'Metas',
-            'type'   => 'text',
-            'entity' => false,
+            'name'  => 'metas',
+            'label' => 'Metas',
+            'type'  => 'text',
         ],
         'tags' => [
-            'name'   => 'tags',
-            'label'  => 'Tags',
-            'type'   => 'text',
-            'entity' => false,
+            'name'  => 'tags',
+            'label' => 'Tags',
+            'type'  => 'text',
         ],
         'extras' => [
-            'name'   => 'extras',
-            'label'  => 'Extras',
-            'type'   => 'text',
-            'entity' => false,
+            'name'  => 'extras',
+            'label' => 'Extras',
+            'type'  => 'text',
         ],
     ];
 
     private $expectedUpdateFormArticleFieldsArray = [
         'content' => [
-            'name'   => 'content',
-            'label'  => 'The Content',
-            'type'   => 'text',
-            'value'  => 'Some Content',
-            'entity' => false,
+            'name'  => 'content',
+            'label' => 'The Content',
+            'type'  => 'text',
+            'value' => 'Some Content',
         ],
         'metas' => [
-            'name'   => 'metas',
-            'label'  => 'Metas',
-            'type'   => 'text',
-            'value'  => '{"meta_title":"Meta Title Value","meta_description":"Meta Description Value"}',
-            'entity' => false,
+            'name'  => 'metas',
+            'label' => 'Metas',
+            'type'  => 'text',
+            'value' => '{"meta_title":"Meta Title Value","meta_description":"Meta Description Value"}',
         ],
         'tags' => [
-            'name'   => 'tags',
-            'label'  => 'Tags',
-            'type'   => 'text',
-            'value'  => '{"tags":["tag1","tag2","tag3"]}',
-            'entity' => false,
+            'name'  => 'tags',
+            'label' => 'Tags',
+            'type'  => 'text',
+            'value' => '{"tags":["tag1","tag2","tag3"]}',
         ],
         'extras' => [
-            'name'   => 'extras',
-            'label'  => 'Extras',
-            'type'   => 'text',
-            'value'  => '{"extra_details":["detail1","detail2","detail3"]}',
-            'entity' => false,
+            'name'  => 'extras',
+            'label' => 'Extras',
+            'type'  => 'text',
+            'value' => '{"extra_details":["detail1","detail2","detail3"]}',
         ],
         'id' => [
             'name'  => 'id',
@@ -285,10 +276,6 @@ class CrudPanelReadTest extends BaseDBCrudPanelTest
 
     public function testEnableDetailsRow()
     {
-        if (! backpack_pro()) {
-            $this->expectException(\Backpack\CRUD\app\Exceptions\BackpackProRequiredException::class);
-        }
-
         $this->crudPanel->setOperation('create');
         $this->crudPanel->enableDetailsRow();
 
@@ -320,11 +307,8 @@ class CrudPanelReadTest extends BaseDBCrudPanelTest
 
     public function testEnableExportButtons()
     {
-        if (! backpack_pro()) {
-            $this->expectException(\Backpack\CRUD\app\Exceptions\BackpackProRequiredException::class);
-        }
-
         $this->crudPanel->enableExportButtons();
+
         $this->assertTrue($this->crudPanel->exportButtons());
     }
 

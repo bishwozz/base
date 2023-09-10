@@ -296,7 +296,7 @@ trait HasAttributes
                 $attributes[$key] = $this->serializeClassCastableAttribute($key, $attributes[$key]);
             }
 
-            if ($this->isEnumCastable($key) && (! ($attributes[$key] ?? null) instanceof Arrayable)) {
+            if ($this->isEnumCastable($key)) {
                 $attributes[$key] = isset($attributes[$key]) ? $attributes[$key]->value : null;
             }
 
@@ -499,10 +499,6 @@ trait HasAttributes
      */
     public function isRelation($key)
     {
-        if ($this->hasAttributeMutator($key)) {
-            return false;
-        }
-
         return method_exists($this, $key) ||
             (static::$relationResolvers[get_class($this)][$key] ?? null);
     }
@@ -517,10 +513,6 @@ trait HasAttributes
     {
         if (isset(static::$lazyLoadingViolationCallback)) {
             return call_user_func(static::$lazyLoadingViolationCallback, $this, $key);
-        }
-
-        if (! $this->exists || $this->wasRecentlyCreated) {
-            return;
         }
 
         throw new LazyLoadingViolationException($this, $key);
@@ -633,13 +625,11 @@ trait HasAttributes
             return $this->attributeCastCache[$key];
         }
 
-        $attribute = $this->{Str::camel($key)}();
-
-        $value = call_user_func($attribute->get ?: function ($value) {
+        $value = call_user_func($this->{Str::camel($key)}()->get ?: function ($value) {
             return $value;
         }, $value, $this->attributes);
 
-        if (! is_object($value) || ! $attribute->withObjectCaching) {
+        if (! is_object($value)) {
             unset($this->attributeCastCache[$key]);
         } else {
             $this->attributeCastCache[$key] = $value;
@@ -1009,9 +999,7 @@ trait HasAttributes
      */
     protected function setAttributeMarkedMutatedAttributeValue($key, $value)
     {
-        $attribute = $this->{Str::camel($key)}();
-
-        $callback = $attribute->set ?: function ($value) use ($key) {
+        $callback = $this->{Str::camel($key)}()->set ?: function ($value) use ($key) {
             $this->attributes[$key] = $value;
         };
 
@@ -1022,7 +1010,7 @@ trait HasAttributes
             )
         );
 
-        if (! is_object($value) || ! $attribute->withObjectCaching) {
+        if (! is_object($value)) {
             unset($this->attributeCastCache[$key]);
         } else {
             $this->attributeCastCache[$key] = $value;
@@ -1649,13 +1637,7 @@ trait HasAttributes
     protected function mergeAttributesFromAttributeCasts()
     {
         foreach ($this->attributeCastCache as $key => $value) {
-            $attribute = $this->{Str::camel($key)}();
-
-            if ($attribute->get && ! $attribute->set) {
-                continue;
-            }
-
-            $callback = $attribute->set ?: function ($value) use ($key) {
+            $callback = $this->{Str::camel($key)}()->set ?: function ($value) use ($key) {
                 $this->attributes[$key] = $value;
             };
 
@@ -1956,8 +1938,8 @@ trait HasAttributes
             return $this->fromDateTime($attribute) ===
                 $this->fromDateTime($original);
         } elseif ($this->hasCast($key, ['object', 'collection'])) {
-            return $this->fromJson($attribute) ===
-                $this->fromJson($original);
+            return $this->castAttribute($key, $attribute) ==
+                $this->castAttribute($key, $original);
         } elseif ($this->hasCast($key, ['real', 'float', 'double'])) {
             if (($attribute === null && $original !== null) || ($attribute !== null && $original === null)) {
                 return false;

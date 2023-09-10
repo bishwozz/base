@@ -3,7 +3,6 @@
 namespace App\Base\Operations;
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
 
 trait ListOperation
 {
@@ -44,12 +43,6 @@ trait ListOperation
 
         $this->crud->operation('list', function () {
             $this->crud->loadDefaultOperationSettingsFromConfig();
-            // dd($this->crud->model->getAttributes());
-            $schema =  Schema::getColumnListing($this->crud->model->getTable());
-            if(in_array('deleted_uq_code',$schema)){
-               $this->crud->query->where('deleted_uq_code',1);
-            }
-            $this->crud->orderBy('id');
         });
     }
 
@@ -80,6 +73,7 @@ trait ListOperation
 
         $this->crud->applyUnappliedFilters();
 
+        $totalRows = $this->crud->model->count();
         $filteredRows = $this->crud->query->toBase()->getCountForPagination();
         $startIndex = request()->input('start') ?: 0;
         // if a search term was present
@@ -135,7 +129,6 @@ trait ListOperation
         }
 
         $entries = $this->crud->getEntries();
-        $totalRows = $entries->count();
 
         return $this->crud->getEntriesAsJsonForDatatables($entries, $totalRows, $filteredRows, $startIndex);
     }

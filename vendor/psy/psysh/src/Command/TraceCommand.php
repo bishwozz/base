@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -68,8 +68,6 @@ HELP
 
     /**
      * {@inheritdoc}
-     *
-     * @return int 0 if everything went fine, or an exit code
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -81,18 +79,18 @@ HELP
     }
 
     /**
-     * Get a backtrace for an exception or error.
+     * Get a backtrace for an exception.
      *
      * Optionally limit the number of rows to include with $count, and exclude
      * Psy from the trace.
      *
-     * @param \Throwable $e          The exception or error with a backtrace
+     * @param \Exception $e          The exception with a backtrace
      * @param int        $count      (default: PHP_INT_MAX)
      * @param bool       $includePsy (default: true)
      *
      * @return array Formatted stacktrace lines
      */
-    protected function getBacktrace(\Throwable $e, int $count = null, bool $includePsy = true): array
+    protected function getBacktrace(\Exception $e, $count = null, $includePsy = true)
     {
         return TraceFormatter::formatTrace($e, $this->filter, $count, $includePsy);
     }

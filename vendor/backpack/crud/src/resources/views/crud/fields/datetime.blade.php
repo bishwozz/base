@@ -1,4 +1,4 @@
-{{-- html5 datetime input --}}
+<!-- html5 datetime input -->
 
 @php
 // if the column has been cast to Carbon or Date (using attribute casting)
@@ -7,26 +7,21 @@ if (isset($field['value']) && ($field['value'] instanceof \Carbon\CarbonInterfac
     $field['value'] = $field['value']->toDateTimeString();
 }
 
-$timestamp = strtotime(old_empty_or_null($field['name'], '') ??  $field['value'] ?? $field['default'] ?? '');
+$timestamp = strtotime(old(square_brackets_to_dots($field['name'])) ? old(square_brackets_to_dots($field['name'])) : (isset($field['value']) ? $field['value'] : (isset($field['default']) ? $field['default'] : '' )));
 
-$value = $timestamp ? date('Y-m-d\TH:i:s', $timestamp) : '';
+$value = $timestamp ? strftime('%Y-%m-%dT%H:%M:%S', $timestamp) : '';
 @endphp
 
 @include('crud::fields.inc.wrapper_start')
     <label>{!! $field['label'] !!}</label>
     @include('crud::fields.inc.translatable_icon')
-
-    @if(isset($field['prefix']) || isset($field['suffix'])) <div class="input-group"> @endif
-        @if(isset($field['prefix'])) <div class="input-group-prepend"><span class="input-group-text">{!! $field['prefix'] !!}</span></div> @endif
-        <input
-            type="datetime-local"
-            name="{{ $field['name'] }}"
-            value="{{ $value }}"
-            @include('crud::fields.inc.attributes')
+    <input
+        type="datetime-local"
+        name="{{ $field['name'] }}"
+        value="{{ $value }}"
+        @include('crud::fields.inc.attributes')
         >
-        @if(isset($field['suffix'])) <div class="input-group-append"><span class="input-group-text">{!! $field['suffix'] !!}</span></div> @endif
-    @if(isset($field['prefix']) || isset($field['suffix'])) </div> @endif
-    
+
     {{-- HINT --}}
     @if (isset($field['hint']))
         <p class="help-block">{!! $field['hint'] !!}</p>

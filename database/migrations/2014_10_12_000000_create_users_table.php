@@ -20,14 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            
             $table->timestamps();
-            $table->unsignedInteger('created_by')->nullable();
-            $table->unsignedInteger('updated_by')->nullable();
-            $table->softDeletes();
-            $table->unsignedSmallInteger('deleted_by')->nullable();
-            $table->boolean('is_deleted')->nullable();
-            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
         });
     }
 

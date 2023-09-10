@@ -1,27 +1,23 @@
 {{-- image column type --}}
 @php
-  $column['value'] = $column['value'] ?? data_get($entry, $column['name']);
-
-  if($column['value']) {
+  $value = data_get($entry, $column['name']);
+  
+  if($value) {
     $column['height'] = $column['height'] ?? "25px";
     $column['width'] = $column['width'] ?? "auto";
     $column['radius'] = $column['radius'] ?? "3px";
     $column['prefix'] = $column['prefix'] ?? '';
 
-    if($column['value'] instanceof \Closure) {
-      $column['value'] = $column['value']($entry);
+    if (is_array($value)) {
+      $value = json_encode($value);
     }
 
-    if (is_array($column['value'])) {
-      $column['value'] = json_encode($column['value']);
-    }
-
-    if (preg_match('/^data\:image\//', $column['value'])) { // base64_image
-      $href = $src = $column['value'];
+    if (preg_match('/^data\:image\//', $value)) { // base64_image
+      $href = $src = $value;
     } elseif (isset($column['disk'])) { // image from a different disk (like s3 bucket)
-      $href = $src = Storage::disk($column['disk'])->url($column['prefix'].$column['value']);
+      $href = $src = Storage::disk($column['disk'])->url($column['prefix'].$value);
     } else { // plain-old image, from a local disk
-      $href = $src = asset($column['prefix'] . $column['value']);
+      $href = $src = asset( $column['prefix'] . $value);
     }
 
     $column['wrapper']['element'] = $column['wrapper']['element'] ?? 'a';
@@ -31,8 +27,8 @@
 @endphp
 
 <span>
-  @if(empty($column['value']))
-    {{ $column['default'] ?? '-' }}
+  @if( empty($value) )
+    -
   @else
     @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_start')
         <img src="{{ $src }}" style="

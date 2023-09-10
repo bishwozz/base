@@ -90,7 +90,10 @@ class TestCommand extends Command
             ),
             null,
             // Envs ...
-            $parallel ? $this->paratestEnvironmentVariables() : $this->phpunitEnvironmentVariables(),
+            $parallel ? [
+                'LARAVEL_PARALLEL_TESTING'                    => 1,
+                'LARAVEL_PARALLEL_TESTING_RECREATE_DATABASES' => $this->option('recreate-databases'),
+            ] : [],
         ))->setTimeout(null);
 
         try {
@@ -176,29 +179,6 @@ class TestCommand extends Command
             "--configuration=$file",
             "--runner=\Illuminate\Testing\ParallelRunner",
         ], $options);
-    }
-
-    /**
-     * Get the array of environment variables for running PHPUnit.
-     *
-     * @return array
-     */
-    protected function phpunitEnvironmentVariables()
-    {
-        return [];
-    }
-
-    /**
-     * Get the array of environment variables for running Paratest.
-     *
-     * @return array
-     */
-    protected function paratestEnvironmentVariables()
-    {
-        return [
-            'LARAVEL_PARALLEL_TESTING'                    => 1,
-            'LARAVEL_PARALLEL_TESTING_RECREATE_DATABASES' => $this->option('recreate-databases'),
-        ];
     }
 
     /**

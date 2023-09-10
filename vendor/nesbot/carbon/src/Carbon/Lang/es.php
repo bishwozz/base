@@ -26,7 +26,6 @@
  * - quinterocesar
  * - Daniel Commesse Liévanos (danielcommesse)
  * - Pete Scopes (pdscopes)
- * - gam04
  */
 
 use Carbon\CarbonInterface;
@@ -109,13 +108,4 @@ return [
     'day_of_first_week_of_year' => 4,
     'list' => [', ', ' y '],
     'meridiem' => ['a. m.', 'p. m.'],
-    'ordinal_words' => [
-        'of' => 'de',
-        'first' => 'primer',
-        'second' => 'segundo',
-        'third' => 'tercer',
-        'fourth' => 'cuarto',
-        'fifth' => 'quinto',
-        'last' => 'último',
-    ],
 ];

@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,7 +18,7 @@ abstract class AbstractDefaultParametersMatcher extends AbstractContextAwareMatc
      *
      * @return array
      */
-    public function getDefaultParameterCompletion(array $reflectionParameters): array
+    public function getDefaultParameterCompletion(array $reflectionParameters)
     {
         $parametersProcessed = [];
 
@@ -29,7 +29,7 @@ abstract class AbstractDefaultParametersMatcher extends AbstractContextAwareMatc
 
             $defaultValue = $this->valueToShortString($parameter->getDefaultValue());
 
-            $parametersProcessed[] = \sprintf('$%s = %s', $parameter->getName(), $defaultValue);
+            $parametersProcessed[] = "\${$parameter->getName()} = $defaultValue";
         }
 
         if (empty($parametersProcessed)) {
@@ -45,8 +45,10 @@ abstract class AbstractDefaultParametersMatcher extends AbstractContextAwareMatc
      * This is not 100% true to the original (newlines are inlined, for example).
      *
      * @param mixed $value
+     *
+     * @return string
      */
-    private function valueToShortString($value): string
+    private function valueToShortString($value)
     {
         if (!\is_array($value)) {
             return \json_encode($value);

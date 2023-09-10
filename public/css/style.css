@@ -1,0 +1,23 @@
+.delete-btn {
+    margin-left: 2px;
+    padding: 0px 2px 0px 2px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.edit-btn {
+    margin-left: 2px;
+    padding: 0px 2px 0px 3px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.show-btn {
+    margin-left: 2px;
+    padding: 0px 2px 0px 3px;
+    border-radius: 4px;
+    font-size: 16px;
+    border: 1px solid #055d78;
+    background-color: #055d78;
+}

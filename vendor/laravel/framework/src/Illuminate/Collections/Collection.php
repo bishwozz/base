@@ -397,7 +397,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Remove an item from the collection by key.
      *
-     * @param  string|int|array  $keys
+     * @param  string|array  $keys
      * @return $this
      */
     public function forget($keys)
@@ -423,24 +423,6 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
         }
 
         return value($default);
-    }
-
-    /**
-     * Get an item from the collection by key or add it to collection if it does not exist.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $value
-     * @return mixed
-     */
-    public function getOrPut($key, $value)
-    {
-        if (array_key_exists($key, $this->items)) {
-            return $this->items[$key];
-        }
-
-        $this->offsetSet($key, $value = value($value));
-
-        return $value;
     }
 
     /**
@@ -806,8 +788,8 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
 
         $position = 0;
 
-        foreach ($this->slice($offset)->items as $item) {
-            if ($position % $step === 0) {
+        foreach ($this->items as $item) {
+            if ($position % $step === $offset) {
                 $new[] = $item;
             }
 
@@ -1298,7 +1280,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
 
         // First we will loop through the items and get the comparator from a callback
         // function which we were given. Then, we will sort the returned values and
-        // grab all the corresponding values for the sorted keys from this array.
+        // and grab the corresponding values for the sorted keys from this array.
         foreach ($this->items as $key => $value) {
             $results[$key] = $callback($value, $key);
         }
@@ -1397,21 +1379,6 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     public function sortKeysDesc($options = SORT_REGULAR)
     {
         return $this->sortKeys($options, true);
-    }
-
-    /**
-     * Sort the collection keys using a callback.
-     *
-     * @param  callable  $callback
-     * @return static
-     */
-    public function sortKeysUsing(callable $callback)
-    {
-        $items = $this->items;
-
-        uksort($items, $callback);
-
-        return new static($items);
     }
 
     /**
@@ -1661,7 +1628,7 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     /**
      * Unset the item at a given offset.
      *
-     * @param  mixed  $key
+     * @param  string  $key
      * @return void
      */
     #[\ReturnTypeWillChange]

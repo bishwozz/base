@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2023 Justin Hileman
+ * (c) 2012-2020 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,7 +21,7 @@ class PropertyEnumerator extends Enumerator
     /**
      * {@inheritdoc}
      */
-    protected function listItems(InputInterface $input, \Reflector $reflector = null, $target = null): array
+    protected function listItems(InputInterface $input, \Reflector $reflector = null, $target = null)
     {
         // only list properties when a Reflector is present.
 
@@ -56,13 +56,13 @@ class PropertyEnumerator extends Enumerator
     /**
      * Get defined properties for the given class or object Reflector.
      *
-     * @param bool             $showAll   Include private and protected properties
-     * @param \ReflectionClass $reflector
-     * @param bool             $noInherit Exclude inherited properties
+     * @param bool       $showAll   Include private and protected properties
+     * @param \Reflector $reflector
+     * @param bool       $noInherit Exclude inherited properties
      *
      * @return array
      */
-    protected function getProperties(bool $showAll, \ReflectionClass $reflector, bool $noInherit = false): array
+    protected function getProperties($showAll, \Reflector $reflector, $noInherit = false)
     {
         $className = $reflector->getName();
 
@@ -89,7 +89,7 @@ class PropertyEnumerator extends Enumerator
      *
      * @return array
      */
-    protected function prepareProperties(array $properties, $target = null): array
+    protected function prepareProperties(array $properties, $target = null)
     {
         // My kingdom for a generator.
         $ret = [];
@@ -112,8 +112,10 @@ class PropertyEnumerator extends Enumerator
      * Get a label for the particular kind of "class" represented.
      *
      * @param \ReflectionClass $reflector
+     *
+     * @return string
      */
-    protected function getKindLabel(\ReflectionClass $reflector): string
+    protected function getKindLabel(\ReflectionClass $reflector)
     {
         if (\method_exists($reflector, 'isTrait') && $reflector->isTrait()) {
             return 'Trait Properties';
@@ -126,8 +128,10 @@ class PropertyEnumerator extends Enumerator
      * Get output style for the given property's visibility.
      *
      * @param \ReflectionProperty $property
+     *
+     * @return string
      */
-    private function getVisibilityStyle(\ReflectionProperty $property): string
+    private function getVisibilityStyle(\ReflectionProperty $property)
     {
         if ($property->isPublic()) {
             return self::IS_PUBLIC;
@@ -143,13 +147,11 @@ class PropertyEnumerator extends Enumerator
      *
      * @param \ReflectionProperty $property
      * @param mixed               $target
+     *
+     * @return string
      */
-    protected function presentValue(\ReflectionProperty $property, $target): string
+    protected function presentValue(\ReflectionProperty $property, $target)
     {
-        if (!$target) {
-            return '';
-        }
-
         // If $target is a class or trait (try to) get the default
         // value for the property.
         if (!\is_object($target)) {
@@ -161,7 +163,7 @@ class PropertyEnumerator extends Enumerator
 
                     return $this->presentRef($props[$property->name]).$suffix;
                 }
-            } catch (\Throwable $e) {
+            } catch (\Exception $e) {
                 // Well, we gave it a shot.
             }
 

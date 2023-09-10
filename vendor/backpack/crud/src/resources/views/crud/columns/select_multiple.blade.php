@@ -1,32 +1,29 @@
 {{-- relationships with pivot table (n-n) --}}
 @php
-    $column['value'] = $column['value'] ?? data_get($entry, $column['name'], []);
     $column['escaped'] = $column['escaped'] ?? true;
     $column['prefix'] = $column['prefix'] ?? '';
     $column['suffix'] = $column['suffix'] ?? '';
-    $column['limit'] = $column['limit'] ?? 32;
+    $column['limit'] = $column['limit'] ?? 40;
     $column['attribute'] = $column['attribute'] ?? (new $column['model'])->identifiableAttribute();
 
-    if($column['value'] instanceof \Closure) {
-        $column['value'] = $column['value']($entry);
+
+    $results = data_get($entry, $column['name']);
+    $results_array = [];
+
+    if($results !== null && !$results->isEmpty()) {
+        $related_key = $results->first()->getKeyName();
+        $results_array = $results->pluck($column['attribute'], $related_key)->toArray();
     }
 
-    if($column['value'] !== null && !$column['value']->isEmpty()) {
-        $related_key = $column['value']->first()->getKeyName();
-        $column['value'] = $column['value']->pluck($column['attribute'], $related_key);
+    foreach ($results_array as $key => $text) {
+        $results_array[$key] = Str::limit($text, $column['limit'], '[...]');
     }
-
-    $column['value'] = $column['value']
-        ->map(function($value) use ($column) {
-            return Str::limit($value, $column['limit'], '…');
-        })
-        ->toArray();
 @endphp
 
 <span>
-    @if(!empty($column['value']))
+    @if(!empty($results_array))
         {{ $column['prefix'] }}
-        @foreach($column['value'] as $key => $text)
+        @foreach($results_array as $key => $text)
             @php
                 $related_key = $key;
             @endphp
@@ -45,6 +42,6 @@
         @endforeach
         {{ $column['suffix'] }}
     @else
-        {{ $column['default'] ?? '-' }}
+        -
     @endif
 </span>

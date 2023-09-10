@@ -67,29 +67,16 @@ class Company extends \Faker\Provider\Company
     }
 
     /**
-     * Italian VAT number (partita IVA)
+     * Italian VAT number (Partita iva)
      *
      * @see https://it.wikipedia.org/wiki/Partita_IVA
      *
      * @return string
      */
-    public static function vat()
+    public static function vatId()
     {
         $code = sprintf('%s%03d', static::numerify('#######'), self::numberBetween(1, 121));
 
         return sprintf('IT%s%d', $code, Luhn::computeCheckDigit($code));
-    }
-
-    /**
-     * Italian VAT number (partita IVA)
-     *
-     * @return string
-     *
-     * @deprecated use {@link \Faker\Provider\it_IT\Company::vat()} instead
-     * @see \Faker\Provider\it_IT\Company::vat()
-     */
-    public static function vatId()
-    {
-        return self::vat();
     }
 }

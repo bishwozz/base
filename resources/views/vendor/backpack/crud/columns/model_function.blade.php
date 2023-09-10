@@ -3,7 +3,7 @@
     $value = $entry->{$column['function_name']}(...($column['function_parameters'] ?? []));
     
     $column['escaped'] = $column['escaped'] ?? false;
-    $column['limit']   = $column['limit'] ?? 1000;
+    $column['limit']   = $column['limit'] ?? 40;
     $column['prefix']  = $column['prefix'] ?? '';
     $column['suffix']  = $column['suffix'] ?? '';
     $column['text']    = $column['prefix'].
@@ -14,9 +14,9 @@
 <span>
 	@includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_start')
         @if($column['escaped'])
-    {{ $column['text'] }}
+            {{ $column['text'] }}
         @else
-            {!! nl2br($column['text']) !!}
+            {!! $column['text'] !!}
         @endif
     @includeWhen(!empty($column['wrapper']), 'crud::columns.inc.wrapper_end')
 </span>
