@@ -12,6 +12,7 @@ use App\Models\Header;
 use App\Models\Saying;
 use App\Models\Slider;
 use App\Models\AboutUs;
+use App\Models\Payment;
 use App\Models\Services;
 use App\Models\NewsNotice;
 use Illuminate\Http\Request;
@@ -31,11 +32,13 @@ class HomeController extends Controller
         $sliders = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $games = Games::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $services = Services::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
+        $payments = Payment::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
 
         $this->data = [
             'sliders' => $sliders,
             'games' => $games,
             'services' => $services,
+            'payments' => $payments,
         ];
         return view('frontend.index', $this->data);
     }

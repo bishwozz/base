@@ -29,11 +29,12 @@ Grid {
  * Component: Card
  */
 .Card-image {
-  display: inline-block !important;
-  position: relative !important;
+  text-align: center;;
+  /* display: inline-block !important;
+  position: relative !important; */
 }
 
-.Card-image:after {
+/* .Card-image:after {
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2) !important;
   content: "" !important;
   position: absolute !important;
@@ -41,81 +42,18 @@ Grid {
   right: 0 !important;
   bottom: 0 !important;
   left: 0 !important;
-}
+} */
 
 .Card-image img {
-  display: block !important;
-  height: 3.125em !important;
-  width: 5em !important;
+  /* display: block !important;
+  height: 5em !important; */
+  width: 40% !important;
 }
 
 .Card-expiry {
+  text-align: center;
   color: #aaa !important;
-  font-size: 0.6666666667em !important;
-}
-
-/**
- * Component: Input
- */
-.Input {
-  background: #fff !important;
-  border: 3px solid #e1e1e1 !important;
-  border-radius: 0.375rem !important;
-  color: #444 !important;
-  display: block !important;
-  font: inherit !important;
-  padding: 0.5rem 1rem !important;
-  width: 100% !important;
-  -webkit-appearance: none !important;
-}
-.Input:hover {
-  border-color: #aaa !important;
-}
-.Input:focus {
-  border-color: #08c !important;
-  outline: 0 !important;
-}
-.Input.is-visa, .Input.is-mastercard, .Input.is-amex {
-  background-position: 0.75rem center;
-  background-repeat: no-repeat;
-  padding-left: 3.375rem;
-}
-.Input.is-visa {
-  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/creditcard-visa.svg");
-}
-.Input.is-mastercard {
-  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/creditcard-mastercard.svg");
-}
-.Input.is-amex {
-  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/creditcard-amex.svg");
-}
-
-/**
- * Component: Button
- */
-.Button {
-  background: #fff;
-  border: 3px solid transparent;
-  border-radius: 0.375rem;
-  color: #08c;
-  cursor: pointer;
-  display: inline-block;
-  font: inherit;
-  font-weight: 600;
-  line-height: normal;
-  margin: 0;
-  padding: 0.5rem 1rem;
-}
-.Button:focus, .Button:hover {
-  color: #00aaff;
-}
-
-.Button--primary {
-  background: #08c;
-  color: #fff !important;
-}
-.Button--primary:focus, .Button--primary:hover {
-  background: #00aaff;
+  font-size: 1em !important;
 }
 
 /**
