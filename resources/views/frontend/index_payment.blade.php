@@ -1,9 +1,10 @@
 <div class="card card-style" style="background: antiquewhite !important;">
     <div class="content mb-0">
-      <h1 class="text-center mb-0"> Our Payment </h1>
+      <h1 class="text-center mb-0"> Pay Us Via </h1>
       <p class="text-center color-highlight font-11 mt-n1 pb-0">Tons of Awesome Features just for You.</p>
       <div class="row">
         <div class="Tiles">
+
           <div class="Tile js-tile">
             <div class="Tile-content Tile-content--toggle js-toggle-tile"
               role="button"
@@ -14,7 +15,7 @@
                 <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/creditcard-visa.svg" alt="Visa">
               </div>
               <pre class="Card-code"><code>&#9679;&#9679;&#9679;&#9679; &#9679;&#9679;&#9679;&#9679; &#9679;&#9679;&#9679;&#9679; 1234</code></pre>
-              <p class="Card-expiry">Expires May 2017</p>
+              {{-- <p class="Card-expiry">Expires May 2017</p> --}}
             </div>
             <form class="Tile-flyout js-tile-flyout"
               id="edit-flyout-0" 
@@ -22,52 +23,29 @@
               <div class="Tile-content">
                 <div class="Grid Grid--withGutter">
                   <div class="Grid-cell u-md-size1of2">
-                    <label>
-                      Card Number
-                      <input class="Input is-visa" type="text" value="XXXX XXXX XXXX 1234">
-                    </label>
-                    <label>
-                      Full Name on Card
-                      <input class="Input" type="text" value="John Smith">
-                    </label>
+                    <div class="u-textRight">
+                      <span style="margin:0; padding-right: 5em;">Scan and Pay</span>
+                      <button class="Button js-toggle-tile" type="button"><i class="fa fa-times"></i></button>
+                    </div>
+
                     <div class="Grid Grid--withGutter u-marginTop">
                       <div class="Grid-cell u-size1of2">
-                        <label>
-                          Expiration Date
-                          <input class="Input" type="text" value="05 / 17" placeholder="MM / YY">
-                        </label>
+                        <img src="{{ asset('frontend/images/payment/btc.png') }}" alt="" width="100%;">
+                        <h5 class="text-center">
+                          bc1qqj3w4fum8uhcsudjkl64vw9nlzegkzxcce27cq
+                        </h5>
                       </div>
-                      <div class="Grid-cell u-size1of2">
-                        <label>
-                          Security Code
-                          <input class="Input" type="text" value="XXX">
-                        </label>
-                      </div>
+                    
                     </div>
                   </div>
-                  <div class="Grid-cell u-md-size1of2 u-marginTop u-md-no-marginTop">
-                    <label>
-                      Address Line 1
-                      <input class="Input" type="text" value="208 SW 1st Ave">
-                    </label>
-                    <label>
-                      Address Line 2
-                      <input class="Input" type="text" value="Ste. 240">
-                    </label>
-                    <label>
-                      Zip/Postal Code
-                      <input class="Input" type="text" value="97204">
-                    </label>
-                  </div>
+           
                 </div>
-                <div class="u-textRight">
-                  <button class="Button js-toggle-tile" type="button">Never Mind</button>
-                  <button class="Button Button--primary js-toggle-tile" type="submit">Save</button>
-                </div>
+
               </div>
             </form>
           </div>
-          <div class="Tile js-tile">
+
+          {{-- <div class="Tile js-tile">
             <div class="Tile-content Tile-content--toggle js-toggle-tile"
               role="button"
               tabindex="0"
@@ -381,7 +359,8 @@
                 </div>
               </div>
             </form>
-          </div>
+          </div> --}}
+
         </div>
       </div>
     </div>

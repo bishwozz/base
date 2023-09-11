@@ -48,6 +48,55 @@ class CreateMainTables extends Migration
                     
         });
 
+        Schema::create('services', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('title',200);
+            $table->string('service_img',500)->nullable();
+            $table->unsignedInteger('display_order')->nullable();
+            $table->boolean('is_active')->nullable()->default(true);
+            $table->timestamps();
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
+            $table->softDeletes();
+            $table->unsignedSmallInteger('deleted_by')->nullable();
+            $table->boolean('is_deleted')->nullable();
+            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
+                    
+        });
+        Schema::create('slide_shows', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('title',200);
+            $table->string('img_path',500)->nullable();
+            $table->unsignedInteger('display_order')->nullable();
+            $table->boolean('is_active')->nullable()->default(true);
+            $table->timestamps();
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
+            $table->softDeletes();
+            $table->unsignedSmallInteger('deleted_by')->nullable();
+            $table->boolean('is_deleted')->nullable();
+            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
+                    
+        });
+
+        Schema::create('payments', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->string('title',200);
+            $table->string('icon',500)->nullable();
+            $table->string('qr_img',500)->nullable();
+            $table->string('qr_address',500)->nullable();
+            $table->unsignedInteger('display_order')->nullable();
+            $table->boolean('is_active')->nullable()->default(true);
+            $table->timestamps();
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
+            $table->softDeletes();
+            $table->unsignedSmallInteger('deleted_by')->nullable();
+            $table->boolean('is_deleted')->nullable();
+            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
+                    
+        });
+
         Schema::create('app_settings', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('title')->nullable();

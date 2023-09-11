@@ -3,11 +3,9 @@
     <br>
     <div class="divider"></div>
     <div class="text-center mb-3">
-      <a href="#" class="icon icon-xs rounded-sm shadow-l me-1 bg-facebook"><i class="fab fa-facebook-f"></i></a>
-      <a href="#" class="icon icon-xs rounded-sm shadow-l me-1 bg-twitter"><i class="fab fa-twitter"></i></a>
-      <a href="#" class="icon icon-xs rounded-sm shadow-l me-1 bg-phone"><i class="fa fa-phone"></i></a>
-      <a href="#" data-menu="menu-share" class="icon icon-xs rounded-sm me-1 shadow-l bg-red-dark"><i
-          class="fa fa-share-alt"></i></a>
+      <a href="https://www.facebook.com/bonanzagamin" class="icon icon-xs rounded-sm shadow-l me-1 bg-facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://discord.gg/9y8DZky4" class="icon icon-xs rounded-sm shadow-l me-1 bg-twitter"><i class="fab fa-discord"></i></a>
+
       <a href="#" class="back-to-top icon icon-xs rounded-sm shadow-l bg-dark-light"><i
           class="fa fa-angle-up"></i></a>
     </div>
