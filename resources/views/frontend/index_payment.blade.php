@@ -66,6 +66,18 @@
           </div>
         @endforeach
 
+        <div class="Tile js-tile">
+          <div class="Tile-content Tile-content--toggle js-toggle-tile">
+            <a href="/payment">
+              <div class="Card-image">
+                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/62127/creditcard-mastercard.svg" alt="Mastercard">
+              </div>
+              <p class="Card-expiry">OTHERS</p>
+            </a>
+          </div>
+    
+        </div>
+
       </div>
     </div>
   </div>
