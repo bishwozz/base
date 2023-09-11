@@ -4,6 +4,7 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('games') }}'><i class='nav-icon la la-sliders'></i> games</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('services') }}'><i class='nav-icon la la-sliders'></i> Services</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('payments') }}'><i class='nav-icon la la-sliders'></i> payments</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('slideshow') }}'><i class='nav-icon la la-sliders'></i> Slide Show </a></li>
 
 <li class="nav-item nav-dropdown">
 	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-database"></i>Master</a>
