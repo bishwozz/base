@@ -129,13 +129,13 @@
   </div>
     @else
     @endauth
-    <div class="card card-style">
+    <div class="card card-style" style="margin-top: 2em;">
       <div class="content mb-0">
           <h1 class="text-center mb-0"> Other Payments </h1>
           <div class="divider"></div>
       </div>
-      <div>
-        <a href="/login" ><span> login to pay...</span></a>
+      <div style="min-height:100px;">
+        <h1 style="text-align: center;"><a href="/login" ><span> login to pay...</span></a></h1>
       </div>
     </div>
  
