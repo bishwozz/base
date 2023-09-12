@@ -17,7 +17,7 @@ class SlideShowCrudController extends BaseCrudController
     public function setup()
     {
         CRUD::setModel(\App\Models\SlideShow::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/payments');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/slideshow');
         CRUD::setEntityNameStrings('Slideshow', 'Slideshows');
     }
 

@@ -374,3 +374,83 @@ Grid {
       opacity: 1;
   }
 }
+
+
+
+
+
+
+
+
+
+.winning.wrapper{
+  padding: 70px 0;
+  overflow-x: hidden;
+}
+
+
+.winning .my-slider{
+  padding: 0 70px;
+}
+.winning .slick-initialized .slick-slide{
+  background-color: rgb(255 252 252 / 50%);
+  color: #FFF;
+  height: 600px;
+  margin: 0 15px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px); 
+  border-radius:2%;
+
+}
+
+
+
+.winning .slick-initialized .slick-slide img{
+  width: 90%;
+  height: 90%;
+  border-radius:2%;
+
+}
+
+
+
+.winning .slick-next, .slick-prev{
+  z-index: 5;
+}
+
+.winning .slick-next{
+  right: 15px;
+}
+
+.winning .slick-prev{
+  left: 15px;
+}
+
+.winning .slick-next:before, .slick-prev:before{
+  color: #000;
+  font-size: 26px;
+}
+
+.slick-dots{
+  position: absolute;
+  bottom: -38px;
+  display: block;
+  width: 86%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+

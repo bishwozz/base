@@ -12,10 +12,8 @@
     <meta name="description" content="Technology IT Solutions HTML Template">
     <!-- Favicon -->
     <link rel="icon" href="frontend/images/favicon.webp">
-
-    <!-- CSS -->
-
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('frontend/css/img/icons/icon-192x192.html') }}">
+
 
     <!-- Font Family CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/fontawesome-all.min.css') }}">
@@ -25,10 +23,16 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
         rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Vendor & Plugins CSS (Please remove the comment from below vendor.min.css & plugins.min.css for better website load performance and remove css files from avobe) -->
-    <link rel="stylesheet" href="{{ asset('frontend/css/vendor/vendor.min.css') }}">
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="{{ asset('frontend/css/bootstrap.css') }}">
+    
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" integrity="sha512-wR4oNhLBHf7smjy0K4oqzdWumd+r5/+6QO/vDda76MW5iug4PT7v86FoEkySIJft3XA0Ae6axhIvHrqwm793Nw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="{{ asset('frontend/css/vendor/vendor.min.css') }}">
+
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
 
     <!-- Custom Style CSS -->
@@ -50,7 +54,10 @@
 
     <!-- Main JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{ asset('frontend/js/bootstrap.min.js') }}"></script>
+
+
     <script src="{{ asset('frontend/js/main.js') }}"></script>
 
     <!-- Custom JS -->
