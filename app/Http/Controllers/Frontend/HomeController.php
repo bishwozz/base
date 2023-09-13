@@ -30,6 +30,7 @@ class HomeController extends Controller
 {
     public function index()
     {
+        // dd('as');
         $sliders = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $games = Games::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $services = Services::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
@@ -44,6 +45,18 @@ class HomeController extends Controller
             'slideshows' => $slideshows,
         ];
         return view('frontend.index', $this->data);
+    }
+    public function review()
+    {
+        dd('asd');
+        $review = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
+
+
+        $this->data = [
+            'review' => $review,
+          
+        ];
+        return view('frontend.index_review', $this->data);
     }
 
     public function getData($slug)

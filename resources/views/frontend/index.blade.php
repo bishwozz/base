@@ -7,6 +7,7 @@
     @include('frontend.index_dark_mode')
     @include('frontend.index_services')
     @include('frontend.index_payment')
+    {{-- @include('frontend.index_review') --}}
     @include('frontend.index_footer')
 </div>
     @include('frontend.index_extra')

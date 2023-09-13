@@ -38,4 +38,5 @@ Route::group([
     Route::post('/logout', 'HomeController@logout')->name('logout');
     
     Route::get('/payment', 'HomeController@payment')->name('payment');
+    Route::get('/review', 'HomeController@review')->name('review');
 });

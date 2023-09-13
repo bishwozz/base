@@ -254,9 +254,9 @@ Grid {
 
 
 .icon-xs i{
-  width: 3em !important;
-  line-height: 90px !important;
-  font-size: 50px !important;
+  width: 5em !important;
+  line-height: 36px !important;
+  font-size: 16px !important;
 }
 
 
@@ -448,7 +448,75 @@ Grid {
 
 
 
+.payment .modal_wrap input{
+	display: none;
+}
 
+.payment .modal_overlay{
+	display: flex;
+	justify-content: center;
+	overflow: auto;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9999;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.8);
+	opacity: 0;
+	transition: opacity 0.2s, transform 0s 0.2s;
+	transform: scale(0);
+}
+
+.payment .modal_trigger{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+.payment .modal_content{
+	align-self: center;
+	width: 25%;
+	max-width: 800px;
+	padding: 30px 30px 15px;
+	box-sizing: border-box;
+	background: #fff;
+	line-height: 1.4em;
+	transform: scale(0.3);
+	transition: 0.2s;
+}
+
+.payment .close_button{
+	position: absolute;
+	top: 14px;
+	right: 16px;
+	font-size: 24px;
+	cursor: pointer;
+}
+
+.payment .modal_wrap input:checked ~ .modal_overlay{
+	opacity: 1;
+	transform: scale(1);
+	transition: opacity 0.5s;
+}
+
+.payment .modal_wrap input:checked ~ .modal_overlay .modal_content{
+	transform: scale(1);
+}
+
+.payment .card{
+	/* display: flex;
+	justify-content: center; */
+	align-items: center;
+	/* width: 100%; */
+	/* margin: auto; */
+	padding: 10px 16px;
+	color: #444;
+	font-weight: bold;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+	border-radius: 2px;
+	cursor: pointer;
+}
 
 
 
