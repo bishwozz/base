@@ -64,7 +64,7 @@ class SliderCrudController extends BaseCrudController
      */
     protected function setupCreateOperation()
     {
-        $this->crud->setValidation(SliderRequest::class);
+        // $this->crud->setValidation(SliderRequest::class);
         $arr = [
             [
                 'label' => trans('common.title'),

@@ -56,7 +56,7 @@ class HeaderCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(HeaderRequest::class);
+        // CRUD::setValidation(HeaderRequest::class);
         $arr = [
             [
                 'label' => trans('Title'),
