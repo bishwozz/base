@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\Games;
 use App\Models\Course;
 use App\Models\Header;
+use App\Models\Review;
 use App\Models\Saying;
 use App\Models\Slider;
 use App\Models\AboutUs;
@@ -36,6 +37,7 @@ class HomeController extends Controller
         $services = Services::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $payments = Payment::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $slideshows = SlideShow::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
+        $reviews = Review::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
 
         $this->data = [
             'sliders' => $sliders,
@@ -43,6 +45,7 @@ class HomeController extends Controller
             'services' => $services,
             'payments' => $payments,
             'slideshows' => $slideshows,
+            'reviews' => $reviews,
         ];
         return view('frontend.index', $this->data);
     }
@@ -56,7 +59,7 @@ class HomeController extends Controller
             'review' => $review,
           
         ];
-        return view('frontend.index_review', $this->data);
+        return view('frontend.review', $this->data);
     }
 
     public function getData($slug)

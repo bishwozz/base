@@ -97,21 +97,26 @@ class CreateMainTables extends Migration
                     
         });
 
+        Schema::create('reviews', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->unsignedInteger('rating')->nullable();
+            $table->text('comment')->nullable();
+            $table->unsignedInteger('display_order')->nullable();
+            $table->boolean('is_active')->nullable()->default(true);
+            $table->timestamps();
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
+            $table->softDeletes();
+            $table->unsignedSmallInteger('deleted_by')->nullable();
+            $table->boolean('is_deleted')->nullable();
+            $table->unsignedInteger('deleted_uq_code')->nullable()->default(1);
+                    
+        });
+
         Schema::create('app_settings', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('title')->nullable();
-            $table->string('full_address',100)->nullable();
-            $table->string('opening_time')->nullable();
-            $table->string('closing_time')->nullable();
-            $table->string('from_day')->nullable();
-            $table->string('to_day')->nullable();
-            $table->string('phone',10)->nullable();
-            $table->string('contact_phone',10)->nullable();
-            $table->string('discription',500)->nullable();
-            $table->string('fax',50)->nullable();
-            $table->string('gps',1000)->nullable();
-            $table->string('email',50)->nullable();
-            $table->string('logo',500)->nullable();
+            $table->string('background_color')->nullable();
             $table->timestamps();
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
