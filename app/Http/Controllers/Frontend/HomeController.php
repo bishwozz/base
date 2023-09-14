@@ -51,9 +51,13 @@ class HomeController extends Controller
     }
     public function review()
     {
-        dd('asd');
-        $review = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
-
+        if(Auth::user()){
+            dd(Auth::user());
+            $review = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->where('created_by',Auth::user()->id)->get();
+        }else{
+            $review = null;
+        }
+        // dd($review);
 
         $this->data = [
             'review' => $review,

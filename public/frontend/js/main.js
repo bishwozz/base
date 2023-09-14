@@ -111,13 +111,15 @@ $(document).ready(function() {
         $(".qr_filter").append(`
         <option value="${i}">$${i}</option>
     `);
+     const currentUrl = window.location.host;
+
         $(".qr_container").append(`
             <div class="col-lg-3 col-md-4 col-sm-4 my-4 px-3 qrs" id="qr_${i}">
                 <a target="_blank" href="${eval(link_var)}">
                     <div class=text-center>
-                    $${i}
+                    ${i}
                     </div>
-                    <img src="images/qrs/${i}.jpg" class='qr_img' alt="" width="70">
+                    <img src= "${currentUrl}/frontend/images/payment/qrs/${i}.jpg" class='qr_img' alt="" width="70">
                     <div class='text-center'>
                         Click here for payment link
                     </div>
