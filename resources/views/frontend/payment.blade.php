@@ -63,7 +63,7 @@
                 <p class="color-white mt-n1 mb-0">Ready built to create Pages</p>
             </div>
             <div class="card-center me-3">
-                <a href="#"
+                <a href="/home"
                     class="back-button btn btn-m float-end rounded-xl shadow-xl text-uppercase font-800 bg-highlight">Back
                     Home</a>
             </div>
