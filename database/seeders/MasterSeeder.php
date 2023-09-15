@@ -79,23 +79,23 @@ class MasterSeeder extends Seeder
     public function sliders(){
         DB::table('sliders')->insert([
             // mainmenus
-            ['id' => 1,'display_order'=>2,'title' => 'START YOUR COREER WITH US','file_upload'=>'Sliders/slider1.jpg','description'=>'CAMPUS IN SYDNEY','created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 2,'display_order'=>1,'title' => 'START YOUR COREER WITH US','file_upload'=>'Sliders/slider2.jpg','description'=>'CAMPUS IN SYDNEY','created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 1,'display_order'=>2,'title' => 'START YOUR COREER WITH US','file_upload'=>'','description'=>'CAMPUS IN SYDNEY','created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 2,'display_order'=>1,'title' => 'START YOUR COREER WITH US','file_upload'=>'','description'=>'CAMPUS IN SYDNEY','created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
         ]); 
         // DB::statement("SELECT SETVAL('mst_fee_types_id_seq',1000)");
     }
     public function games(){
         DB::table('games')->insert([
             // mainmenus
-            ['id' => 1,'display_order'=>1,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo1.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 2,'display_order'=>2,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo2.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 3,'display_order'=>3,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo3.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 4,'display_order'=>4,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo4.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 5,'display_order'=>5,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo5.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 6,'display_order'=>6,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo6.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 7,'display_order'=>7,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo7.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 8,'display_order'=>8,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo8.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 9,'display_order'=>9,'title' => 'START YOUR COREER WITH US','game_img'=>'Games/game_logo9.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 1,'display_order'=>1,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 2,'display_order'=>2,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 3,'display_order'=>3,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 4,'display_order'=>4,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 5,'display_order'=>5,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 6,'display_order'=>6,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 7,'display_order'=>7,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 8,'display_order'=>8,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 9,'display_order'=>9,'title' => 'START YOUR COREER WITH US','game_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
         ]); 
         // DB::statement("SELECT SETVAL('mst_fee_types_id_seq',1000)");
     }
@@ -103,27 +103,27 @@ class MasterSeeder extends Seeder
     public function services(){
         DB::table('services')->insert([
             // mainmenus
-            ['id' => 1,'display_order'=>1,'title' => 'START YOUR','service_img'=>'Services/service_logo1.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 2,'display_order'=>2,'title' => 'START YOUR','service_img'=>'Services/service_logo2.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 3,'display_order'=>3,'title' => 'START YOUR','service_img'=>'Services/service_logo3.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 1,'display_order'=>1,'title' => 'START YOUR','service_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 2,'display_order'=>2,'title' => 'START YOUR','service_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 3,'display_order'=>3,'title' => 'START YOUR','service_img'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
         ]); 
         // DB::statement("SELECT SETVAL('mst_fee_types_id_seq',1000)");
     }
     public function slide_shows(){
         DB::table('slide_shows')->insert([
             // mainmenus
-            ['id' => 1,'display_order'=>1,'title' => 'START YOUR','img_path'=>'SlideShow/slideshow_logo1.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 2,'display_order'=>2,'title' => 'START YOUR','img_path'=>'SlideShow/slideshow_logo2.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 3,'display_order'=>3,'title' => 'START YOUR','img_path'=>'SlideShow/slideshow_logo3.jpg', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 1,'display_order'=>1,'title' => 'START YOUR','img_path'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 2,'display_order'=>2,'title' => 'START YOUR','img_path'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 3,'display_order'=>3,'title' => 'START YOUR','img_path'=>'', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
         ]); 
         // DB::statement("SELECT SETVAL('mst_fee_types_id_seq',1000)");
     }
     public function payments(){
         DB::table('payments')->insert([
             // mainmenus
-            ['id' => 1,'display_order'=>1,'title' => 'START YOUR','icon'=>'SlideShow/slideshow_logo1.jpg', 'qr_img'=>'SlideShow/slideshow_logo1.jpg', 'qr_address'=>'aasda3232134123', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 2,'display_order'=>2,'title' => 'START YOUR','icon'=>'SlideShow/slideshow_logo2.jpg', 'qr_img'=>'SlideShow/slideshow_logo2.jpg', 'qr_address'=>'aasda3232134123', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
-            ['id' => 3,'display_order'=>3,'title' => 'START YOUR','icon'=>'SlideShow/slideshow_logo3.jpg', 'qr_img'=>'SlideShow/slideshow_logo3.jpg', 'qr_address'=>'aasda3232134123', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 1,'display_order'=>1,'title' => 'START YOUR','icon'=>'', 'qr_img'=>'', 'qr_address'=>'aasda3232134123', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 2,'display_order'=>2,'title' => 'START YOUR','icon'=>'', 'qr_img'=>'', 'qr_address'=>'aasda3232134123', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
+            ['id' => 3,'display_order'=>3,'title' => 'START YOUR','icon'=>'', 'qr_img'=>'', 'qr_address'=>'aasda3232134123', 'created_at'=>Carbon::now()->toDateTimeString(),'updated_at'=>Carbon::now()->toDateTimeString()],
         ]); 
         // DB::statement("SELECT SETVAL('mst_fee_types_id_seq',1000)");
     }
