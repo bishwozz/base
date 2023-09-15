@@ -33,7 +33,8 @@ Route::group([
     'namespace'  => 'App\Http\Controllers\Frontend',
 ], function () { 
     Route::get('/', 'HomeController@index');
-    Route::get('/home', 'HomeController@index');
+    Route::get('/home', 'HomeController@index')->name('home');
+
     Route::get('/login', 'HomeController@showLoginForm')->name('user_login');
     Route::post('/login', 'HomeController@login')->name('check_login');
     Route::post('/logout', 'HomeController@logout')->name('logout');

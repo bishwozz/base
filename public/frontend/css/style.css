@@ -384,13 +384,13 @@ Grid {
 
 
 .winning.wrapper{
-  padding: 70px 0;
+  padding: 40px 20px;
   overflow-x: hidden;
 }
 
 
 .winning .my-slider{
-  padding: 0 70px;
+  /* padding: 0 70px; */
 }
 .winning .slick-initialized .slick-slide{
   background-color: rgb(255 252 252 / 50%);
@@ -408,8 +408,8 @@ Grid {
 
 
 .winning .slick-initialized .slick-slide img{
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   border-radius:2%;
 
 }
@@ -421,11 +421,13 @@ Grid {
 }
 
 .winning .slick-next{
-  right: 15px;
+  /* right: 15px; */
+  display: none !important;
 }
 
 .winning .slick-prev{
-  left: 15px;
+  /* left: 15px; */
+  display: none !important;
 }
 
 .winning .slick-next:before, .slick-prev:before{
@@ -437,7 +439,7 @@ Grid {
   position: absolute;
   bottom: -38px;
   display: block;
-  width: 86%;
+  width: 100%;
   padding: 0;
   margin: 0;
   list-style: none;

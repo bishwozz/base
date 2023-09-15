@@ -70,8 +70,51 @@ class User extends Authenticatable
         }
     }
 
-    public function ministry()
+    public function hasRole($roles, string $guard = null): bool
     {
-        return $this->belongsTo('App\Models\CoreMaster\MstMinistry', 'ministry_id', 'id');
+        if (is_string($roles) && false !== strpos($roles, '|')) {
+            $roles = $this->convertPipeToArray($roles);
+        }
+
+        if (is_string($roles)) {
+            return $guard
+                ? $this->roles->where('guard_name', $guard)->contains('name', $roles)
+                : $this->roles->contains('name', $roles);
+        }
+
+        if (is_int($roles)) {
+            return $guard
+                ? $this->roles->where('guard_name', $guard)->contains('id', $roles)
+                : $this->roles->contains('id', $roles);
+        }
+
+        if ($roles instanceof Role) {
+            return $this->roles->contains('id', $roles->id);
+        }
+
+        if (is_array($roles)) {
+            foreach ($roles as $role) {
+                if ($this->hasRole($role, $guard)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return $roles->intersect($guard ? $this->roles->where('guard_name', $guard) : $this->roles)->isNotEmpty();
     }
+
+
+
+
+    public function isUser()
+    {
+        return $this->hasRole('user');
+    }
+    
+    public function isSuperuser(){
+        return $this->hasRole('superadmin');
+    }
+
 }

@@ -11,7 +11,7 @@
     </div>
     {{-- <p class="footer-copyright">Copyright &copy; Enabled <span id="copyright-year">2017</span>. All Rights Reserved. --}}
     </p>
-    <p class="footer-links"><a href="#" class="color-highlight">Privacy Policy</a> | <a href="#"
+    <p class="footer-links"><a href="/home" class="color-highlight">Home</a> | <a href="#"
         class="color-highlight">Terms and Conditions</a> | <a href="#" class="back-to-top color-highlight"> Back to
         Top</a></p>
     <div class="clear"></div>
