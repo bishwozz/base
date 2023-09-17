@@ -44,12 +44,12 @@ class HomeController extends Controller
     public function review()
     {
         if(Auth::user()){
-            dd(Auth::user());
-            $review = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->where('created_by',Auth::user()->id)->get();
+            // dd(Auth::user()->id);
+            $review = Slider::where('deleted_uq_code',1)->orderBy('display_order','asc')->where('created_by',Auth::user()->id)->first();
+            // dd($review);
         }else{
             $review = null;
         }
-        // dd($review);
 
         $this->data = [
             'review' => $review,
@@ -93,5 +93,21 @@ class HomeController extends Controller
             $setting->save();
             return back();
         }
+    }
+
+    public function getReviewFancyBox(){
+        return view('frontend.review_fancy_box');
+    }
+
+    public function saveReview(Request $request){
+
+        $review = Review::create([
+            'rating' => $request->star,
+            'comment' => $request->comment,
+            'created_by' => Auth::user()->id,
+        ]);
+        return true;
+
+
     }
 }

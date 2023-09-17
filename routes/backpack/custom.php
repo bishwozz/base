@@ -44,4 +44,6 @@ Route::group([
 
     Route::get('/change-background/{color}', 'HomeController@changeBackground');
 
+    Route::post('/reviewSend', 'HomeController@saveReview')->name('reviewSend');
+
 });

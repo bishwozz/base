@@ -1,10 +1,10 @@
 @extends('layout.base')
 @section('content')
     <div class="page-content header-clear-small">
-        <div class="card card-style preload-img" data-src="images/pictures/18w.jpg" data-card-height="150">
+        <div class="card card-style preload-img" data-src="images/pictures/18w.jpg" data-card-height="150" style="background-color: black;">
             <div class="card-center ms-3">
-                <h1 class="color-white mb-0">Components</h1>
-                <p class="color-white mt-n1 mb-0">Ready built to create Pages</p>
+                <h1 class="color-white mb-0">Review</h1>
+                {{-- <p class="color-white mt-n1 mb-0">Ready built to create Pages</p> --}}
             </div>
             <div class="card-center me-3">
                 <a href="#"
@@ -23,7 +23,7 @@
             </div>
             <br>
             <button type="button" class="back-button btn btn-m rounded-xl shadow-xl text-uppercase font-800 bg-highlight"
-                data-toggle="modal" data-target="#exampleModal">
+                id="reviewFancyBox">
                 Rate us
             </button>
 
@@ -33,29 +33,7 @@
         </div>
 
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+@include('frontend.review_fancy_box')
 
     @if ($review)
         <div class="card card-style">

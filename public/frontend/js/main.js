@@ -306,3 +306,23 @@ $(document).ready(function(){
 ]
   });
 });
+
+$(document).ready(function() {
+  $('#reviewFancyBox').click(function() {
+      $.fancybox.open({
+          src: '#formContainer',
+          type: 'inline',
+          opts: {
+            beforeClose: function(instance, current) {
+                return false; // Prevent FancyBox from closing
+            }
+        }
+      });
+
+
+
+
+
+      
+  });
+});
