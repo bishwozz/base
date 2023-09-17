@@ -116,6 +116,9 @@ class CreateMainTables extends Migration
         Schema::create('app_settings', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('title')->nullable();
+            $table->string('phone',10)->nullable();
+            $table->string('email',50)->nullable();
+            $table->string('logo',500)->nullable();
             $table->string('background_color')->nullable();
             $table->timestamps();
             $table->unsignedInteger('created_by')->nullable();

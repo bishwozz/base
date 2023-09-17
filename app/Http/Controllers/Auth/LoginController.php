@@ -203,7 +203,7 @@ class LoginController extends Controller
 
         // dd($currentSession);
 
-        $request->session()->put('sessionId', $currentSession->id);      // Store sessionId to current session  
+        // $request->session()->put('sessionId', $currentSession->id);      // Store sessionId to current session  
         
         $this->clearLoginAttempts($request);
         

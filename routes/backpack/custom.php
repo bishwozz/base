@@ -24,7 +24,7 @@ Route::group([
     Route::crud('payments', 'PaymentCrudController');
     Route::crud('slideshow', 'SlideShowCrudController');
     Route::crud('review', 'ReviewCrudController');
-    Route::crud('app-settings', 'AppSettingsCrudController');
+    Route::crud('app-setting', 'AppSettingsCrudController');
 
 }); // this should be the absolute last line of this file
 Route::group([
@@ -41,4 +41,7 @@ Route::group([
     
     Route::get('/payment', 'HomeController@payment')->name('payment');
     Route::get('/review', 'HomeController@review')->name('review');
+
+    Route::get('/change-background/{color}', 'HomeController@changeBackground');
+
 });

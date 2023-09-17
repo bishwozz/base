@@ -49,29 +49,28 @@
   <div id="menu-backgrounds" class="menu menu-box-bottom menu-box-detached">
     <div class="menu-title">
       <h1>Backgrounds</h1>
-      <p class="color-highlight">Change Page Color Behind Content Boxes</p><a href="#" class="close-menu"><i
-          class="fa fa-times"></i></a>
+      <p class="color-highlight"> Change Page Color Behind Content Boxes </p><a href="#" class="close-menu"><i class="fa fa-times"></i></a>
     </div>
     <div class="divider divider-margins mb-n2"></div>
     <div class="content">
       <div class="background-changer">
-        <a href="#" data-change-background="default"><i class="bg-theme"></i><span
+        <a href="/change-background/default" data-change-background="default"><i class="bg-theme"></i><span
             class="color-dark-dark">Default</span></a>
-        <a href="#" data-change-background="plum"><i class="body-plum"></i><span
+        <a href="/change-background/plum" data-change-background="plum"><i class="body-plum"></i><span
             class="color-plum-dark">Plum</span></a>
-        <a href="#" data-change-background="magenta"><i class="body-magenta"></i><span
+        <a href="/change-background/magenta" data-change-background="magenta"><i class="body-magenta"></i><span
             class="color-dark-dark">Magenta</span></a>
-        <a href="#" data-change-background="dark"><i class="body-dark"></i><span
+        <a href="/change-background/dark" data-change-background="dark"><i class="body-dark"></i><span
             class="color-dark-dark">Dark</span></a>
-        <a href="#" data-change-background="violet"><i class="body-violet"></i><span
+        <a href="/change-background/violet" data-change-background="violet"><i class="body-violet"></i><span
             class="color-violet-dark">Violet</span></a>
-        <a href="#" data-change-background="red"><i class="body-red"></i><span class="color-red-dark">Red</span></a>
-        <a href="#" data-change-background="green"><i class="body-green"></i><span
+        <a href="/change-background/red" data-change-background="red"><i class="body-red"></i><span class="color-red-dark">Red</span></a>
+        <a href="/change-background/green" data-change-background="green"><i class="body-green"></i><span
             class="color-green-dark">Green</span></a>
-        <a href="#" data-change-background="sky"><i class="body-sky"></i><span class="color-sky-dark">Sky</span></a>
-        <a href="#" data-change-background="orange"><i class="body-orange"></i><span
+        <a href="/change-background/sky" data-change-background="sky"><i class="body-sky"></i><span class="color-sky-dark">Sky</span></a>
+        <a href="/change-background/orange" data-change-background="orange"><i class="body-orange"></i><span
             class="color-orange-dark">Orange</span></a>
-        <a href="#" data-change-background="yellow"><i class="body-yellow"></i><span
+        <a href="/change-background/yellow" data-change-background="yellow"><i class="body-yellow"></i><span
             class="color-yellow-dark">Yellow</span></a>
         <div class="clearfix"></div>
       </div>
@@ -81,7 +80,7 @@
     </div>
   </div>
 
-  <div id="menu-share" class="menu menu-box-bottom menu-box-detached">
+  {{-- <div id="menu-share" class="menu menu-box-bottom menu-box-detached">
     <div class="menu-title mt-n1">
       <h1>Share the Love</h1>
       <p class="color-highlight">Just Tap the Social Icon. We'll add the Link</p><a href="#" class="close-menu"><i
@@ -117,15 +116,15 @@
         </a>
       </div>
     </div>
-  </div>
+  </div> --}}
 
 
   <div id="menu-install-pwa-android" class="menu menu-box-bottom menu-box-detached rounded-l">
     <div class="boxed-text-l mt-4 pb-3">
-      <img class="rounded-l mb-3" src="app/icons/icon-128x128.png" alt="img" width="90">
-      <h4 class="mt-3">Add Sticky on your Home Screen</h4>
+      <img class="rounded-l mb-3" src="{{ asset('frontend/images/icon-128x128.png') }}" alt="img" width="90">
+      <h4 class="mt-3">Add Bonanaza on your Home Screen</h4>
       <p>
-        Install Sticky on your home screen, and access it just like a regular app. It really is that simple!
+        Install Bonanaza on your home screen, and access it just like a regular app. It really is that simple!
       </p>
       <a href="#" class="pwa-install btn btn-s rounded-s shadow-l text-uppercase font-900 bg-highlight mb-2">Add to
         Home Screen</a><br>
@@ -137,10 +136,10 @@
 
   <div id="menu-install-pwa-ios" class="menu menu-box-bottom menu-box-detached rounded-l">
     <div class="boxed-text-xl mt-4 pb-3">
-      <img class="rounded-l mb-3" src="app/icons/icon-128x128.png" alt="img" width="90">
-      <h4 class="mt-3">Add Sticky on your Home Screen</h4>
+      <img class="rounded-l mb-3" src="{{ asset('frontend/images/icon-128x128.png') }}" alt="img" width="90">
+      <h4 class="mt-3">Add Bonanaza on your Home Screen</h4>
       <p class="mb-0 pb-0">
-        Install Sticky, and access it like a regular app. Open your Safari menu and tap "Add to Home Screen".
+        Install Bonanaza, and access it like a regular app. Open your Safari menu and tap "Add to Home Screen".
       </p>
       <div class="clearfix pt-3"></div>
       <a href="#" class="pwa-dismiss close-menu color-highlight text-uppercase font-700">Maybe later</a>

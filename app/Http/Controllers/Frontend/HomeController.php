@@ -11,6 +11,7 @@ use App\Models\Slider;
 use App\Models\Payment;
 use App\Models\Services;
 use App\Models\SlideShow;
+use App\Models\AppSettings;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,7 @@ class HomeController extends Controller
         $payments = Payment::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $slideshows = SlideShow::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
         $reviews = Review::where('deleted_uq_code',1)->orderBy('display_order','asc')->get();
+        $app_setting = AppSettings::where('deleted_uq_code',1)->first();
 
         $this->data = [
             'sliders' => $sliders,
@@ -82,5 +84,14 @@ class HomeController extends Controller
     public function payment()
     {
         return view('frontend.payment');
+    }
+
+    public function changeBackground($color){
+        $setting = AppSettings::where('id',1)->first();
+        if($setting){
+            $setting->background_color = $color;
+            $setting->save();
+            return back();
+        }
     }
 }

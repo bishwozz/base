@@ -114,15 +114,15 @@ $(document).ready(function() {
      const currentUrl = window.location.host;
 
         $(".qr_container").append(`
-            <div class="col-lg-3 col-md-4 col-sm-4 my-4 px-3 qrs" id="qr_${i}">
+            <div class="col-6 qrs" id="qr_${i}" style="padding: 2em;">
                 <a target="_blank" href="${eval(link_var)}">
-                    <div class=text-center>
-                    ${i}
+                  <div class="card" style="">
+                    <div class="card-header text-center">$ ${i}</div>
+                    <img class="card-img-top" src="/frontend/images/payment/qrs/${i}.jpg" class='qr_img' alt="">
+                    <div class="card-body text-center">
+                      <p class="card-text" style="color: black;">Click here for payment link.</p>
                     </div>
-                    <img src= "${currentUrl}/frontend/images/payment/qrs/${i}.jpg" class='qr_img' alt="" width="70">
-                    <div class='text-center'>
-                        Click here for payment link
-                    </div>
+                  </div>
                 </a>
             </div>
         `);

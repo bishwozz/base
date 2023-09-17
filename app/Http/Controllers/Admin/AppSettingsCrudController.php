@@ -40,54 +40,23 @@ class AppSettingsCrudController extends BaseCrudController
                 'disk' => 'uploads', 
                 'upload' => true,
             ],
-            [
-                'label' => 'Address',
-                'name' => 'address',
-                'type' => 'text',
-
-            ],
-            [
-                'label' => 'Description',
-                'name' => 'description',
-                'type' => 'textarea',
-
-            ],
+            
+            
             [
                 'label' => 'Phone Number',
                 'name' => 'phone',
                 'type' => 'text',
 
             ],
-            [
-                'label' => 'Fax',
-                'name' => 'fax',
-                'type' => 'text',
 
-            ],
+            
             [
                 'label' => 'Email',
                 'name' => 'email',
                 'type' => 'email',
 
             ],
-            [
-                'label' => 'Opening Hour',
-                'name' => 'opening_hours',
-                'type' => 'time',
-
-            ],
-            [
-                'label' => 'Total Clients',
-                'name' => 'total_clients',
-                'type' => 'number',
-
-            ],
-            [
-                'label' => 'Total Products',
-                'name' => 'total_products',
-                'type' => 'number',
-
-            ],
+            
         ];
         $this->crud->addColumns($arr);
 
@@ -131,14 +100,7 @@ class AppSettingsCrudController extends BaseCrudController
                 ],
                 
             ],
-            [
-                'label' => 'Address',
-                'name' => 'address',
-                'type' => 'text',
-                'wrapperAttributes' => [
-                    'class' => 'form-group col-md-4',
-                ],
-            ],
+           
             [
                 'label' => 'Phone Number',
                 'name' => 'phone',
@@ -147,14 +109,7 @@ class AppSettingsCrudController extends BaseCrudController
                     'class' => 'form-group col-md-4',
                 ],
             ],
-            [
-                'label' => 'Fax',
-                'name' => 'fax',
-                'type' => 'text',
-                'wrapperAttributes' => [
-                    'class' => 'form-group col-md-4',
-                ],
-            ],
+            
             [
                 'label' => 'Email',
                 'name' => 'email',
@@ -163,42 +118,15 @@ class AppSettingsCrudController extends BaseCrudController
                     'class' => 'form-group col-md-4',
                 ],
             ],
+           
+            
             [
-                'label' => 'Opening Hour',
-                'name' => 'opening_hours',
-                'type' => 'text',
-                'wrapperAttributes' => [
-                    'class' => 'form-group col-md-4',
-                ],
-            ],
-            [
-                'label' => 'Total Clients',
-                'name' => 'total_clients',
-                'type' => 'number',
-                'wrapperAttributes' => [
-                    'class' => 'form-group col-md-4',
-                ],
-            ],
-            [
-                'label' => 'Total Products',
-                'name' => 'total_products',
-                'type' => 'number',
-                'wrapperAttributes' => [
-                    'class' => 'form-group col-md-4',
-                ],
-            ],
-            [
-                'label' => 'Description',
-                'name' => 'description',
-                'type' => 'ckeditor',
+                'label' => 'background_color',
+                'name' => 'background_color',
+                'type' => 'color',
 
             ],
-            [
-                'label' => 'display_order',
-                'name' => 'display_order',
-                'type' => 'number',
-
-            ],
+            
         ];
         $this->crud->addFields($arr);
 

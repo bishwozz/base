@@ -10,6 +10,7 @@
     <title>Bonanzagaming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Technology IT Solutions HTML Template">
+    {{-- <meta http-equiv="refresh" content="0;url=/"> --}}
     <!-- Favicon -->
     <link rel="icon" href="frontend/images/favicon.webp">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('frontend/css/img/icons/icon-192x192.html') }}">
@@ -37,6 +38,11 @@
 
     <!-- Custom Style CSS -->
     @yield('css')
+    <style>
+    body {
+            background-color: {{ $app_setting->background_color ?? '#ffffff' }};
+        }
+    </style>
 </head>
 
 <body class="theme-light" data-highlight="highlight-red" data-gradient="body-default">
@@ -69,7 +75,7 @@
     </script>
     
       <!-- Your SDK code -->
-    <script>
+    {{-- <script>
         window.fbAsyncInit = function () {
           FB.init({
             xfbml: true,
@@ -84,7 +90,7 @@
           js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
           fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-    </script>
+    </script> --}}
     {{-- <script type="text/javascript" src="{{ url('frontend/js/main.js') }}"></script> --}}
     <script type="text/javascript" src="{{ asset('frontend/js/custom.js') }}" defer></script>
 

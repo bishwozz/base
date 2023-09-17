@@ -28,7 +28,7 @@
 
         .selcls {
             padding: 9px;
-            border: solid 1px #517B97;
+            border: solid 4px black;
             outline: 0;
             background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #CAD9E3), to(#FFFFFF));
             background: -moz-linear-gradient(top, #FFFFFF, #CAD9E3 1px, #FFFFFF 25px);
@@ -57,10 +57,10 @@
     <!--  icon -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="page-content header-clear-small">
-        <div class="card card-style preload-img" data-src="images/pictures/18w.jpg" data-card-height="150">
+        <div class="card card-style preload-img" data-src="images/pictures/18w.jpg" data-card-height="150" style="background-color: black;">
             <div class="card-center ms-3">
-                <h1 class="color-white mb-0">Components</h1>
-                <p class="color-white mt-n1 mb-0">Ready built to create Pages</p>
+                <h1 class="color-white mb-0">Payment</h1>
+                {{-- <p class="color-white mt-n1 mb-0">Ready built to create Pages</p> --}}
             </div>
             <div class="card-center me-3">
                 <a href="/home"
@@ -94,14 +94,18 @@
             </div>
 
 
-
-
-            <div class="container-fluid">
+            <div class="container">
                 <div class="row">
-                    <div class="col qr_container">
+                    <div class="qr_container" style="display: contents;">
                     </div>
                 </div>
-            </div>
+              </div>
+
+            {{-- <div class="container-fluid">
+                <div class="row">
+                    
+                </div>
+            </div> --}}
         </div>
     @else
         <div class="card card-style" style="margin-top: 2em;">
